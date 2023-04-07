@@ -10,6 +10,11 @@
       "StackName": "amplify-lola-dev-170025",
       "StackId": "arn:aws:cloudformation:us-east-1:089370838833:stack/amplify-lola-dev-170025/a4c3e7a0-d522-11ed-8adb-0eb7c264a68f",
       "AmplifyAppId": "d12ttd7t3b3wpr"
+    },
+    "categories": {
+      "api": {
+        "lola": {}
+      }
     }
   }
 }
