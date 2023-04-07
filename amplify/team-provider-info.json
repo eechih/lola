@@ -14,6 +14,12 @@
     "categories": {
       "api": {
         "lola": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d12ttd7t3b3wpr",
+          "type": "manual"
+        }
       }
     }
   }
