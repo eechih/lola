@@ -14,7 +14,7 @@ export const getProduct = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const listProducts = /* GraphQL */ `
   query ListProducts(
     $filter: ModelProductFilterInput
@@ -34,4 +34,4 @@ export const listProducts = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`

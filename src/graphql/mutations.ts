@@ -17,7 +17,7 @@ export const createProduct = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const updateProduct = /* GraphQL */ `
   mutation UpdateProduct(
     $input: UpdateProductInput!
@@ -33,7 +33,7 @@ export const updateProduct = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const deleteProduct = /* GraphQL */ `
   mutation DeleteProduct(
     $input: DeleteProductInput!
@@ -49,4 +49,4 @@ export const deleteProduct = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
