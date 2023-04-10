@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import {
   CreateProductInput,
   CreateProductMutation,
+  DeleteProductMutation,
   ListProductsQuery,
   ListProductsQueryVariables,
   OnCreateProductSubscription,
@@ -44,7 +45,7 @@ const Index = () => {
     try {
       const variables: ListProductsQueryVariables = {
         // filter: { name: { beginsWith: 'a' } },
-        limit: 3,
+        // limit: 3,
       }
       const res = await API.graphql<GraphQLQuery<ListProductsQuery>>({
         query: queries.listProducts,
@@ -76,6 +77,18 @@ const Index = () => {
     }
   }
 
+  async function deleteProduct(productId: string) {
+    try {
+      setProducts(products.filter(product => product.id !== productId))
+      await API.graphql<GraphQLQuery<DeleteProductMutation>>({
+        query: mutations.deleteProduct,
+        variables: { input: { id: productId } },
+      })
+    } catch (error) {
+      console.log('Error deleting product', error)
+    }
+  }
+
   return (
     <div>
       <h2>Products</h2>
@@ -101,6 +114,7 @@ const Index = () => {
         {products.map((product, index) => (
           <li key={product.id ?? index}>
             <b>{product.name}</b> - <span>{product.description}</span>
+            <button onClick={() => deleteProduct(product.id)}>[delete]</button>
           </li>
         ))}
       </ol>

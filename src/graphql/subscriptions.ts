@@ -14,7 +14,7 @@ export const onCreateProduct = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onUpdateProduct = /* GraphQL */ `
   subscription OnUpdateProduct($filter: ModelSubscriptionProductFilterInput) {
     onUpdateProduct(filter: $filter) {
@@ -27,7 +27,7 @@ export const onUpdateProduct = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const onDeleteProduct = /* GraphQL */ `
   subscription OnDeleteProduct($filter: ModelSubscriptionProductFilterInput) {
     onDeleteProduct(filter: $filter) {
@@ -40,4 +40,4 @@ export const onDeleteProduct = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
