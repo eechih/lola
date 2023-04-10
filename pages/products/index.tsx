@@ -1,9 +1,12 @@
 import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api'
-import { API, graphqlOperation } from 'aws-amplify'
+import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
+import { API, Hub, graphqlOperation } from 'aws-amplify'
 import { useEffect, useState } from 'react'
 import {
+  CreateProductInput,
   CreateProductMutation,
   ListProductsQuery,
+  ListProductsQueryVariables,
   OnCreateProductSubscription,
   Product,
 } from '../../src/API'
@@ -16,6 +19,14 @@ const initialState = { name: '', description: '' }
 const Index = () => {
   const [formState, setFormState] = useState(initialState)
   const [products, setProducts] = useState<Product[]>([])
+
+  Hub.listen('api', (data: any) => {
+    const { payload } = data
+    if (payload.event === CONNECTION_STATE_CHANGE) {
+      const connectionState = payload.data.connectionState as ConnectionState
+      console.log('connectionState', connectionState)
+    }
+  })
 
   useEffect(() => {
     fetchProducts()
@@ -31,15 +42,20 @@ const Index = () => {
 
   async function fetchProducts() {
     try {
-      const result = await API.graphql<GraphQLQuery<ListProductsQuery>>({
+      const variables: ListProductsQueryVariables = {
+        // filter: { name: { beginsWith: 'a' } },
+        limit: 3,
+      }
+      const res = await API.graphql<GraphQLQuery<ListProductsQuery>>({
         query: queries.listProducts,
+        variables: variables,
       })
-      const products = result.data?.listProducts?.items as Product[]
-      console.log(
-        'Products retrieved successfully!',
-        JSON.stringify(products, null, 2)
-      )
-      setProducts(products)
+      console.log(res)
+      if (res.data?.listProducts) {
+        const { items, nextToken } = res.data.listProducts
+        console.log('Products retrieved successfully!', items)
+        if (items) setProducts(items as Product[])
+      }
     } catch (error) {
       console.log('Error retrieving products', error)
     }
@@ -48,12 +64,13 @@ const Index = () => {
   async function createProduct() {
     try {
       if (!formState.name || !formState.description) return
-      const product = { ...formState } as Product
-      setProducts([...products, product])
+      const productDeatils: CreateProductInput = { ...formState }
+      setProducts([...products, productDeatils as Product])
       setFormState(initialState)
-      await API.graphql<GraphQLQuery<CreateProductMutation>>(
-        graphqlOperation(mutations.createProduct, { input: product })
-      )
+      await API.graphql<GraphQLQuery<CreateProductMutation>>({
+        query: mutations.createProduct,
+        variables: { input: productDeatils },
+      })
     } catch (error) {
       console.log('Error creating products', error)
     }
@@ -80,12 +97,13 @@ const Index = () => {
       </div>
       <button onClick={createProduct}>Create product</button>
 
-      {products.map((product, index) => (
-        <div key={product.id ?? index}>
-          <p>{product.name}</p>
-          <p>{product.description}</p>
-        </div>
-      ))}
+      <ol>
+        {products.map((product, index) => (
+          <li key={product.id ?? index}>
+            <b>{product.name}</b> - <span>{product.description}</span>
+          </li>
+        ))}
+      </ol>
     </div>
   )
 }
