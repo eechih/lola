@@ -1,19 +1,15 @@
-import { GraphQLQuery } from '@aws-amplify/api'
+import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api'
 import { API, graphqlOperation } from 'aws-amplify'
 import { useEffect, useState } from 'react'
-import { CreateProductMutation, ListProductsQuery } from '../../src/API'
+import {
+  CreateProductMutation,
+  ListProductsQuery,
+  OnCreateProductSubscription,
+  Product,
+} from '../../src/API'
 import * as mutations from '../../src/graphql/mutations'
 import * as queries from '../../src/graphql/queries'
-
-type Product = {
-  id: string
-  name: string
-  price?: number | null
-  cost?: number | null
-  description?: string | null
-  createdAt: string
-  updatedAt: string
-}
+import * as subscriptions from '../../src/graphql/subscriptions'
 
 const initialState = { name: '', description: '' }
 
@@ -23,6 +19,10 @@ const Index = () => {
 
   useEffect(() => {
     fetchProducts()
+    const sub = API.graphql<GraphQLSubscription<OnCreateProductSubscription>>(
+      graphqlOperation(subscriptions.onCreateProduct)
+    ).subscribe(fetchProducts)
+    return () => sub.unsubscribe()
   }, [])
 
   function setInput(key: string, value: string) {
