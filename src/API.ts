@@ -81,6 +81,7 @@ export type Product = {
   description?: string | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type UpdateProductInput = {
@@ -92,118 +93,6 @@ export type UpdateProductInput = {
 };
 
 export type DeleteProductInput = {
-  id: string,
-};
-
-export type CreateInventoryInput = {
-  productId: string,
-  warehouseID: string,
-  inventoryAmount?: number | null,
-};
-
-export type ModelInventoryConditionInput = {
-  inventoryAmount?: ModelIntInput | null,
-  and?: Array< ModelInventoryConditionInput | null > | null,
-  or?: Array< ModelInventoryConditionInput | null > | null,
-  not?: ModelInventoryConditionInput | null,
-};
-
-export type Inventory = {
-  __typename: "Inventory",
-  productId: string,
-  warehouseID: string,
-  inventoryAmount?: number | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type UpdateInventoryInput = {
-  productId: string,
-  warehouseID: string,
-  inventoryAmount?: number | null,
-};
-
-export type DeleteInventoryInput = {
-  productId: string,
-  warehouseID: string,
-};
-
-export type CreateProjectInput = {
-  id?: string | null,
-  name?: string | null,
-  teamID?: string | null,
-};
-
-export type ModelProjectConditionInput = {
-  name?: ModelStringInput | null,
-  teamID?: ModelIDInput | null,
-  and?: Array< ModelProjectConditionInput | null > | null,
-  or?: Array< ModelProjectConditionInput | null > | null,
-  not?: ModelProjectConditionInput | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
-export type Project = {
-  __typename: "Project",
-  id: string,
-  name?: string | null,
-  teamID?: string | null,
-  team?: Team | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type Team = {
-  __typename: "Team",
-  id: string,
-  name: string,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type UpdateProjectInput = {
-  id: string,
-  name?: string | null,
-  teamID?: string | null,
-};
-
-export type DeleteProjectInput = {
-  id: string,
-};
-
-export type CreateTeamInput = {
-  id?: string | null,
-  name: string,
-};
-
-export type ModelTeamConditionInput = {
-  name?: ModelStringInput | null,
-  and?: Array< ModelTeamConditionInput | null > | null,
-  or?: Array< ModelTeamConditionInput | null > | null,
-  not?: ModelTeamConditionInput | null,
-};
-
-export type UpdateTeamInput = {
-  id: string,
-  name?: string | null,
-};
-
-export type DeleteTeamInput = {
   id: string,
 };
 
@@ -224,9 +113,9 @@ export type Post = {
   id: string,
   title: string,
   comments?: ModelCommentConnection | null,
-  tags?: ModelPostTagsConnection | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type ModelCommentConnection = {
@@ -238,36 +127,11 @@ export type ModelCommentConnection = {
 export type Comment = {
   __typename: "Comment",
   id: string,
-  postID: string,
   content: string,
   createdAt: string,
   updatedAt: string,
-};
-
-export type ModelPostTagsConnection = {
-  __typename: "ModelPostTagsConnection",
-  items:  Array<PostTags | null >,
-  nextToken?: string | null,
-};
-
-export type PostTags = {
-  __typename: "PostTags",
-  id: string,
-  postId: string,
-  tagId: string,
-  post: Post,
-  tag: Tag,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type Tag = {
-  __typename: "Tag",
-  id: string,
-  label: string,
-  posts?: ModelPostTagsConnection | null,
-  createdAt: string,
-  updatedAt: string,
+  postCommentsId?: string | null,
+  owner?: string | null,
 };
 
 export type UpdatePostInput = {
@@ -281,70 +145,41 @@ export type DeletePostInput = {
 
 export type CreateCommentInput = {
   id?: string | null,
-  postID: string,
   content: string,
+  postCommentsId?: string | null,
 };
 
 export type ModelCommentConditionInput = {
-  postID?: ModelIDInput | null,
   content?: ModelStringInput | null,
   and?: Array< ModelCommentConditionInput | null > | null,
   or?: Array< ModelCommentConditionInput | null > | null,
   not?: ModelCommentConditionInput | null,
+  postCommentsId?: ModelIDInput | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
 };
 
 export type UpdateCommentInput = {
   id: string,
-  postID?: string | null,
   content?: string | null,
+  postCommentsId?: string | null,
 };
 
 export type DeleteCommentInput = {
-  id: string,
-};
-
-export type CreateTagInput = {
-  id?: string | null,
-  label: string,
-};
-
-export type ModelTagConditionInput = {
-  label?: ModelStringInput | null,
-  and?: Array< ModelTagConditionInput | null > | null,
-  or?: Array< ModelTagConditionInput | null > | null,
-  not?: ModelTagConditionInput | null,
-};
-
-export type UpdateTagInput = {
-  id: string,
-  label?: string | null,
-};
-
-export type DeleteTagInput = {
-  id: string,
-};
-
-export type CreatePostTagsInput = {
-  id?: string | null,
-  postId: string,
-  tagId: string,
-};
-
-export type ModelPostTagsConditionInput = {
-  postId?: ModelIDInput | null,
-  tagId?: ModelIDInput | null,
-  and?: Array< ModelPostTagsConditionInput | null > | null,
-  or?: Array< ModelPostTagsConditionInput | null > | null,
-  not?: ModelPostTagsConditionInput | null,
-};
-
-export type UpdatePostTagsInput = {
-  id: string,
-  postId?: string | null,
-  tagId?: string | null,
-};
-
-export type DeletePostTagsInput = {
   id: string,
 };
 
@@ -371,60 +206,6 @@ export type ModelProductConnection = {
   nextToken?: string | null,
 };
 
-export type ModelIDKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-};
-
-export type ModelInventoryFilterInput = {
-  productId?: ModelIDInput | null,
-  warehouseID?: ModelIDInput | null,
-  inventoryAmount?: ModelIntInput | null,
-  and?: Array< ModelInventoryFilterInput | null > | null,
-  or?: Array< ModelInventoryFilterInput | null > | null,
-  not?: ModelInventoryFilterInput | null,
-};
-
-export type ModelInventoryConnection = {
-  __typename: "ModelInventoryConnection",
-  items:  Array<Inventory | null >,
-  nextToken?: string | null,
-};
-
-export type ModelProjectFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  teamID?: ModelIDInput | null,
-  and?: Array< ModelProjectFilterInput | null > | null,
-  or?: Array< ModelProjectFilterInput | null > | null,
-  not?: ModelProjectFilterInput | null,
-};
-
-export type ModelProjectConnection = {
-  __typename: "ModelProjectConnection",
-  items:  Array<Project | null >,
-  nextToken?: string | null,
-};
-
-export type ModelTeamFilterInput = {
-  id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
-  and?: Array< ModelTeamFilterInput | null > | null,
-  or?: Array< ModelTeamFilterInput | null > | null,
-  not?: ModelTeamFilterInput | null,
-};
-
-export type ModelTeamConnection = {
-  __typename: "ModelTeamConnection",
-  items:  Array<Team | null >,
-  nextToken?: string | null,
-};
-
 export type ModelPostFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -441,44 +222,11 @@ export type ModelPostConnection = {
 
 export type ModelCommentFilterInput = {
   id?: ModelIDInput | null,
-  postID?: ModelIDInput | null,
   content?: ModelStringInput | null,
   and?: Array< ModelCommentFilterInput | null > | null,
   or?: Array< ModelCommentFilterInput | null > | null,
   not?: ModelCommentFilterInput | null,
-};
-
-export type ModelTagFilterInput = {
-  id?: ModelIDInput | null,
-  label?: ModelStringInput | null,
-  and?: Array< ModelTagFilterInput | null > | null,
-  or?: Array< ModelTagFilterInput | null > | null,
-  not?: ModelTagFilterInput | null,
-};
-
-export type ModelTagConnection = {
-  __typename: "ModelTagConnection",
-  items:  Array<Tag | null >,
-  nextToken?: string | null,
-};
-
-export type ModelPostTagsFilterInput = {
-  id?: ModelIDInput | null,
-  postId?: ModelIDInput | null,
-  tagId?: ModelIDInput | null,
-  and?: Array< ModelPostTagsFilterInput | null > | null,
-  or?: Array< ModelPostTagsFilterInput | null > | null,
-  not?: ModelPostTagsFilterInput | null,
-};
-
-export type ModelStringKeyConditionInput = {
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
+  postCommentsId?: ModelIDInput | null,
 };
 
 export type ModelSubscriptionProductFilterInput = {
@@ -533,29 +281,6 @@ export type ModelSubscriptionIntInput = {
   notIn?: Array< number | null > | null,
 };
 
-export type ModelSubscriptionInventoryFilterInput = {
-  productId?: ModelSubscriptionIDInput | null,
-  warehouseID?: ModelSubscriptionIDInput | null,
-  inventoryAmount?: ModelSubscriptionIntInput | null,
-  and?: Array< ModelSubscriptionInventoryFilterInput | null > | null,
-  or?: Array< ModelSubscriptionInventoryFilterInput | null > | null,
-};
-
-export type ModelSubscriptionProjectFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  teamID?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionProjectFilterInput | null > | null,
-  or?: Array< ModelSubscriptionProjectFilterInput | null > | null,
-};
-
-export type ModelSubscriptionTeamFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionTeamFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTeamFilterInput | null > | null,
-};
-
 export type ModelSubscriptionPostFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
@@ -565,25 +290,9 @@ export type ModelSubscriptionPostFilterInput = {
 
 export type ModelSubscriptionCommentFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  postID?: ModelSubscriptionIDInput | null,
   content?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionCommentFilterInput | null > | null,
   or?: Array< ModelSubscriptionCommentFilterInput | null > | null,
-};
-
-export type ModelSubscriptionTagFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  label?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionTagFilterInput | null > | null,
-  or?: Array< ModelSubscriptionTagFilterInput | null > | null,
-};
-
-export type ModelSubscriptionPostTagsFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  postId?: ModelSubscriptionIDInput | null,
-  tagId?: ModelSubscriptionIDInput | null,
-  and?: Array< ModelSubscriptionPostTagsFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPostTagsFilterInput | null > | null,
 };
 
 export type CreateProductMutationVariables = {
@@ -601,6 +310,7 @@ export type CreateProductMutation = {
     description?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -619,6 +329,7 @@ export type UpdateProductMutation = {
     description?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -637,168 +348,7 @@ export type DeleteProductMutation = {
     description?: string | null,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type CreateInventoryMutationVariables = {
-  input: CreateInventoryInput,
-  condition?: ModelInventoryConditionInput | null,
-};
-
-export type CreateInventoryMutation = {
-  createInventory?:  {
-    __typename: "Inventory",
-    productId: string,
-    warehouseID: string,
-    inventoryAmount?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateInventoryMutationVariables = {
-  input: UpdateInventoryInput,
-  condition?: ModelInventoryConditionInput | null,
-};
-
-export type UpdateInventoryMutation = {
-  updateInventory?:  {
-    __typename: "Inventory",
-    productId: string,
-    warehouseID: string,
-    inventoryAmount?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteInventoryMutationVariables = {
-  input: DeleteInventoryInput,
-  condition?: ModelInventoryConditionInput | null,
-};
-
-export type DeleteInventoryMutation = {
-  deleteInventory?:  {
-    __typename: "Inventory",
-    productId: string,
-    warehouseID: string,
-    inventoryAmount?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateProjectMutationVariables = {
-  input: CreateProjectInput,
-  condition?: ModelProjectConditionInput | null,
-};
-
-export type CreateProjectMutation = {
-  createProject?:  {
-    __typename: "Project",
-    id: string,
-    name?: string | null,
-    teamID?: string | null,
-    team?:  {
-      __typename: "Team",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateProjectMutationVariables = {
-  input: UpdateProjectInput,
-  condition?: ModelProjectConditionInput | null,
-};
-
-export type UpdateProjectMutation = {
-  updateProject?:  {
-    __typename: "Project",
-    id: string,
-    name?: string | null,
-    teamID?: string | null,
-    team?:  {
-      __typename: "Team",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteProjectMutationVariables = {
-  input: DeleteProjectInput,
-  condition?: ModelProjectConditionInput | null,
-};
-
-export type DeleteProjectMutation = {
-  deleteProject?:  {
-    __typename: "Project",
-    id: string,
-    name?: string | null,
-    teamID?: string | null,
-    team?:  {
-      __typename: "Team",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateTeamMutationVariables = {
-  input: CreateTeamInput,
-  condition?: ModelTeamConditionInput | null,
-};
-
-export type CreateTeamMutation = {
-  createTeam?:  {
-    __typename: "Team",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateTeamMutationVariables = {
-  input: UpdateTeamInput,
-  condition?: ModelTeamConditionInput | null,
-};
-
-export type UpdateTeamMutation = {
-  updateTeam?:  {
-    __typename: "Team",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteTeamMutationVariables = {
-  input: DeleteTeamInput,
-  condition?: ModelTeamConditionInput | null,
-};
-
-export type DeleteTeamMutation = {
-  deleteTeam?:  {
-    __typename: "Team",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -817,27 +367,17 @@ export type CreatePostMutation = {
       items:  Array< {
         __typename: "Comment",
         id: string,
-        postID: string,
         content: string,
         createdAt: string,
         updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    tags?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
+        postCommentsId?: string | null,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -856,27 +396,17 @@ export type UpdatePostMutation = {
       items:  Array< {
         __typename: "Comment",
         id: string,
-        postID: string,
         content: string,
         createdAt: string,
         updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    tags?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
+        postCommentsId?: string | null,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -895,27 +425,17 @@ export type DeletePostMutation = {
       items:  Array< {
         __typename: "Comment",
         id: string,
-        postID: string,
         content: string,
         createdAt: string,
         updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    tags?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
+        postCommentsId?: string | null,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -928,10 +448,11 @@ export type CreateCommentMutation = {
   createComment?:  {
     __typename: "Comment",
     id: string,
-    postID: string,
     content: string,
     createdAt: string,
     updatedAt: string,
+    postCommentsId?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -944,10 +465,11 @@ export type UpdateCommentMutation = {
   updateComment?:  {
     __typename: "Comment",
     id: string,
-    postID: string,
     content: string,
     createdAt: string,
     updatedAt: string,
+    postCommentsId?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -960,217 +482,11 @@ export type DeleteCommentMutation = {
   deleteComment?:  {
     __typename: "Comment",
     id: string,
-    postID: string,
     content: string,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type CreateTagMutationVariables = {
-  input: CreateTagInput,
-  condition?: ModelTagConditionInput | null,
-};
-
-export type CreateTagMutation = {
-  createTag?:  {
-    __typename: "Tag",
-    id: string,
-    label: string,
-    posts?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateTagMutationVariables = {
-  input: UpdateTagInput,
-  condition?: ModelTagConditionInput | null,
-};
-
-export type UpdateTagMutation = {
-  updateTag?:  {
-    __typename: "Tag",
-    id: string,
-    label: string,
-    posts?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteTagMutationVariables = {
-  input: DeleteTagInput,
-  condition?: ModelTagConditionInput | null,
-};
-
-export type DeleteTagMutation = {
-  deleteTag?:  {
-    __typename: "Tag",
-    id: string,
-    label: string,
-    posts?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreatePostTagsMutationVariables = {
-  input: CreatePostTagsInput,
-  condition?: ModelPostTagsConditionInput | null,
-};
-
-export type CreatePostTagsMutation = {
-  createPostTags?:  {
-    __typename: "PostTags",
-    id: string,
-    postId: string,
-    tagId: string,
-    post:  {
-      __typename: "Post",
-      id: string,
-      title: string,
-      comments?:  {
-        __typename: "ModelCommentConnection",
-        nextToken?: string | null,
-      } | null,
-      tags?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      label: string,
-      posts?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdatePostTagsMutationVariables = {
-  input: UpdatePostTagsInput,
-  condition?: ModelPostTagsConditionInput | null,
-};
-
-export type UpdatePostTagsMutation = {
-  updatePostTags?:  {
-    __typename: "PostTags",
-    id: string,
-    postId: string,
-    tagId: string,
-    post:  {
-      __typename: "Post",
-      id: string,
-      title: string,
-      comments?:  {
-        __typename: "ModelCommentConnection",
-        nextToken?: string | null,
-      } | null,
-      tags?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      label: string,
-      posts?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeletePostTagsMutationVariables = {
-  input: DeletePostTagsInput,
-  condition?: ModelPostTagsConditionInput | null,
-};
-
-export type DeletePostTagsMutation = {
-  deletePostTags?:  {
-    __typename: "PostTags",
-    id: string,
-    postId: string,
-    tagId: string,
-    post:  {
-      __typename: "Post",
-      id: string,
-      title: string,
-      comments?:  {
-        __typename: "ModelCommentConnection",
-        nextToken?: string | null,
-      } | null,
-      tags?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      label: string,
-      posts?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
+    postCommentsId?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -1188,6 +504,7 @@ export type GetProductQuery = {
     description?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1211,130 +528,7 @@ export type ListProductsQuery = {
       description?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetInventoryQueryVariables = {
-  productId: string,
-  warehouseID: string,
-};
-
-export type GetInventoryQuery = {
-  getInventory?:  {
-    __typename: "Inventory",
-    productId: string,
-    warehouseID: string,
-    inventoryAmount?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListInventoriesQueryVariables = {
-  productId?: string | null,
-  warehouseID?: ModelIDKeyConditionInput | null,
-  filter?: ModelInventoryFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListInventoriesQuery = {
-  listInventories?:  {
-    __typename: "ModelInventoryConnection",
-    items:  Array< {
-      __typename: "Inventory",
-      productId: string,
-      warehouseID: string,
-      inventoryAmount?: number | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetProjectQueryVariables = {
-  id: string,
-};
-
-export type GetProjectQuery = {
-  getProject?:  {
-    __typename: "Project",
-    id: string,
-    name?: string | null,
-    teamID?: string | null,
-    team?:  {
-      __typename: "Team",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListProjectsQueryVariables = {
-  filter?: ModelProjectFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListProjectsQuery = {
-  listProjects?:  {
-    __typename: "ModelProjectConnection",
-    items:  Array< {
-      __typename: "Project",
-      id: string,
-      name?: string | null,
-      teamID?: string | null,
-      team?:  {
-        __typename: "Team",
-        id: string,
-        name: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetTeamQueryVariables = {
-  id: string,
-};
-
-export type GetTeamQuery = {
-  getTeam?:  {
-    __typename: "Team",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListTeamsQueryVariables = {
-  filter?: ModelTeamFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListTeamsQuery = {
-  listTeams?:  {
-    __typename: "ModelTeamConnection",
-    items:  Array< {
-      __typename: "Team",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1354,27 +548,17 @@ export type GetPostQuery = {
       items:  Array< {
         __typename: "Comment",
         id: string,
-        postID: string,
         content: string,
         createdAt: string,
         updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    tags?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
+        postCommentsId?: string | null,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1395,12 +579,9 @@ export type ListPostsQuery = {
         __typename: "ModelCommentConnection",
         nextToken?: string | null,
       } | null,
-      tags?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1414,10 +595,11 @@ export type GetCommentQuery = {
   getComment?:  {
     __typename: "Comment",
     id: string,
-    postID: string,
     content: string,
     createdAt: string,
     updatedAt: string,
+    postCommentsId?: string | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -1433,234 +615,11 @@ export type ListCommentsQuery = {
     items:  Array< {
       __typename: "Comment",
       id: string,
-      postID: string,
       content: string,
       createdAt: string,
       updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetTagQueryVariables = {
-  id: string,
-};
-
-export type GetTagQuery = {
-  getTag?:  {
-    __typename: "Tag",
-    id: string,
-    label: string,
-    posts?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListTagsQueryVariables = {
-  filter?: ModelTagFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListTagsQuery = {
-  listTags?:  {
-    __typename: "ModelTagConnection",
-    items:  Array< {
-      __typename: "Tag",
-      id: string,
-      label: string,
-      posts?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetPostTagsQueryVariables = {
-  id: string,
-};
-
-export type GetPostTagsQuery = {
-  getPostTags?:  {
-    __typename: "PostTags",
-    id: string,
-    postId: string,
-    tagId: string,
-    post:  {
-      __typename: "Post",
-      id: string,
-      title: string,
-      comments?:  {
-        __typename: "ModelCommentConnection",
-        nextToken?: string | null,
-      } | null,
-      tags?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      label: string,
-      posts?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListPostTagsQueryVariables = {
-  filter?: ModelPostTagsFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListPostTagsQuery = {
-  listPostTags?:  {
-    __typename: "ModelPostTagsConnection",
-    items:  Array< {
-      __typename: "PostTags",
-      id: string,
-      postId: string,
-      tagId: string,
-      post:  {
-        __typename: "Post",
-        id: string,
-        title: string,
-        createdAt: string,
-        updatedAt: string,
-      },
-      tag:  {
-        __typename: "Tag",
-        id: string,
-        label: string,
-        createdAt: string,
-        updatedAt: string,
-      },
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type CommentsByPostIDAndContentQueryVariables = {
-  postID: string,
-  content?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCommentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type CommentsByPostIDAndContentQuery = {
-  commentsByPostIDAndContent?:  {
-    __typename: "ModelCommentConnection",
-    items:  Array< {
-      __typename: "Comment",
-      id: string,
-      postID: string,
-      content: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type PostTagsByPostIdQueryVariables = {
-  postId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelPostTagsFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type PostTagsByPostIdQuery = {
-  postTagsByPostId?:  {
-    __typename: "ModelPostTagsConnection",
-    items:  Array< {
-      __typename: "PostTags",
-      id: string,
-      postId: string,
-      tagId: string,
-      post:  {
-        __typename: "Post",
-        id: string,
-        title: string,
-        createdAt: string,
-        updatedAt: string,
-      },
-      tag:  {
-        __typename: "Tag",
-        id: string,
-        label: string,
-        createdAt: string,
-        updatedAt: string,
-      },
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type PostTagsByTagIdQueryVariables = {
-  tagId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelPostTagsFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type PostTagsByTagIdQuery = {
-  postTagsByTagId?:  {
-    __typename: "ModelPostTagsConnection",
-    items:  Array< {
-      __typename: "PostTags",
-      id: string,
-      postId: string,
-      tagId: string,
-      post:  {
-        __typename: "Post",
-        id: string,
-        title: string,
-        createdAt: string,
-        updatedAt: string,
-      },
-      tag:  {
-        __typename: "Tag",
-        id: string,
-        label: string,
-        createdAt: string,
-        updatedAt: string,
-      },
-      createdAt: string,
-      updatedAt: string,
+      postCommentsId?: string | null,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1668,6 +627,7 @@ export type PostTagsByTagIdQuery = {
 
 export type OnCreateProductSubscriptionVariables = {
   filter?: ModelSubscriptionProductFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateProductSubscription = {
@@ -1680,11 +640,13 @@ export type OnCreateProductSubscription = {
     description?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateProductSubscriptionVariables = {
   filter?: ModelSubscriptionProductFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateProductSubscription = {
@@ -1697,11 +659,13 @@ export type OnUpdateProductSubscription = {
     description?: string | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteProductSubscriptionVariables = {
   filter?: ModelSubscriptionProductFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteProductSubscription = {
@@ -1714,164 +678,13 @@ export type OnDeleteProductSubscription = {
     description?: string | null,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type OnCreateInventorySubscriptionVariables = {
-  filter?: ModelSubscriptionInventoryFilterInput | null,
-};
-
-export type OnCreateInventorySubscription = {
-  onCreateInventory?:  {
-    __typename: "Inventory",
-    productId: string,
-    warehouseID: string,
-    inventoryAmount?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateInventorySubscriptionVariables = {
-  filter?: ModelSubscriptionInventoryFilterInput | null,
-};
-
-export type OnUpdateInventorySubscription = {
-  onUpdateInventory?:  {
-    __typename: "Inventory",
-    productId: string,
-    warehouseID: string,
-    inventoryAmount?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteInventorySubscriptionVariables = {
-  filter?: ModelSubscriptionInventoryFilterInput | null,
-};
-
-export type OnDeleteInventorySubscription = {
-  onDeleteInventory?:  {
-    __typename: "Inventory",
-    productId: string,
-    warehouseID: string,
-    inventoryAmount?: number | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateProjectSubscriptionVariables = {
-  filter?: ModelSubscriptionProjectFilterInput | null,
-};
-
-export type OnCreateProjectSubscription = {
-  onCreateProject?:  {
-    __typename: "Project",
-    id: string,
-    name?: string | null,
-    teamID?: string | null,
-    team?:  {
-      __typename: "Team",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateProjectSubscriptionVariables = {
-  filter?: ModelSubscriptionProjectFilterInput | null,
-};
-
-export type OnUpdateProjectSubscription = {
-  onUpdateProject?:  {
-    __typename: "Project",
-    id: string,
-    name?: string | null,
-    teamID?: string | null,
-    team?:  {
-      __typename: "Team",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteProjectSubscriptionVariables = {
-  filter?: ModelSubscriptionProjectFilterInput | null,
-};
-
-export type OnDeleteProjectSubscription = {
-  onDeleteProject?:  {
-    __typename: "Project",
-    id: string,
-    name?: string | null,
-    teamID?: string | null,
-    team?:  {
-      __typename: "Team",
-      id: string,
-      name: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateTeamSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamFilterInput | null,
-};
-
-export type OnCreateTeamSubscription = {
-  onCreateTeam?:  {
-    __typename: "Team",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateTeamSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamFilterInput | null,
-};
-
-export type OnUpdateTeamSubscription = {
-  onUpdateTeam?:  {
-    __typename: "Team",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteTeamSubscriptionVariables = {
-  filter?: ModelSubscriptionTeamFilterInput | null,
-};
-
-export type OnDeleteTeamSubscription = {
-  onDeleteTeam?:  {
-    __typename: "Team",
-    id: string,
-    name: string,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreatePostSubscriptionVariables = {
   filter?: ModelSubscriptionPostFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreatePostSubscription = {
@@ -1884,32 +697,23 @@ export type OnCreatePostSubscription = {
       items:  Array< {
         __typename: "Comment",
         id: string,
-        postID: string,
         content: string,
         createdAt: string,
         updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    tags?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
+        postCommentsId?: string | null,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdatePostSubscriptionVariables = {
   filter?: ModelSubscriptionPostFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdatePostSubscription = {
@@ -1922,32 +726,23 @@ export type OnUpdatePostSubscription = {
       items:  Array< {
         __typename: "Comment",
         id: string,
-        postID: string,
         content: string,
         createdAt: string,
         updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    tags?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
+        postCommentsId?: string | null,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeletePostSubscriptionVariables = {
   filter?: ModelSubscriptionPostFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeletePostSubscription = {
@@ -1960,272 +755,67 @@ export type OnDeletePostSubscription = {
       items:  Array< {
         __typename: "Comment",
         id: string,
-        postID: string,
         content: string,
         createdAt: string,
         updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    tags?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
+        postCommentsId?: string | null,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreateCommentSubscriptionVariables = {
   filter?: ModelSubscriptionCommentFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateCommentSubscription = {
   onCreateComment?:  {
     __typename: "Comment",
     id: string,
-    postID: string,
     content: string,
     createdAt: string,
     updatedAt: string,
+    postCommentsId?: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateCommentSubscriptionVariables = {
   filter?: ModelSubscriptionCommentFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateCommentSubscription = {
   onUpdateComment?:  {
     __typename: "Comment",
     id: string,
-    postID: string,
     content: string,
     createdAt: string,
     updatedAt: string,
+    postCommentsId?: string | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteCommentSubscriptionVariables = {
   filter?: ModelSubscriptionCommentFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteCommentSubscription = {
   onDeleteComment?:  {
     __typename: "Comment",
     id: string,
-    postID: string,
     content: string,
     createdAt: string,
     updatedAt: string,
-  } | null,
-};
-
-export type OnCreateTagSubscriptionVariables = {
-  filter?: ModelSubscriptionTagFilterInput | null,
-};
-
-export type OnCreateTagSubscription = {
-  onCreateTag?:  {
-    __typename: "Tag",
-    id: string,
-    label: string,
-    posts?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateTagSubscriptionVariables = {
-  filter?: ModelSubscriptionTagFilterInput | null,
-};
-
-export type OnUpdateTagSubscription = {
-  onUpdateTag?:  {
-    __typename: "Tag",
-    id: string,
-    label: string,
-    posts?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteTagSubscriptionVariables = {
-  filter?: ModelSubscriptionTagFilterInput | null,
-};
-
-export type OnDeleteTagSubscription = {
-  onDeleteTag?:  {
-    __typename: "Tag",
-    id: string,
-    label: string,
-    posts?:  {
-      __typename: "ModelPostTagsConnection",
-      items:  Array< {
-        __typename: "PostTags",
-        id: string,
-        postId: string,
-        tagId: string,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreatePostTagsSubscriptionVariables = {
-  filter?: ModelSubscriptionPostTagsFilterInput | null,
-};
-
-export type OnCreatePostTagsSubscription = {
-  onCreatePostTags?:  {
-    __typename: "PostTags",
-    id: string,
-    postId: string,
-    tagId: string,
-    post:  {
-      __typename: "Post",
-      id: string,
-      title: string,
-      comments?:  {
-        __typename: "ModelCommentConnection",
-        nextToken?: string | null,
-      } | null,
-      tags?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      label: string,
-      posts?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdatePostTagsSubscriptionVariables = {
-  filter?: ModelSubscriptionPostTagsFilterInput | null,
-};
-
-export type OnUpdatePostTagsSubscription = {
-  onUpdatePostTags?:  {
-    __typename: "PostTags",
-    id: string,
-    postId: string,
-    tagId: string,
-    post:  {
-      __typename: "Post",
-      id: string,
-      title: string,
-      comments?:  {
-        __typename: "ModelCommentConnection",
-        nextToken?: string | null,
-      } | null,
-      tags?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      label: string,
-      posts?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeletePostTagsSubscriptionVariables = {
-  filter?: ModelSubscriptionPostTagsFilterInput | null,
-};
-
-export type OnDeletePostTagsSubscription = {
-  onDeletePostTags?:  {
-    __typename: "PostTags",
-    id: string,
-    postId: string,
-    tagId: string,
-    post:  {
-      __typename: "Post",
-      id: string,
-      title: string,
-      comments?:  {
-        __typename: "ModelCommentConnection",
-        nextToken?: string | null,
-      } | null,
-      tags?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    tag:  {
-      __typename: "Tag",
-      id: string,
-      label: string,
-      posts?:  {
-        __typename: "ModelPostTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    },
-    createdAt: string,
-    updatedAt: string,
+    postCommentsId?: string | null,
+    owner?: string | null,
   } | null,
 };

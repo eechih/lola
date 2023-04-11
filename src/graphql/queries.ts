@@ -12,6 +12,7 @@ export const getProduct = /* GraphQL */ `
       description
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -38,113 +39,7 @@ export const listProducts = /* GraphQL */ `
         description
         createdAt
         updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getInventory = /* GraphQL */ `
-  query GetInventory($productId: ID!, $warehouseID: ID!) {
-    getInventory(productId: $productId, warehouseID: $warehouseID) {
-      productId
-      warehouseID
-      inventoryAmount
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listInventories = /* GraphQL */ `
-  query ListInventories(
-    $productId: ID
-    $warehouseID: ModelIDKeyConditionInput
-    $filter: ModelInventoryFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listInventories(
-      productId: $productId
-      warehouseID: $warehouseID
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        productId
-        warehouseID
-        inventoryAmount
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getProject = /* GraphQL */ `
-  query GetProject($id: ID!) {
-    getProject(id: $id) {
-      id
-      name
-      teamID
-      team {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listProjects = /* GraphQL */ `
-  query ListProjects(
-    $filter: ModelProjectFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listProjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        teamID
-        team {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getTeam = /* GraphQL */ `
-  query GetTeam($id: ID!) {
-    getTeam(id: $id) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listTeams = /* GraphQL */ `
-  query ListTeams(
-    $filter: ModelTeamFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        createdAt
-        updatedAt
+        owner
       }
       nextToken
     }
@@ -158,25 +53,17 @@ export const getPost = /* GraphQL */ `
       comments {
         items {
           id
-          postID
           content
           createdAt
           updatedAt
-        }
-        nextToken
-      }
-      tags {
-        items {
-          id
-          postId
-          tagId
-          createdAt
-          updatedAt
+          postCommentsId
+          owner
         }
         nextToken
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -193,11 +80,9 @@ export const listPosts = /* GraphQL */ `
         comments {
           nextToken
         }
-        tags {
-          nextToken
-        }
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -207,10 +92,11 @@ export const getComment = /* GraphQL */ `
   query GetComment($id: ID!) {
     getComment(id: $id) {
       id
-      postID
       content
       createdAt
       updatedAt
+      postCommentsId
+      owner
     }
   }
 `;
@@ -223,216 +109,11 @@ export const listComments = /* GraphQL */ `
     listComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        postID
         content
         createdAt
         updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getTag = /* GraphQL */ `
-  query GetTag($id: ID!) {
-    getTag(id: $id) {
-      id
-      label
-      posts {
-        items {
-          id
-          postId
-          tagId
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listTags = /* GraphQL */ `
-  query ListTags(
-    $filter: ModelTagFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        label
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getPostTags = /* GraphQL */ `
-  query GetPostTags($id: ID!) {
-    getPostTags(id: $id) {
-      id
-      postId
-      tagId
-      post {
-        id
-        title
-        comments {
-          nextToken
-        }
-        tags {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      tag {
-        id
-        label
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listPostTags = /* GraphQL */ `
-  query ListPostTags(
-    $filter: ModelPostTagsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPostTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        postId
-        tagId
-        post {
-          id
-          title
-          createdAt
-          updatedAt
-        }
-        tag {
-          id
-          label
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const commentsByPostIDAndContent = /* GraphQL */ `
-  query CommentsByPostIDAndContent(
-    $postID: ID!
-    $content: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelCommentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    commentsByPostIDAndContent(
-      postID: $postID
-      content: $content
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        postID
-        content
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const postTagsByPostId = /* GraphQL */ `
-  query PostTagsByPostId(
-    $postId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelPostTagsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    postTagsByPostId(
-      postId: $postId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        postId
-        tagId
-        post {
-          id
-          title
-          createdAt
-          updatedAt
-        }
-        tag {
-          id
-          label
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const postTagsByTagId = /* GraphQL */ `
-  query PostTagsByTagId(
-    $tagId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelPostTagsFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    postTagsByTagId(
-      tagId: $tagId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        postId
-        tagId
-        post {
-          id
-          title
-          createdAt
-          updatedAt
-        }
-        tag {
-          id
-          label
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
+        postCommentsId
+        owner
       }
       nextToken
     }
