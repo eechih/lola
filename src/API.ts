@@ -2,22 +2,22 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateProductInput = {
+export type CreateStudentInput = {
+  name?: string | null,
+  dateOfBirth?: string | null,
+  email?: string | null,
+  examsCompleted?: number | null,
   id?: string | null,
-  name: string,
-  price?: number | null,
-  cost?: number | null,
-  description?: string | null,
 };
 
-export type ModelProductConditionInput = {
+export type ModelStudentConditionInput = {
   name?: ModelStringInput | null,
-  price?: ModelIntInput | null,
-  cost?: ModelIntInput | null,
-  description?: ModelStringInput | null,
-  and?: Array< ModelProductConditionInput | null > | null,
-  or?: Array< ModelProductConditionInput | null > | null,
-  not?: ModelProductConditionInput | null,
+  dateOfBirth?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  examsCompleted?: ModelIntInput | null,
+  and?: Array< ModelStudentConditionInput | null > | null,
+  or?: Array< ModelStudentConditionInput | null > | null,
+  not?: ModelStudentConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -70,6 +70,47 @@ export type ModelIntInput = {
   between?: Array< number | null > | null,
   attributeExists?: boolean | null,
   attributeType?: ModelAttributeTypes | null,
+};
+
+export type Student = {
+  __typename: "Student",
+  name?: string | null,
+  dateOfBirth?: string | null,
+  email?: string | null,
+  examsCompleted?: number | null,
+  id: string,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateStudentInput = {
+  name?: string | null,
+  dateOfBirth?: string | null,
+  email?: string | null,
+  examsCompleted?: number | null,
+  id: string,
+};
+
+export type DeleteStudentInput = {
+  id: string,
+};
+
+export type CreateProductInput = {
+  id?: string | null,
+  name: string,
+  price?: number | null,
+  cost?: number | null,
+  description?: string | null,
+};
+
+export type ModelProductConditionInput = {
+  name?: ModelStringInput | null,
+  price?: ModelIntInput | null,
+  cost?: ModelIntInput | null,
+  description?: ModelStringInput | null,
+  and?: Array< ModelProductConditionInput | null > | null,
+  or?: Array< ModelProductConditionInput | null > | null,
+  not?: ModelProductConditionInput | null,
 };
 
 export type Product = {
@@ -183,6 +224,160 @@ export type DeleteCommentInput = {
   id: string,
 };
 
+export type SearchableStudentFilterInput = {
+  name?: SearchableStringFilterInput | null,
+  dateOfBirth?: SearchableStringFilterInput | null,
+  email?: SearchableStringFilterInput | null,
+  examsCompleted?: SearchableIntFilterInput | null,
+  id?: SearchableIDFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  and?: Array< SearchableStudentFilterInput | null > | null,
+  or?: Array< SearchableStudentFilterInput | null > | null,
+  not?: SearchableStudentFilterInput | null,
+};
+
+export type SearchableStringFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+  range?: Array< string | null > | null,
+};
+
+export type SearchableIntFilterInput = {
+  ne?: number | null,
+  gt?: number | null,
+  lt?: number | null,
+  gte?: number | null,
+  lte?: number | null,
+  eq?: number | null,
+  range?: Array< number | null > | null,
+};
+
+export type SearchableIDFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+  range?: Array< string | null > | null,
+};
+
+export type SearchableStudentSortInput = {
+  field?: SearchableStudentSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableStudentSortableFields {
+  name = "name",
+  dateOfBirth = "dateOfBirth",
+  email = "email",
+  examsCompleted = "examsCompleted",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export enum SearchableSortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+
+
+export type SearchableStudentAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableStudentAggregateField,
+};
+
+export enum SearchableAggregateType {
+  terms = "terms",
+  avg = "avg",
+  min = "min",
+  max = "max",
+  sum = "sum",
+}
+
+
+export enum SearchableStudentAggregateField {
+  name = "name",
+  dateOfBirth = "dateOfBirth",
+  email = "email",
+  examsCompleted = "examsCompleted",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableStudentConnection = {
+  __typename: "SearchableStudentConnection",
+  items:  Array<Student | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
+export type SearchableAggregateResult = {
+  __typename: "SearchableAggregateResult",
+  name: string,
+  result?: SearchableAggregateGenericResult | null,
+};
+
+export type SearchableAggregateGenericResult = SearchableAggregateScalarResult | SearchableAggregateBucketResult
+
+
+export type SearchableAggregateScalarResult = {
+  __typename: "SearchableAggregateScalarResult",
+  value: number,
+};
+
+export type SearchableAggregateBucketResult = {
+  __typename: "SearchableAggregateBucketResult",
+  buckets?:  Array<SearchableAggregateBucketResultItem | null > | null,
+};
+
+export type SearchableAggregateBucketResultItem = {
+  __typename: "SearchableAggregateBucketResultItem",
+  key: string,
+  doc_count: number,
+};
+
+export type ModelStudentFilterInput = {
+  name?: ModelStringInput | null,
+  dateOfBirth?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  examsCompleted?: ModelIntInput | null,
+  and?: Array< ModelStudentFilterInput | null > | null,
+  or?: Array< ModelStudentFilterInput | null > | null,
+  not?: ModelStudentFilterInput | null,
+};
+
+export type ModelStudentConnection = {
+  __typename: "ModelStudentConnection",
+  items:  Array<Student | null >,
+  nextToken?: string | null,
+};
+
 export type ModelProductFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -229,29 +424,13 @@ export type ModelCommentFilterInput = {
   postCommentsId?: ModelIDInput | null,
 };
 
-export type ModelSubscriptionProductFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
+export type ModelSubscriptionStudentFilterInput = {
   name?: ModelSubscriptionStringInput | null,
-  price?: ModelSubscriptionIntInput | null,
-  cost?: ModelSubscriptionIntInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionProductFilterInput | null > | null,
-  or?: Array< ModelSubscriptionProductFilterInput | null > | null,
-};
-
-export type ModelSubscriptionIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  in?: Array< string | null > | null,
-  notIn?: Array< string | null > | null,
+  dateOfBirth?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  examsCompleted?: ModelSubscriptionIntInput | null,
+  and?: Array< ModelSubscriptionStudentFilterInput | null > | null,
+  or?: Array< ModelSubscriptionStudentFilterInput | null > | null,
 };
 
 export type ModelSubscriptionStringInput = {
@@ -281,6 +460,31 @@ export type ModelSubscriptionIntInput = {
   notIn?: Array< number | null > | null,
 };
 
+export type ModelSubscriptionProductFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  price?: ModelSubscriptionIntInput | null,
+  cost?: ModelSubscriptionIntInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionProductFilterInput | null > | null,
+  or?: Array< ModelSubscriptionProductFilterInput | null > | null,
+};
+
+export type ModelSubscriptionIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  in?: Array< string | null > | null,
+  notIn?: Array< string | null > | null,
+};
+
 export type ModelSubscriptionPostFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   title?: ModelSubscriptionStringInput | null,
@@ -293,6 +497,60 @@ export type ModelSubscriptionCommentFilterInput = {
   content?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionCommentFilterInput | null > | null,
   or?: Array< ModelSubscriptionCommentFilterInput | null > | null,
+};
+
+export type CreateStudentMutationVariables = {
+  input: CreateStudentInput,
+  condition?: ModelStudentConditionInput | null,
+};
+
+export type CreateStudentMutation = {
+  createStudent?:  {
+    __typename: "Student",
+    name?: string | null,
+    dateOfBirth?: string | null,
+    email?: string | null,
+    examsCompleted?: number | null,
+    id: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateStudentMutationVariables = {
+  input: UpdateStudentInput,
+  condition?: ModelStudentConditionInput | null,
+};
+
+export type UpdateStudentMutation = {
+  updateStudent?:  {
+    __typename: "Student",
+    name?: string | null,
+    dateOfBirth?: string | null,
+    email?: string | null,
+    examsCompleted?: number | null,
+    id: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteStudentMutationVariables = {
+  input: DeleteStudentInput,
+  condition?: ModelStudentConditionInput | null,
+};
+
+export type DeleteStudentMutation = {
+  deleteStudent?:  {
+    __typename: "Student",
+    name?: string | null,
+    dateOfBirth?: string | null,
+    email?: string | null,
+    examsCompleted?: number | null,
+    id: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreateProductMutationVariables = {
@@ -490,6 +748,89 @@ export type DeleteCommentMutation = {
   } | null,
 };
 
+export type SearchStudentsQueryVariables = {
+  filter?: SearchableStudentFilterInput | null,
+  sort?: Array< SearchableStudentSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableStudentAggregationInput | null > | null,
+};
+
+export type SearchStudentsQuery = {
+  searchStudents?:  {
+    __typename: "SearchableStudentConnection",
+    items:  Array< {
+      __typename: "Student",
+      name?: string | null,
+      dateOfBirth?: string | null,
+      email?: string | null,
+      examsCompleted?: number | null,
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
+  } | null,
+};
+
+export type GetStudentQueryVariables = {
+  id: string,
+};
+
+export type GetStudentQuery = {
+  getStudent?:  {
+    __typename: "Student",
+    name?: string | null,
+    dateOfBirth?: string | null,
+    email?: string | null,
+    examsCompleted?: number | null,
+    id: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListStudentsQueryVariables = {
+  filter?: ModelStudentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListStudentsQuery = {
+  listStudents?:  {
+    __typename: "ModelStudentConnection",
+    items:  Array< {
+      __typename: "Student",
+      name?: string | null,
+      dateOfBirth?: string | null,
+      email?: string | null,
+      examsCompleted?: number | null,
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetProductQueryVariables = {
   id: string,
 };
@@ -622,6 +963,57 @@ export type ListCommentsQuery = {
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type OnCreateStudentSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentFilterInput | null,
+};
+
+export type OnCreateStudentSubscription = {
+  onCreateStudent?:  {
+    __typename: "Student",
+    name?: string | null,
+    dateOfBirth?: string | null,
+    email?: string | null,
+    examsCompleted?: number | null,
+    id: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateStudentSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentFilterInput | null,
+};
+
+export type OnUpdateStudentSubscription = {
+  onUpdateStudent?:  {
+    __typename: "Student",
+    name?: string | null,
+    dateOfBirth?: string | null,
+    email?: string | null,
+    examsCompleted?: number | null,
+    id: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteStudentSubscriptionVariables = {
+  filter?: ModelSubscriptionStudentFilterInput | null,
+};
+
+export type OnDeleteStudentSubscription = {
+  onDeleteStudent?:  {
+    __typename: "Student",
+    name?: string | null,
+    dateOfBirth?: string | null,
+    email?: string | null,
+    examsCompleted?: number | null,
+    id: string,
+    createdAt: string,
+    updatedAt: string,
   } | null,
 };
 

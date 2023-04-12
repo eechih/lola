@@ -19,3 +19,10 @@ type Comment @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   content: String!
 }
+
+type Student @model @searchable @auth(rules: [{ allow: public }]) {
+  name: String
+  dateOfBirth: AWSDate
+  email: AWSEmail
+  examsCompleted: Int
+}

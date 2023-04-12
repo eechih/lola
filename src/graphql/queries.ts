@@ -2,6 +2,84 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const searchStudents = /* GraphQL */ `
+  query SearchStudents(
+    $filter: SearchableStudentFilterInput
+    $sort: [SearchableStudentSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableStudentAggregationInput]
+  ) {
+    searchStudents(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        name
+        dateOfBirth
+        email
+        examsCompleted
+        id
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+export const getStudent = /* GraphQL */ `
+  query GetStudent($id: ID!) {
+    getStudent(id: $id) {
+      name
+      dateOfBirth
+      email
+      examsCompleted
+      id
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listStudents = /* GraphQL */ `
+  query ListStudents(
+    $filter: ModelStudentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        name
+        dateOfBirth
+        email
+        examsCompleted
+        id
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getProduct = /* GraphQL */ `
   query GetProduct($id: ID!) {
     getProduct(id: $id) {
