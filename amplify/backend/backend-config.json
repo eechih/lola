@@ -88,5 +88,12 @@
         }
       ]
     }
+  },
+  "storage": {
+    "lolastorage": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
   }
 }

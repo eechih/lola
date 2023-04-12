@@ -80,6 +80,11 @@ export const listStudents = /* GraphQL */ `
     }
   }
 `;
+export const speakTranslatedImageText = /* GraphQL */ `
+  query SpeakTranslatedImageText($input: SpeakTranslatedImageTextInput!) {
+    speakTranslatedImageText(input: $input)
+  }
+`;
 export const getProduct = /* GraphQL */ `
   query GetProduct($id: ID!) {
     getProduct(id: $id) {

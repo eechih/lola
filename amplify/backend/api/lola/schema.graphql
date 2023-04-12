@@ -26,3 +26,8 @@ type Student @model @searchable @auth(rules: [{ allow: public }]) {
   email: AWSEmail
   examsCompleted: Int
 }
+
+type Query {
+  speakTranslatedImageText: String
+    @predictions(actions: [identifyText, translateText, convertTextToSpeech])
+}

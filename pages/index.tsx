@@ -1,5 +1,7 @@
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
+import Image from 'next/image'
+
+import SpeakTranslatedImage from '@/src/components/SpeakTranslatedImage'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -41,6 +43,8 @@ export default function Home() {
           priority
         />
       </div>
+
+      <SpeakTranslatedImage />
 
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
         <a

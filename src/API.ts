@@ -378,6 +378,25 @@ export type ModelStudentConnection = {
   nextToken?: string | null,
 };
 
+export type SpeakTranslatedImageTextInput = {
+  identifyText: SpeakTranslatedImageTextIdentifyTextInput,
+  translateText: SpeakTranslatedImageTextTranslateTextInput,
+  convertTextToSpeech: SpeakTranslatedImageTextConvertTextToSpeechInput,
+};
+
+export type SpeakTranslatedImageTextIdentifyTextInput = {
+  key: string,
+};
+
+export type SpeakTranslatedImageTextTranslateTextInput = {
+  sourceLanguage: string,
+  targetLanguage: string,
+};
+
+export type SpeakTranslatedImageTextConvertTextToSpeechInput = {
+  voiceID: string,
+};
+
 export type ModelProductFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -829,6 +848,14 @@ export type ListStudentsQuery = {
     } | null >,
     nextToken?: string | null,
   } | null,
+};
+
+export type SpeakTranslatedImageTextQueryVariables = {
+  input: SpeakTranslatedImageTextInput,
+};
+
+export type SpeakTranslatedImageTextQuery = {
+  speakTranslatedImageText?: string | null,
 };
 
 export type GetProductQueryVariables = {
