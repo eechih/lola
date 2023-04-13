@@ -30,7 +30,7 @@
       "function": {
         "echofunction": {
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
-          "s3Key": "amplify-builds/echofunction-4555732f4a693370506b-build.zip"
+          "s3Key": "amplify-builds/echofunction-5633435273376a556144-build.zip"
         }
       }
     }
