@@ -11,9 +11,9 @@
     "format": "npm run prettier -- --write"
   },
   "dependencies": {
-    "@aws-amplify/ui-react": "^4.5.1",
+    "@aws-amplify/ui-react": "^4.6.0",
     "autoprefixer": "10.4.14",
-    "aws-amplify": "^5.0.25",
+    "aws-amplify": "^5.1.1",
     "next": "13.3.0",
     "postcss": "8.4.21",
     "react": "18.2.0",
@@ -22,11 +22,11 @@
   },
   "devDependencies": {
     "@types/node": "18.15.11",
-    "@types/react": "18.0.33",
+    "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",
-    "eslint": "8.37.0",
+    "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "prettier": "^2.8.7",
-    "typescript": "5.0.3"
+    "typescript": "5.0.4"
   }
 }
