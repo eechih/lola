@@ -63,7 +63,13 @@
       "service": "Cognito"
     }
   },
-  "function": {},
+  "function": {
+    "echofunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "hosting": {
     "amplifyhosting": {
       "providerPlugin": "awscloudformation",
@@ -72,6 +78,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_echofunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "echofunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_echofunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "echofunction"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {

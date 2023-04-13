@@ -30,4 +30,5 @@ type Student @model @searchable @auth(rules: [{ allow: public }]) {
 type Query {
   speakTranslatedImageText: String
     @predictions(actions: [identifyText, translateText, convertTextToSpeech])
+  echo(msg: String): String @function(name: "echofunction-${env}")
 }

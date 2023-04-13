@@ -767,6 +767,14 @@ export type DeleteCommentMutation = {
   } | null,
 };
 
+export type EchoQueryVariables = {
+  msg?: string | null,
+};
+
+export type EchoQuery = {
+  echo?: string | null,
+};
+
 export type SearchStudentsQueryVariables = {
   filter?: SearchableStudentFilterInput | null,
   sort?: Array< SearchableStudentSortInput | null > | null,
