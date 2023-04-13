@@ -27,8 +27,8 @@ import {
   CreateStudentInput,
   CreateStudentMutation,
   DeleteStudentMutation,
-  SearchStudentsQuery,
-  SearchStudentsQueryVariables,
+  ListStudentsQuery,
+  ListStudentsQueryVariables,
   Student,
 } from '../../src/API'
 import * as mutations from '../../src/graphql/mutations'
@@ -76,17 +76,17 @@ const Home = ({ signOut, user }: WithAuthenticatorProps) => {
 
   async function fetchStudents(criteria: SearchCriteria) {
     try {
-      const variables: SearchStudentsQueryVariables = {
-        filter: { name: { wildcard: '*' + criteria.name + '*' } },
+      const variables: ListStudentsQueryVariables = {
+        filter: { name: { contains: criteria.name } },
       }
-      const res = await API.graphql<GraphQLQuery<SearchStudentsQuery>>({
-        query: queries.searchStudents,
+      const res = await API.graphql<GraphQLQuery<ListStudentsQuery>>({
+        query: queries.listStudents,
         variables: variables,
         authMode: GRAPHQL_AUTH_MODE.API_KEY,
       })
       console.log(res)
-      if (res.data?.searchStudents) {
-        const { items, nextToken } = res.data.searchStudents
+      if (res.data?.listStudents) {
+        const { items, nextToken } = res.data.listStudents
         console.log('Students retrieved successfully!', items)
         if (items) setStudents(items as Student[])
       }
