@@ -2,10 +2,9 @@
   "AppSyncApiName": "lola",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2023-04-11T02:54:50.284Z",
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
-      "authlola525c45f7",
+      "authlolab73aed38",
       "Outputs.UserPoolId"
     ]
   }

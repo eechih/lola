@@ -12,9 +12,6 @@
       "AmplifyAppId": "d12ttd7t3b3wpr"
     },
     "categories": {
-      "api": {
-        "lola": {}
-      },
       "hosting": {
         "amplifyhosting": {
           "appId": "d12ttd7t3b3wpr",
@@ -22,16 +19,19 @@
         }
       },
       "auth": {
-        "lola525c45f7": {}
+        "lolab73aed38": {}
       },
       "storage": {
-        "lolastorage": {}
+        "lola": {}
       },
       "function": {
         "echofunction": {
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
-          "s3Key": "amplify-builds/echofunction-5633435273376a556144-build.zip"
+          "s3Key": "amplify-builds/echofunction-72687a726b417a56694a-build.zip"
         }
+      },
+      "api": {
+        "lola": {}
       }
     }
   }

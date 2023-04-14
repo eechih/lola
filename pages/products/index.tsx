@@ -1,15 +1,12 @@
-import {
-  GRAPHQL_AUTH_MODE,
-  GraphQLQuery,
-  GraphQLResult,
-  GraphQLSubscription,
-} from '@aws-amplify/api'
+import { GraphQLQuery, GraphQLResult } from '@aws-amplify/api'
 import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
 import {
   Button,
   Divider,
   Flex,
   Heading,
+  Image,
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -21,23 +18,36 @@ import {
   WithAuthenticatorProps,
   withAuthenticator,
 } from '@aws-amplify/ui-react'
-import { API, Hub } from 'aws-amplify'
-import { useEffect, useState } from 'react'
+import { API, Hub, Storage } from 'aws-amplify'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 import {
   CreateProductInput,
   CreateProductMutation,
   DeleteProductMutation,
-  ListProductsQuery,
-  ListProductsQueryVariables,
-  OnCreateProductSubscription,
+  ListProductsByStatusQuery,
+  ListProductsByStatusQueryVariables,
+  ModelSortDirection,
   Product,
+  ProductStatus,
 } from '../../src/API'
 import * as mutations from '../../src/graphql/mutations'
 import * as queries from '../../src/graphql/queries'
-import * as subscriptions from '../../src/graphql/subscriptions'
 
-const initialState = { name: '', price: 0, cost: 0, description: '' }
+type CreateForm = {
+  name: string
+  price: string
+  cost: string
+  description: string
+  file?: File
+}
+
+const initialState: CreateForm = {
+  name: '',
+  price: '0',
+  cost: '0',
+  description: '',
+}
 
 type Alert = {
   id: string
@@ -47,10 +57,14 @@ type Alert = {
 }
 
 const Index = ({ signOut, user }: WithAuthenticatorProps) => {
-  const [formState, setFormState] = useState(initialState)
+  const [formState, setFormState] = useState<CreateForm>(initialState)
   const [products, setProducts] = useState<Product[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [isMutating, setMutating] = useState<boolean>(false)
+
+  const [pageTokens, setPageTokens] = useState<string[]>([])
+  const [currentPageIndex, setCurrentPageIndex] = useState<number>(1)
+  const [hasMorePages, setHasMorePages] = useState<boolean>(true)
 
   Hub.listen('api', (data: any) => {
     const { payload } = data
@@ -61,52 +75,104 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
   })
 
   useEffect(() => {
-    fetchProducts()
-    const sub = API.graphql<GraphQLSubscription<OnCreateProductSubscription>>({
-      query: subscriptions.onCreateComment,
-      authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
-    }).subscribe(fetchProducts)
-    return () => sub.unsubscribe()
+    const loadData = async () => {
+      const { items, nextToken } = await listProducts()
+      setProducts(items)
+      if (nextToken) setPageTokens([...pageTokens, nextToken])
+      else setHasMorePages(false)
+    }
+    loadData()
   }, [])
+
+  async function handleNextPage() {
+    console.log('handleNextPage')
+    if (hasMorePages && currentPageIndex === pageTokens.length) {
+      const { items, nextToken } = await listProducts()
+      setProducts(items)
+      if (nextToken) setPageTokens([...pageTokens, nextToken])
+      else setHasMorePages(false)
+    }
+    setCurrentPageIndex(currentPageIndex + 1)
+  }
+
+  async function handlePreviousPage() {
+    console.log('handlePreviousPage')
+    setCurrentPageIndex(currentPageIndex - 1)
+  }
+
+  async function handleChangePage(newPageIndex?: number) {
+    console.log('handleChangePage', newPageIndex)
+    setCurrentPageIndex(newPageIndex ?? 1)
+  }
+
+  type ListProductsResult = {
+    items: Product[]
+    limit: number
+    nextToken?: string
+  }
+
+  async function listProducts(props?: {
+    nextToken?: string
+    limit?: number
+  }): Promise<ListProductsResult> {
+    console.log('listProducts', props)
+    const { nextToken, limit = 10 } = props ?? {}
+    const ret: ListProductsResult = { items: [], limit }
+    try {
+      const variables: ListProductsByStatusQueryVariables = {
+        status: ProductStatus.ACTIVE,
+        sortDirection: ModelSortDirection.DESC,
+        limit: limit,
+        nextToken: nextToken,
+      }
+      const res = await API.graphql<GraphQLQuery<ListProductsByStatusQuery>>({
+        query: queries.listProductsByStatus,
+        variables: variables,
+      })
+      console.log(res)
+      const items = res.data?.listProductsByStatus?.items as Product[]
+      ret.items = await Promise.all(
+        items.map(async product => {
+          if (product.image) {
+            const image = await Storage.get(product.image)
+            product.image = image
+          }
+          return product
+        })
+      )
+      ret.nextToken = res.data?.listProductsByStatus?.nextToken as string
+    } catch (error) {
+      console.log('Error retrieving products', error)
+    }
+    return ret
+  }
 
   function setInput(key: string, value: string) {
     setFormState({ ...formState, [key]: value })
   }
 
-  async function fetchProducts() {
-    try {
-      const variables: ListProductsQueryVariables = {
-        // filter: { name: { beginsWith: 'a' } },
-        // limit: 3,
-      }
-      const res = await API.graphql<GraphQLQuery<ListProductsQuery>>({
-        query: queries.listProducts,
-        variables: variables,
-        authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
-      })
-      console.log(res)
-      if (res.data?.listProducts) {
-        const { items, nextToken } = res.data.listProducts
-        console.log('Products retrieved successfully!', items)
-        if (items) setProducts(items as Product[])
-      }
-    } catch (error) {
-      console.log('Error retrieving products', error)
-    }
-  }
-
   async function createProduct() {
+    const { name, price, cost, description, file } = formState
+    if (!formState.name || !formState.description) return
+    setMutating(true)
     const prevProducts = products
     try {
-      if (!formState.name || !formState.description) return
-      setMutating(true)
-      const productDeatils: CreateProductInput = { ...formState }
-      setProducts([...products, productDeatils as Product])
+      const product: CreateProductInput = {
+        name: name,
+        price: Number(price),
+        cost: Number(cost),
+        description: description,
+        status: ProductStatus.ACTIVE,
+      }
+      if (file) {
+        await Storage.put(file.name, file)
+        product.image = file.name
+      }
+      setProducts([product as Product, ...products])
       setFormState(initialState)
       await API.graphql<GraphQLQuery<CreateProductMutation>>({
         query: mutations.createProduct,
-        variables: { input: productDeatils },
-        authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+        variables: { input: product },
       })
       setMutating(false)
     } catch (error) {
@@ -134,7 +200,6 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
       await API.graphql<GraphQLQuery<DeleteProductMutation>>({
         query: mutations.deleteProduct,
         variables: { input: { id: productId } },
-        authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
       })
       setMutating(false)
     } catch (error) {
@@ -211,6 +276,17 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
             onChange={event => setInput('description', event.target.value)}
             value={formState.description}
           />
+          <Flex direction="row" alignItems="center">
+            <Heading level={6}>Image</Heading>
+            <input
+              type="file"
+              accept="image/jpeg"
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                console.log(event.target.files)
+                setFormState({ ...formState, file: event.target.files?.[0] })
+              }}
+            />
+          </Flex>
           <Button
             isDisabled={isMutating}
             onClick={createProduct}
@@ -220,10 +296,19 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
           </Button>
         </Flex>
         <Divider orientation="horizontal" />
-
+        <Pagination
+          currentPage={currentPageIndex}
+          totalPages={pageTokens.length}
+          hasMorePages={hasMorePages}
+          onNext={handleNextPage}
+          onPrevious={handlePreviousPage}
+          onChange={handleChangePage}
+        />
         <Table caption="" highlightOnHover={true}>
           <TableHead>
             <TableRow>
+              <TableCell as="th">ID</TableCell>
+              <TableCell as="th">圖片</TableCell>
               <TableCell as="th">名稱</TableCell>
               <TableCell as="th">價格</TableCell>
               <TableCell as="th">成本</TableCell>
@@ -234,6 +319,17 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
           <TableBody>
             {products.map((product, index) => (
               <TableRow key={product.id ?? index}>
+                <TableCell>{product.id?.substring(0, 6) ?? ''}</TableCell>
+                <TableCell>
+                  {product.image && (
+                    <Image
+                      height="3rem"
+                      width="3rem"
+                      src={product.image}
+                      alt={product.id}
+                    />
+                  )}
+                </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.price}</TableCell>
                 <TableCell>{product.cost}</TableCell>

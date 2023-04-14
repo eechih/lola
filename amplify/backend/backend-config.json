@@ -7,29 +7,26 @@
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "lola525c45f7"
+          "resourceName": "lolab73aed38"
         }
       ],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AWS_IAM"
-            },
-            {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authlola525c45f7"
-              }
+              "apiKeyConfig": {
+                "apiKeyExpirationDate": "2024-04-12T07:21:21.714Z",
+                "apiKeyExpirationDays": 365,
+                "description": "public"
+              },
+              "authenticationType": "API_KEY"
             }
           ],
           "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-04-10T07:34:54.025Z",
-              "apiKeyExpirationDays": 365,
-              "description": ""
-            },
-            "authenticationType": "API_KEY"
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authlolab73aed38"
+            }
           }
         }
       },
@@ -38,7 +35,7 @@
     }
   },
   "auth": {
-    "lola525c45f7": {
+    "lolab73aed38": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -112,7 +109,7 @@
     }
   },
   "storage": {
-    "lolastorage": {
+    "lola": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"

@@ -2,45 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateStudent = /* GraphQL */ `
-  subscription OnCreateStudent($filter: ModelSubscriptionStudentFilterInput) {
-    onCreateStudent(filter: $filter) {
-      name
-      dateOfBirth
-      email
-      examsCompleted
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateStudent = /* GraphQL */ `
-  subscription OnUpdateStudent($filter: ModelSubscriptionStudentFilterInput) {
-    onUpdateStudent(filter: $filter) {
-      name
-      dateOfBirth
-      email
-      examsCompleted
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteStudent = /* GraphQL */ `
-  subscription OnDeleteStudent($filter: ModelSubscriptionStudentFilterInput) {
-    onDeleteStudent(filter: $filter) {
-      name
-      dateOfBirth
-      email
-      examsCompleted
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateProduct = /* GraphQL */ `
   subscription OnCreateProduct(
     $filter: ModelSubscriptionProductFilterInput
@@ -49,9 +10,11 @@ export const onCreateProduct = /* GraphQL */ `
     onCreateProduct(filter: $filter, owner: $owner) {
       id
       name
+      description
       price
       cost
-      description
+      image
+      status
       createdAt
       updatedAt
       owner
@@ -66,9 +29,11 @@ export const onUpdateProduct = /* GraphQL */ `
     onUpdateProduct(filter: $filter, owner: $owner) {
       id
       name
+      description
       price
       cost
-      description
+      image
+      status
       createdAt
       updatedAt
       owner
@@ -83,131 +48,13 @@ export const onDeleteProduct = /* GraphQL */ `
     onDeleteProduct(filter: $filter, owner: $owner) {
       id
       name
+      description
       price
       cost
-      description
+      image
+      status
       createdAt
       updatedAt
-      owner
-    }
-  }
-`;
-export const onCreatePost = /* GraphQL */ `
-  subscription OnCreatePost(
-    $filter: ModelSubscriptionPostFilterInput
-    $owner: String
-  ) {
-    onCreatePost(filter: $filter, owner: $owner) {
-      id
-      title
-      comments {
-        items {
-          id
-          content
-          createdAt
-          updatedAt
-          postCommentsId
-          owner
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onUpdatePost = /* GraphQL */ `
-  subscription OnUpdatePost(
-    $filter: ModelSubscriptionPostFilterInput
-    $owner: String
-  ) {
-    onUpdatePost(filter: $filter, owner: $owner) {
-      id
-      title
-      comments {
-        items {
-          id
-          content
-          createdAt
-          updatedAt
-          postCommentsId
-          owner
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onDeletePost = /* GraphQL */ `
-  subscription OnDeletePost(
-    $filter: ModelSubscriptionPostFilterInput
-    $owner: String
-  ) {
-    onDeletePost(filter: $filter, owner: $owner) {
-      id
-      title
-      comments {
-        items {
-          id
-          content
-          createdAt
-          updatedAt
-          postCommentsId
-          owner
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const onCreateComment = /* GraphQL */ `
-  subscription OnCreateComment(
-    $filter: ModelSubscriptionCommentFilterInput
-    $owner: String
-  ) {
-    onCreateComment(filter: $filter, owner: $owner) {
-      id
-      content
-      createdAt
-      updatedAt
-      postCommentsId
-      owner
-    }
-  }
-`;
-export const onUpdateComment = /* GraphQL */ `
-  subscription OnUpdateComment(
-    $filter: ModelSubscriptionCommentFilterInput
-    $owner: String
-  ) {
-    onUpdateComment(filter: $filter, owner: $owner) {
-      id
-      content
-      createdAt
-      updatedAt
-      postCommentsId
-      owner
-    }
-  }
-`;
-export const onDeleteComment = /* GraphQL */ `
-  subscription OnDeleteComment(
-    $filter: ModelSubscriptionCommentFilterInput
-    $owner: String
-  ) {
-    onDeleteComment(filter: $filter, owner: $owner) {
-      id
-      content
-      createdAt
-      updatedAt
-      postCommentsId
       owner
     }
   }

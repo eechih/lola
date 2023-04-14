@@ -7,39 +7,6 @@ export const echo = /* GraphQL */ `
     echo(msg: $msg)
   }
 `;
-export const getStudent = /* GraphQL */ `
-  query GetStudent($id: ID!) {
-    getStudent(id: $id) {
-      name
-      dateOfBirth
-      email
-      examsCompleted
-      id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listStudents = /* GraphQL */ `
-  query ListStudents(
-    $filter: ModelStudentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        name
-        dateOfBirth
-        email
-        examsCompleted
-        id
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const speakTranslatedImageText = /* GraphQL */ `
   query SpeakTranslatedImageText($input: SpeakTranslatedImageTextInput!) {
     speakTranslatedImageText(input: $input)
@@ -50,9 +17,11 @@ export const getProduct = /* GraphQL */ `
     getProduct(id: $id) {
       id
       name
+      description
       price
       cost
-      description
+      image
+      status
       createdAt
       updatedAt
       owner
@@ -61,101 +30,54 @@ export const getProduct = /* GraphQL */ `
 `;
 export const listProducts = /* GraphQL */ `
   query ListProducts(
-    $id: ID
     $filter: ModelProductFilterInput
     $limit: Int
     $nextToken: String
-    $sortDirection: ModelSortDirection
   ) {
-    listProducts(
-      id: $id
+    listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        description
+        price
+        cost
+        image
+        status
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const listProductsByStatus = /* GraphQL */ `
+  query ListProductsByStatus(
+    $status: ProductStatus!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProductsByStatus(
+      status: $status
+      createdAt: $createdAt
+      sortDirection: $sortDirection
       filter: $filter
       limit: $limit
       nextToken: $nextToken
-      sortDirection: $sortDirection
     ) {
       items {
         id
         name
+        description
         price
         cost
-        description
+        image
+        status
         createdAt
         updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getPost = /* GraphQL */ `
-  query GetPost($id: ID!) {
-    getPost(id: $id) {
-      id
-      title
-      comments {
-        items {
-          id
-          content
-          createdAt
-          updatedAt
-          postCommentsId
-          owner
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-export const listPosts = /* GraphQL */ `
-  query ListPosts(
-    $filter: ModelPostFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        title
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getComment = /* GraphQL */ `
-  query GetComment($id: ID!) {
-    getComment(id: $id) {
-      id
-      content
-      createdAt
-      updatedAt
-      postCommentsId
-      owner
-    }
-  }
-`;
-export const listComments = /* GraphQL */ `
-  query ListComments(
-    $filter: ModelCommentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        content
-        createdAt
-        updatedAt
-        postCommentsId
         owner
       }
       nextToken

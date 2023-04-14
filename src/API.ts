@@ -2,22 +2,34 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateStudentInput = {
-  name?: string | null,
-  dateOfBirth?: string | null,
-  email?: string | null,
-  examsCompleted?: number | null,
+export type CreateProductInput = {
   id?: string | null,
+  name: string,
+  description?: string | null,
+  price?: number | null,
+  cost?: number | null,
+  image?: string | null,
+  status: ProductStatus,
+  createdAt?: string | null,
 };
 
-export type ModelStudentConditionInput = {
+export enum ProductStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
+
+
+export type ModelProductConditionInput = {
   name?: ModelStringInput | null,
-  dateOfBirth?: ModelStringInput | null,
-  email?: ModelStringInput | null,
-  examsCompleted?: ModelIntInput | null,
-  and?: Array< ModelStudentConditionInput | null > | null,
-  or?: Array< ModelStudentConditionInput | null > | null,
-  not?: ModelStudentConditionInput | null,
+  description?: ModelStringInput | null,
+  price?: ModelIntInput | null,
+  cost?: ModelIntInput | null,
+  image?: ModelStringInput | null,
+  status?: ModelProductStatusInput | null,
+  createdAt?: ModelStringInput | null,
+  and?: Array< ModelProductConditionInput | null > | null,
+  or?: Array< ModelProductConditionInput | null > | null,
+  not?: ModelProductConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -72,54 +84,20 @@ export type ModelIntInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type Student = {
-  __typename: "Student",
-  name?: string | null,
-  dateOfBirth?: string | null,
-  email?: string | null,
-  examsCompleted?: number | null,
-  id: string,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type UpdateStudentInput = {
-  name?: string | null,
-  dateOfBirth?: string | null,
-  email?: string | null,
-  examsCompleted?: number | null,
-  id: string,
-};
-
-export type DeleteStudentInput = {
-  id: string,
-};
-
-export type CreateProductInput = {
-  id?: string | null,
-  name: string,
-  price?: number | null,
-  cost?: number | null,
-  description?: string | null,
-};
-
-export type ModelProductConditionInput = {
-  name?: ModelStringInput | null,
-  price?: ModelIntInput | null,
-  cost?: ModelIntInput | null,
-  description?: ModelStringInput | null,
-  and?: Array< ModelProductConditionInput | null > | null,
-  or?: Array< ModelProductConditionInput | null > | null,
-  not?: ModelProductConditionInput | null,
+export type ModelProductStatusInput = {
+  eq?: ProductStatus | null,
+  ne?: ProductStatus | null,
 };
 
 export type Product = {
   __typename: "Product",
   id: string,
   name: string,
+  description?: string | null,
   price?: number | null,
   cost?: number | null,
-  description?: string | null,
+  image?: string | null,
+  status: ProductStatus,
   createdAt: string,
   updatedAt: string,
   owner?: string | null,
@@ -128,116 +106,16 @@ export type Product = {
 export type UpdateProductInput = {
   id: string,
   name?: string | null,
+  description?: string | null,
   price?: number | null,
   cost?: number | null,
-  description?: string | null,
+  image?: string | null,
+  status?: ProductStatus | null,
+  createdAt?: string | null,
 };
 
 export type DeleteProductInput = {
   id: string,
-};
-
-export type CreatePostInput = {
-  id?: string | null,
-  title: string,
-};
-
-export type ModelPostConditionInput = {
-  title?: ModelStringInput | null,
-  and?: Array< ModelPostConditionInput | null > | null,
-  or?: Array< ModelPostConditionInput | null > | null,
-  not?: ModelPostConditionInput | null,
-};
-
-export type Post = {
-  __typename: "Post",
-  id: string,
-  title: string,
-  comments?: ModelCommentConnection | null,
-  createdAt: string,
-  updatedAt: string,
-  owner?: string | null,
-};
-
-export type ModelCommentConnection = {
-  __typename: "ModelCommentConnection",
-  items:  Array<Comment | null >,
-  nextToken?: string | null,
-};
-
-export type Comment = {
-  __typename: "Comment",
-  id: string,
-  content: string,
-  createdAt: string,
-  updatedAt: string,
-  postCommentsId?: string | null,
-  owner?: string | null,
-};
-
-export type UpdatePostInput = {
-  id: string,
-  title?: string | null,
-};
-
-export type DeletePostInput = {
-  id: string,
-};
-
-export type CreateCommentInput = {
-  id?: string | null,
-  content: string,
-  postCommentsId?: string | null,
-};
-
-export type ModelCommentConditionInput = {
-  content?: ModelStringInput | null,
-  and?: Array< ModelCommentConditionInput | null > | null,
-  or?: Array< ModelCommentConditionInput | null > | null,
-  not?: ModelCommentConditionInput | null,
-  postCommentsId?: ModelIDInput | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
-export type UpdateCommentInput = {
-  id: string,
-  content?: string | null,
-  postCommentsId?: string | null,
-};
-
-export type DeleteCommentInput = {
-  id: string,
-};
-
-export type ModelStudentFilterInput = {
-  name?: ModelStringInput | null,
-  dateOfBirth?: ModelStringInput | null,
-  email?: ModelStringInput | null,
-  examsCompleted?: ModelIntInput | null,
-  and?: Array< ModelStudentFilterInput | null > | null,
-  or?: Array< ModelStudentFilterInput | null > | null,
-  not?: ModelStudentFilterInput | null,
-};
-
-export type ModelStudentConnection = {
-  __typename: "ModelStudentConnection",
-  items:  Array<Student | null >,
-  nextToken?: string | null,
 };
 
 export type SpeakTranslatedImageTextInput = {
@@ -262,12 +140,47 @@ export type SpeakTranslatedImageTextConvertTextToSpeechInput = {
 export type ModelProductFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
   price?: ModelIntInput | null,
   cost?: ModelIntInput | null,
-  description?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  status?: ModelProductStatusInput | null,
+  createdAt?: ModelStringInput | null,
   and?: Array< ModelProductFilterInput | null > | null,
   or?: Array< ModelProductFilterInput | null > | null,
   not?: ModelProductFilterInput | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type ModelProductConnection = {
+  __typename: "ModelProductConnection",
+  items:  Array<Product | null >,
+  nextToken?: string | null,
+};
+
+export type ModelStringKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
 };
 
 export enum ModelSortDirection {
@@ -276,42 +189,32 @@ export enum ModelSortDirection {
 }
 
 
-export type ModelProductConnection = {
-  __typename: "ModelProductConnection",
-  items:  Array<Product | null >,
-  nextToken?: string | null,
-};
-
-export type ModelPostFilterInput = {
-  id?: ModelIDInput | null,
-  title?: ModelStringInput | null,
-  and?: Array< ModelPostFilterInput | null > | null,
-  or?: Array< ModelPostFilterInput | null > | null,
-  not?: ModelPostFilterInput | null,
-};
-
-export type ModelPostConnection = {
-  __typename: "ModelPostConnection",
-  items:  Array<Post | null >,
-  nextToken?: string | null,
-};
-
-export type ModelCommentFilterInput = {
-  id?: ModelIDInput | null,
-  content?: ModelStringInput | null,
-  and?: Array< ModelCommentFilterInput | null > | null,
-  or?: Array< ModelCommentFilterInput | null > | null,
-  not?: ModelCommentFilterInput | null,
-  postCommentsId?: ModelIDInput | null,
-};
-
-export type ModelSubscriptionStudentFilterInput = {
+export type ModelSubscriptionProductFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
   name?: ModelSubscriptionStringInput | null,
-  dateOfBirth?: ModelSubscriptionStringInput | null,
-  email?: ModelSubscriptionStringInput | null,
-  examsCompleted?: ModelSubscriptionIntInput | null,
-  and?: Array< ModelSubscriptionStudentFilterInput | null > | null,
-  or?: Array< ModelSubscriptionStudentFilterInput | null > | null,
+  description?: ModelSubscriptionStringInput | null,
+  price?: ModelSubscriptionIntInput | null,
+  cost?: ModelSubscriptionIntInput | null,
+  image?: ModelSubscriptionStringInput | null,
+  status?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionProductFilterInput | null > | null,
+  or?: Array< ModelSubscriptionProductFilterInput | null > | null,
+};
+
+export type ModelSubscriptionIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  in?: Array< string | null > | null,
+  notIn?: Array< string | null > | null,
 };
 
 export type ModelSubscriptionStringInput = {
@@ -341,99 +244,6 @@ export type ModelSubscriptionIntInput = {
   notIn?: Array< number | null > | null,
 };
 
-export type ModelSubscriptionProductFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  price?: ModelSubscriptionIntInput | null,
-  cost?: ModelSubscriptionIntInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionProductFilterInput | null > | null,
-  or?: Array< ModelSubscriptionProductFilterInput | null > | null,
-};
-
-export type ModelSubscriptionIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  in?: Array< string | null > | null,
-  notIn?: Array< string | null > | null,
-};
-
-export type ModelSubscriptionPostFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  title?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionPostFilterInput | null > | null,
-  or?: Array< ModelSubscriptionPostFilterInput | null > | null,
-};
-
-export type ModelSubscriptionCommentFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  content?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionCommentFilterInput | null > | null,
-  or?: Array< ModelSubscriptionCommentFilterInput | null > | null,
-};
-
-export type CreateStudentMutationVariables = {
-  input: CreateStudentInput,
-  condition?: ModelStudentConditionInput | null,
-};
-
-export type CreateStudentMutation = {
-  createStudent?:  {
-    __typename: "Student",
-    name?: string | null,
-    dateOfBirth?: string | null,
-    email?: string | null,
-    examsCompleted?: number | null,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateStudentMutationVariables = {
-  input: UpdateStudentInput,
-  condition?: ModelStudentConditionInput | null,
-};
-
-export type UpdateStudentMutation = {
-  updateStudent?:  {
-    __typename: "Student",
-    name?: string | null,
-    dateOfBirth?: string | null,
-    email?: string | null,
-    examsCompleted?: number | null,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteStudentMutationVariables = {
-  input: DeleteStudentInput,
-  condition?: ModelStudentConditionInput | null,
-};
-
-export type DeleteStudentMutation = {
-  deleteStudent?:  {
-    __typename: "Student",
-    name?: string | null,
-    dateOfBirth?: string | null,
-    email?: string | null,
-    examsCompleted?: number | null,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type CreateProductMutationVariables = {
   input: CreateProductInput,
   condition?: ModelProductConditionInput | null,
@@ -444,9 +254,11 @@ export type CreateProductMutation = {
     __typename: "Product",
     id: string,
     name: string,
+    description?: string | null,
     price?: number | null,
     cost?: number | null,
-    description?: string | null,
+    image?: string | null,
+    status: ProductStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -463,9 +275,11 @@ export type UpdateProductMutation = {
     __typename: "Product",
     id: string,
     name: string,
+    description?: string | null,
     price?: number | null,
     cost?: number | null,
-    description?: string | null,
+    image?: string | null,
+    status: ProductStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -482,149 +296,13 @@ export type DeleteProductMutation = {
     __typename: "Product",
     id: string,
     name: string,
+    description?: string | null,
     price?: number | null,
     cost?: number | null,
-    description?: string | null,
+    image?: string | null,
+    status: ProductStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type CreatePostMutationVariables = {
-  input: CreatePostInput,
-  condition?: ModelPostConditionInput | null,
-};
-
-export type CreatePostMutation = {
-  createPost?:  {
-    __typename: "Post",
-    id: string,
-    title: string,
-    comments?:  {
-      __typename: "ModelCommentConnection",
-      items:  Array< {
-        __typename: "Comment",
-        id: string,
-        content: string,
-        createdAt: string,
-        updatedAt: string,
-        postCommentsId?: string | null,
-        owner?: string | null,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type UpdatePostMutationVariables = {
-  input: UpdatePostInput,
-  condition?: ModelPostConditionInput | null,
-};
-
-export type UpdatePostMutation = {
-  updatePost?:  {
-    __typename: "Post",
-    id: string,
-    title: string,
-    comments?:  {
-      __typename: "ModelCommentConnection",
-      items:  Array< {
-        __typename: "Comment",
-        id: string,
-        content: string,
-        createdAt: string,
-        updatedAt: string,
-        postCommentsId?: string | null,
-        owner?: string | null,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type DeletePostMutationVariables = {
-  input: DeletePostInput,
-  condition?: ModelPostConditionInput | null,
-};
-
-export type DeletePostMutation = {
-  deletePost?:  {
-    __typename: "Post",
-    id: string,
-    title: string,
-    comments?:  {
-      __typename: "ModelCommentConnection",
-      items:  Array< {
-        __typename: "Comment",
-        id: string,
-        content: string,
-        createdAt: string,
-        updatedAt: string,
-        postCommentsId?: string | null,
-        owner?: string | null,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type CreateCommentMutationVariables = {
-  input: CreateCommentInput,
-  condition?: ModelCommentConditionInput | null,
-};
-
-export type CreateCommentMutation = {
-  createComment?:  {
-    __typename: "Comment",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    postCommentsId?: string | null,
-    owner?: string | null,
-  } | null,
-};
-
-export type UpdateCommentMutationVariables = {
-  input: UpdateCommentInput,
-  condition?: ModelCommentConditionInput | null,
-};
-
-export type UpdateCommentMutation = {
-  updateComment?:  {
-    __typename: "Comment",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    postCommentsId?: string | null,
-    owner?: string | null,
-  } | null,
-};
-
-export type DeleteCommentMutationVariables = {
-  input: DeleteCommentInput,
-  condition?: ModelCommentConditionInput | null,
-};
-
-export type DeleteCommentMutation = {
-  deleteComment?:  {
-    __typename: "Comment",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    postCommentsId?: string | null,
     owner?: string | null,
   } | null,
 };
@@ -635,46 +313,6 @@ export type EchoQueryVariables = {
 
 export type EchoQuery = {
   echo?: string | null,
-};
-
-export type GetStudentQueryVariables = {
-  id: string,
-};
-
-export type GetStudentQuery = {
-  getStudent?:  {
-    __typename: "Student",
-    name?: string | null,
-    dateOfBirth?: string | null,
-    email?: string | null,
-    examsCompleted?: number | null,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListStudentsQueryVariables = {
-  filter?: ModelStudentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListStudentsQuery = {
-  listStudents?:  {
-    __typename: "ModelStudentConnection",
-    items:  Array< {
-      __typename: "Student",
-      name?: string | null,
-      dateOfBirth?: string | null,
-      email?: string | null,
-      examsCompleted?: number | null,
-      id: string,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
 };
 
 export type SpeakTranslatedImageTextQueryVariables = {
@@ -694,9 +332,11 @@ export type GetProductQuery = {
     __typename: "Product",
     id: string,
     name: string,
+    description?: string | null,
     price?: number | null,
     cost?: number | null,
-    description?: string | null,
+    image?: string | null,
+    status: ProductStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -704,11 +344,9 @@ export type GetProductQuery = {
 };
 
 export type ListProductsQueryVariables = {
-  id?: string | null,
   filter?: ModelProductFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListProductsQuery = {
@@ -718,156 +356,45 @@ export type ListProductsQuery = {
       __typename: "Product",
       id: string,
       name: string,
+      description?: string | null,
       price?: number | null,
       cost?: number | null,
+      image?: string | null,
+      status: ProductStatus,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ListProductsByStatusQueryVariables = {
+  status: ProductStatus,
+  createdAt?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelProductFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListProductsByStatusQuery = {
+  listProductsByStatus?:  {
+    __typename: "ModelProductConnection",
+    items:  Array< {
+      __typename: "Product",
+      id: string,
+      name: string,
       description?: string | null,
+      price?: number | null,
+      cost?: number | null,
+      image?: string | null,
+      status: ProductStatus,
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
-  } | null,
-};
-
-export type GetPostQueryVariables = {
-  id: string,
-};
-
-export type GetPostQuery = {
-  getPost?:  {
-    __typename: "Post",
-    id: string,
-    title: string,
-    comments?:  {
-      __typename: "ModelCommentConnection",
-      items:  Array< {
-        __typename: "Comment",
-        id: string,
-        content: string,
-        createdAt: string,
-        updatedAt: string,
-        postCommentsId?: string | null,
-        owner?: string | null,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type ListPostsQueryVariables = {
-  filter?: ModelPostFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListPostsQuery = {
-  listPosts?:  {
-    __typename: "ModelPostConnection",
-    items:  Array< {
-      __typename: "Post",
-      id: string,
-      title: string,
-      comments?:  {
-        __typename: "ModelCommentConnection",
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-      owner?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetCommentQueryVariables = {
-  id: string,
-};
-
-export type GetCommentQuery = {
-  getComment?:  {
-    __typename: "Comment",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    postCommentsId?: string | null,
-    owner?: string | null,
-  } | null,
-};
-
-export type ListCommentsQueryVariables = {
-  filter?: ModelCommentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListCommentsQuery = {
-  listComments?:  {
-    __typename: "ModelCommentConnection",
-    items:  Array< {
-      __typename: "Comment",
-      id: string,
-      content: string,
-      createdAt: string,
-      updatedAt: string,
-      postCommentsId?: string | null,
-      owner?: string | null,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type OnCreateStudentSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentFilterInput | null,
-};
-
-export type OnCreateStudentSubscription = {
-  onCreateStudent?:  {
-    __typename: "Student",
-    name?: string | null,
-    dateOfBirth?: string | null,
-    email?: string | null,
-    examsCompleted?: number | null,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateStudentSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentFilterInput | null,
-};
-
-export type OnUpdateStudentSubscription = {
-  onUpdateStudent?:  {
-    __typename: "Student",
-    name?: string | null,
-    dateOfBirth?: string | null,
-    email?: string | null,
-    examsCompleted?: number | null,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteStudentSubscriptionVariables = {
-  filter?: ModelSubscriptionStudentFilterInput | null,
-};
-
-export type OnDeleteStudentSubscription = {
-  onDeleteStudent?:  {
-    __typename: "Student",
-    name?: string | null,
-    dateOfBirth?: string | null,
-    email?: string | null,
-    examsCompleted?: number | null,
-    id: string,
-    createdAt: string,
-    updatedAt: string,
   } | null,
 };
 
@@ -881,9 +408,11 @@ export type OnCreateProductSubscription = {
     __typename: "Product",
     id: string,
     name: string,
+    description?: string | null,
     price?: number | null,
     cost?: number | null,
-    description?: string | null,
+    image?: string | null,
+    status: ProductStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -900,9 +429,11 @@ export type OnUpdateProductSubscription = {
     __typename: "Product",
     id: string,
     name: string,
+    description?: string | null,
     price?: number | null,
     cost?: number | null,
-    description?: string | null,
+    image?: string | null,
+    status: ProductStatus,
     createdAt: string,
     updatedAt: string,
     owner?: string | null,
@@ -919,149 +450,13 @@ export type OnDeleteProductSubscription = {
     __typename: "Product",
     id: string,
     name: string,
+    description?: string | null,
     price?: number | null,
     cost?: number | null,
-    description?: string | null,
+    image?: string | null,
+    status: ProductStatus,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnCreatePostSubscriptionVariables = {
-  filter?: ModelSubscriptionPostFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnCreatePostSubscription = {
-  onCreatePost?:  {
-    __typename: "Post",
-    id: string,
-    title: string,
-    comments?:  {
-      __typename: "ModelCommentConnection",
-      items:  Array< {
-        __typename: "Comment",
-        id: string,
-        content: string,
-        createdAt: string,
-        updatedAt: string,
-        postCommentsId?: string | null,
-        owner?: string | null,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnUpdatePostSubscriptionVariables = {
-  filter?: ModelSubscriptionPostFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnUpdatePostSubscription = {
-  onUpdatePost?:  {
-    __typename: "Post",
-    id: string,
-    title: string,
-    comments?:  {
-      __typename: "ModelCommentConnection",
-      items:  Array< {
-        __typename: "Comment",
-        id: string,
-        content: string,
-        createdAt: string,
-        updatedAt: string,
-        postCommentsId?: string | null,
-        owner?: string | null,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnDeletePostSubscriptionVariables = {
-  filter?: ModelSubscriptionPostFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnDeletePostSubscription = {
-  onDeletePost?:  {
-    __typename: "Post",
-    id: string,
-    title: string,
-    comments?:  {
-      __typename: "ModelCommentConnection",
-      items:  Array< {
-        __typename: "Comment",
-        id: string,
-        content: string,
-        createdAt: string,
-        updatedAt: string,
-        postCommentsId?: string | null,
-        owner?: string | null,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnCreateCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionCommentFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnCreateCommentSubscription = {
-  onCreateComment?:  {
-    __typename: "Comment",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    postCommentsId?: string | null,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnUpdateCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionCommentFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnUpdateCommentSubscription = {
-  onUpdateComment?:  {
-    __typename: "Comment",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    postCommentsId?: string | null,
-    owner?: string | null,
-  } | null,
-};
-
-export type OnDeleteCommentSubscriptionVariables = {
-  filter?: ModelSubscriptionCommentFilterInput | null,
-  owner?: string | null,
-};
-
-export type OnDeleteCommentSubscription = {
-  onDeleteComment?:  {
-    __typename: "Comment",
-    id: string,
-    content: string,
-    createdAt: string,
-    updatedAt: string,
-    postCommentsId?: string | null,
     owner?: string | null,
   } | null,
 };
