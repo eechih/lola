@@ -7,4 +7,5 @@ package-lock.json
 amplify/**/*.d.ts
 amplify/**/*.json
 src/graphql/
+src/models/
 src/API.ts

@@ -17,6 +17,9 @@ export const createProduct = /* GraphQL */ `
       status
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -36,6 +39,9 @@ export const updateProduct = /* GraphQL */ `
       status
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -55,6 +61,9 @@ export const deleteProduct = /* GraphQL */ `
       status
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }

@@ -11,6 +11,7 @@ export type CreateProductInput = {
   image?: string | null,
   status: ProductStatus,
   createdAt?: string | null,
+  _version?: number | null,
 };
 
 export enum ProductStatus {
@@ -100,6 +101,9 @@ export type Product = {
   status: ProductStatus,
   createdAt: string,
   updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
   owner?: string | null,
 };
 
@@ -112,10 +116,12 @@ export type UpdateProductInput = {
   image?: string | null,
   status?: ProductStatus | null,
   createdAt?: string | null,
+  _version?: number | null,
 };
 
 export type DeleteProductInput = {
   id: string,
+  _version?: number | null,
 };
 
 export type SpeakTranslatedImageTextInput = {
@@ -171,6 +177,7 @@ export type ModelProductConnection = {
   __typename: "ModelProductConnection",
   items:  Array<Product | null >,
   nextToken?: string | null,
+  startedAt?: number | null,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -261,6 +268,9 @@ export type CreateProductMutation = {
     status: ProductStatus,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     owner?: string | null,
   } | null,
 };
@@ -282,6 +292,9 @@ export type UpdateProductMutation = {
     status: ProductStatus,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     owner?: string | null,
   } | null,
 };
@@ -303,6 +316,9 @@ export type DeleteProductMutation = {
     status: ProductStatus,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     owner?: string | null,
   } | null,
 };
@@ -339,6 +355,9 @@ export type GetProductQuery = {
     status: ProductStatus,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     owner?: string | null,
   } | null,
 };
@@ -363,9 +382,44 @@ export type ListProductsQuery = {
       status: ProductStatus,
       createdAt: string,
       updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncProductsQueryVariables = {
+  filter?: ModelProductFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncProductsQuery = {
+  syncProducts?:  {
+    __typename: "ModelProductConnection",
+    items:  Array< {
+      __typename: "Product",
+      id: string,
+      name: string,
+      description?: string | null,
+      price?: number | null,
+      cost?: number | null,
+      image?: string | null,
+      status: ProductStatus,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -392,9 +446,13 @@ export type ListProductsByStatusQuery = {
       status: ProductStatus,
       createdAt: string,
       updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
+    startedAt?: number | null,
   } | null,
 };
 
@@ -415,6 +473,9 @@ export type OnCreateProductSubscription = {
     status: ProductStatus,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     owner?: string | null,
   } | null,
 };
@@ -436,6 +497,9 @@ export type OnUpdateProductSubscription = {
     status: ProductStatus,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     owner?: string | null,
   } | null,
 };
@@ -457,6 +521,9 @@ export type OnDeleteProductSubscription = {
     status: ProductStatus,
     createdAt: string,
     updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
     owner?: string | null,
   } | null,
 };

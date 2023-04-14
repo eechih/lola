@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier .",
-    "format": "npm run prettier -- --write"
+    "format": "npm run prettier -- --write",
+    "amplify-modelgen": "amplify codegen models"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^4.6.0",

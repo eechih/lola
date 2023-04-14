@@ -1,4 +1,4 @@
-import { GraphQLQuery, GraphQLResult } from '@aws-amplify/api'
+import { GraphQLResult } from '@aws-amplify/api'
 import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
 import {
   Button,
@@ -6,7 +6,6 @@ import {
   Flex,
   Heading,
   Image,
-  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -18,21 +17,10 @@ import {
   WithAuthenticatorProps,
   withAuthenticator,
 } from '@aws-amplify/ui-react'
-import { API, Hub, Storage } from 'aws-amplify'
+import { DataStore, Hub, Predicates, Storage } from 'aws-amplify'
 import { ChangeEvent, useEffect, useState } from 'react'
 
-import {
-  CreateProductInput,
-  CreateProductMutation,
-  DeleteProductMutation,
-  ListProductsByStatusQuery,
-  ListProductsByStatusQueryVariables,
-  ModelSortDirection,
-  Product,
-  ProductStatus,
-} from '../../src/API'
-import * as mutations from '../../src/graphql/mutations'
-import * as queries from '../../src/graphql/queries'
+import { Product, ProductStatus } from '../../src/models'
 
 type CreateForm = {
   name: string
@@ -62,10 +50,6 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [isMutating, setMutating] = useState<boolean>(false)
 
-  const [pageTokens, setPageTokens] = useState<string[]>([])
-  const [currentPageIndex, setCurrentPageIndex] = useState<number>(1)
-  const [hasMorePages, setHasMorePages] = useState<boolean>(true)
-
   Hub.listen('api', (data: any) => {
     const { payload } = data
     if (payload.event === CONNECTION_STATE_CHANGE) {
@@ -75,35 +59,9 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
   })
 
   useEffect(() => {
-    const loadData = async () => {
-      const { items, nextToken } = await listProducts()
-      setProducts(items)
-      if (nextToken) setPageTokens([...pageTokens, nextToken])
-      else setHasMorePages(false)
-    }
+    const loadData = async () => setProducts(await listProducts())
     loadData()
   }, [])
-
-  async function handleNextPage() {
-    console.log('handleNextPage')
-    if (hasMorePages && currentPageIndex === pageTokens.length) {
-      const { items, nextToken } = await listProducts()
-      setProducts(items)
-      if (nextToken) setPageTokens([...pageTokens, nextToken])
-      else setHasMorePages(false)
-    }
-    setCurrentPageIndex(currentPageIndex + 1)
-  }
-
-  async function handlePreviousPage() {
-    console.log('handlePreviousPage')
-    setCurrentPageIndex(currentPageIndex - 1)
-  }
-
-  async function handleChangePage(newPageIndex?: number) {
-    console.log('handleChangePage', newPageIndex)
-    setCurrentPageIndex(newPageIndex ?? 1)
-  }
 
   type ListProductsResult = {
     items: Product[]
@@ -114,37 +72,19 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
   async function listProducts(props?: {
     nextToken?: string
     limit?: number
-  }): Promise<ListProductsResult> {
+  }): Promise<Product[]> {
     console.log('listProducts', props)
     const { nextToken, limit = 10 } = props ?? {}
-    const ret: ListProductsResult = { items: [], limit }
     try {
-      const variables: ListProductsByStatusQueryVariables = {
-        status: ProductStatus.ACTIVE,
-        sortDirection: ModelSortDirection.DESC,
-        limit: limit,
-        nextToken: nextToken,
-      }
-      const res = await API.graphql<GraphQLQuery<ListProductsByStatusQuery>>({
-        query: queries.listProductsByStatus,
-        variables: variables,
+      const products = await DataStore.query(Product, Predicates.ALL, {
+        limit: 10,
       })
-      console.log(res)
-      const items = res.data?.listProductsByStatus?.items as Product[]
-      ret.items = await Promise.all(
-        items.map(async product => {
-          if (product.image) {
-            const image = await Storage.get(product.image)
-            product.image = image
-          }
-          return product
-        })
-      )
-      ret.nextToken = res.data?.listProductsByStatus?.nextToken as string
+      console.log(products)
+      return products
     } catch (error) {
       console.log('Error retrieving products', error)
+      return []
     }
-    return ret
   }
 
   function setInput(key: string, value: string) {
@@ -157,23 +97,23 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
     setMutating(true)
     const prevProducts = products
     try {
-      const product: CreateProductInput = {
+      const product = {
         name: name,
         price: Number(price),
         cost: Number(cost),
         description: description,
         status: ProductStatus.ACTIVE,
+        image: '',
+        createdAt: new Date().toISOString(),
       }
       if (file) {
         await Storage.put(file.name, file)
         product.image = file.name
       }
+      console.log('product', product)
       setProducts([product as Product, ...products])
       setFormState(initialState)
-      await API.graphql<GraphQLQuery<CreateProductMutation>>({
-        query: mutations.createProduct,
-        variables: { input: product },
-      })
+      await DataStore.save(new Product(product))
       setMutating(false)
     } catch (error) {
       console.log('Error creating products', error)
@@ -197,10 +137,8 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
     try {
       setMutating(true)
       setProducts(products.filter(product => product.id !== productId))
-      await API.graphql<GraphQLQuery<DeleteProductMutation>>({
-        query: mutations.deleteProduct,
-        variables: { input: { id: productId } },
-      })
+      const toDelete = await DataStore.query(Product, productId)
+      if (toDelete) await DataStore.delete(toDelete)
       setMutating(false)
     } catch (error) {
       console.log('Error deleting product', error)
@@ -296,14 +234,6 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
           </Button>
         </Flex>
         <Divider orientation="horizontal" />
-        <Pagination
-          currentPage={currentPageIndex}
-          totalPages={pageTokens.length}
-          hasMorePages={hasMorePages}
-          onNext={handleNextPage}
-          onPrevious={handlePreviousPage}
-          onChange={handleChangePage}
-        />
         <Table caption="" highlightOnHover={true}>
           <TableHead>
             <TableRow>
