@@ -15,18 +15,6 @@
         "keyDescription": "public"
       }
     ],
-    "conflictResolution": {
-      "defaultResolutionStrategy": {
-        "type": "AUTOMERGE"
-      },
-      "perModelResolutionStrategy": [
-        {
-          "resolutionStrategy": {
-            "type": "AUTOMERGE"
-          },
-          "entityName": "Product"
-        }
-      ]
-    }
+    "conflictResolution": {}
   }
 }

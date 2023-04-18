@@ -22,11 +22,19 @@ export const getProduct = /* GraphQL */ `
       cost
       image
       status
+      images {
+        items {
+          id
+          url
+          createdAt
+          updatedAt
+          productImagesId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -46,48 +54,14 @@ export const listProducts = /* GraphQL */ `
         cost
         image
         status
+        images {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncProducts = /* GraphQL */ `
-  query SyncProducts(
-    $filter: ModelProductFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncProducts(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        name
-        description
-        price
-        cost
-        image
-        status
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;
@@ -116,15 +90,72 @@ export const listProductsByStatus = /* GraphQL */ `
         cost
         image
         status
+        images {
+          nextToken
+        }
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
         owner
       }
       nextToken
-      startedAt
+    }
+  }
+`;
+export const getImage = /* GraphQL */ `
+  query GetImage($id: ID!) {
+    getImage(id: $id) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        image
+        status
+        images {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      url
+      createdAt
+      updatedAt
+      productImagesId
+      owner
+    }
+  }
+`;
+export const listImages = /* GraphQL */ `
+  query ListImages(
+    $filter: ModelImageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listImages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        product {
+          id
+          name
+          description
+          price
+          cost
+          image
+          status
+          createdAt
+          updatedAt
+          owner
+        }
+        url
+        createdAt
+        updatedAt
+        productImagesId
+        owner
+      }
+      nextToken
     }
   }
 `;

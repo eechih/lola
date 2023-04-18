@@ -15,11 +15,19 @@ export const onCreateProduct = /* GraphQL */ `
       cost
       image
       status
+      images {
+        items {
+          id
+          url
+          createdAt
+          updatedAt
+          productImagesId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -37,11 +45,19 @@ export const onUpdateProduct = /* GraphQL */ `
       cost
       image
       status
+      images {
+        items {
+          id
+          url
+          createdAt
+          updatedAt
+          productImagesId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -59,11 +75,109 @@ export const onDeleteProduct = /* GraphQL */ `
       cost
       image
       status
+      images {
+        items {
+          id
+          url
+          createdAt
+          updatedAt
+          productImagesId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      owner
+    }
+  }
+`;
+export const onCreateImage = /* GraphQL */ `
+  subscription OnCreateImage(
+    $filter: ModelSubscriptionImageFilterInput
+    $owner: String
+  ) {
+    onCreateImage(filter: $filter, owner: $owner) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        image
+        status
+        images {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      url
+      createdAt
+      updatedAt
+      productImagesId
+      owner
+    }
+  }
+`;
+export const onUpdateImage = /* GraphQL */ `
+  subscription OnUpdateImage(
+    $filter: ModelSubscriptionImageFilterInput
+    $owner: String
+  ) {
+    onUpdateImage(filter: $filter, owner: $owner) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        image
+        status
+        images {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      url
+      createdAt
+      updatedAt
+      productImagesId
+      owner
+    }
+  }
+`;
+export const onDeleteImage = /* GraphQL */ `
+  subscription OnDeleteImage(
+    $filter: ModelSubscriptionImageFilterInput
+    $owner: String
+  ) {
+    onDeleteImage(filter: $filter, owner: $owner) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        image
+        status
+        images {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      url
+      createdAt
+      updatedAt
+      productImagesId
       owner
     }
   }

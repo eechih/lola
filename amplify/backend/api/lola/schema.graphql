@@ -1,6 +1,11 @@
 # This "input" configures a global authorization rule to enable public access to
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
 
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
 type Product
   @model
   @auth(
@@ -22,12 +27,22 @@ type Product
       queryField: "listProductsByStatus"
       sortKeyFields: ["createdAt"]
     )
+  images: [Image] @hasMany
   createdAt: AWSDateTime!
 }
 
-enum ProductStatus {
-  ACTIVE
-  INACTIVE
+type Image
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, operations: [read] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  product: Product @belongsTo
+  url: String!
 }
 
 type Query {

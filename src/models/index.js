@@ -7,9 +7,10 @@ const ProductStatus = {
   "INACTIVE": "INACTIVE"
 };
 
-const { Product } = initSchema(schema);
+const { Product, Image } = initSchema(schema);
 
 export {
   Product,
+  Image,
   ProductStatus
 };

@@ -5,7 +5,6 @@ import {
   Divider,
   Flex,
   Heading,
-  Image,
   Table,
   TableBody,
   TableCell,
@@ -13,6 +12,7 @@ import {
   TableRow,
   TextField,
   Alert as UIAlert,
+  Image as UIImage,
   View,
   WithAuthenticatorProps,
   withAuthenticator,
@@ -20,7 +20,7 @@ import {
 import { DataStore, Hub, Predicates, Storage } from 'aws-amplify'
 import { ChangeEvent, useEffect, useState } from 'react'
 
-import { Product, ProductStatus } from '../../src/models'
+import { Image, Product, ProductStatus } from '../../src/models'
 
 type CreateForm = {
   name: string
@@ -58,9 +58,27 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
     }
   })
 
+  Hub.listen('auth', async (data: any) => {
+    if (data.payload.event === 'signOut') {
+      await DataStore.clear()
+    }
+  })
+
+  Hub.listen('datastore', async (data: any) => {
+    console.log('datastore event', data.payload)
+  })
+
   useEffect(() => {
     const loadData = async () => setProducts(await listProducts())
+
     loadData()
+    const sub = DataStore.observeQuery(Product, Predicates.ALL).subscribe(
+      value => {
+        console.log('observerOrNext', value)
+        loadData()
+      }
+    )
+    return () => sub.unsubscribe()
   }, [])
 
   type ListProductsResult = {
@@ -80,7 +98,18 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
         limit: 10,
       })
       console.log(products)
-      return products
+
+      return await Promise.all(
+        products.map(async product => {
+          if (product.image) {
+            const image = await Storage.get(product.image)
+            return Product.copyOf(product, updated => {
+              updated.image = image
+            })
+          }
+          return product
+        })
+      )
     } catch (error) {
       console.log('Error retrieving products', error)
       return []
@@ -96,24 +125,33 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
     if (!formState.name || !formState.description) return
     setMutating(true)
     const prevProducts = products
+    const filename = file?.name ?? ''
+
     try {
-      const product = {
+      if (file) {
+        await Storage.put(file.name, file)
+      }
+
+      const input = {
         name: name,
         price: Number(price),
         cost: Number(cost),
         description: description,
         status: ProductStatus.ACTIVE,
-        image: '',
+        image: filename,
         createdAt: new Date().toISOString(),
       }
-      if (file) {
-        await Storage.put(file.name, file)
-        product.image = file.name
-      }
-      console.log('product', product)
-      setProducts([product as Product, ...products])
+
+      console.log('product', input)
+      setProducts([input as Product, ...products])
       setFormState(initialState)
-      await DataStore.save(new Product(product))
+      const product = await DataStore.save(new Product(input))
+      await DataStore.save(
+        new Image({
+          url: filename,
+          product: product,
+        })
+      )
       setMutating(false)
     } catch (error) {
       console.log('Error creating products', error)
@@ -252,7 +290,7 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
                 <TableCell>{product.id?.substring(0, 6) ?? ''}</TableCell>
                 <TableCell>
                   {product.image && (
-                    <Image
+                    <UIImage
                       height="3rem"
                       width="3rem"
                       src={product.image}

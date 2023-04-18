@@ -15,11 +15,19 @@ export const createProduct = /* GraphQL */ `
       cost
       image
       status
+      images {
+        items {
+          id
+          url
+          createdAt
+          updatedAt
+          productImagesId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -37,11 +45,19 @@ export const updateProduct = /* GraphQL */ `
       cost
       image
       status
+      images {
+        items {
+          id
+          url
+          createdAt
+          updatedAt
+          productImagesId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -59,11 +75,109 @@ export const deleteProduct = /* GraphQL */ `
       cost
       image
       status
+      images {
+        items {
+          id
+          url
+          createdAt
+          updatedAt
+          productImagesId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
+      owner
+    }
+  }
+`;
+export const createImage = /* GraphQL */ `
+  mutation CreateImage(
+    $input: CreateImageInput!
+    $condition: ModelImageConditionInput
+  ) {
+    createImage(input: $input, condition: $condition) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        image
+        status
+        images {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      url
+      createdAt
+      updatedAt
+      productImagesId
+      owner
+    }
+  }
+`;
+export const updateImage = /* GraphQL */ `
+  mutation UpdateImage(
+    $input: UpdateImageInput!
+    $condition: ModelImageConditionInput
+  ) {
+    updateImage(input: $input, condition: $condition) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        image
+        status
+        images {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      url
+      createdAt
+      updatedAt
+      productImagesId
+      owner
+    }
+  }
+`;
+export const deleteImage = /* GraphQL */ `
+  mutation DeleteImage(
+    $input: DeleteImageInput!
+    $condition: ModelImageConditionInput
+  ) {
+    deleteImage(input: $input, condition: $condition) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        image
+        status
+        images {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      url
+      createdAt
+      updatedAt
+      productImagesId
       owner
     }
   }
