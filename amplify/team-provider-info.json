@@ -19,7 +19,11 @@
         }
       },
       "auth": {
-        "lolab73aed38": {}
+        "lolab73aed38": {
+          "facebookAppId": "592103672980614",
+          "googleClientId": "619979928517-smidpgrnf925jiilae59caeonb3pmosb.apps.googleusercontent.com",
+          "amazonAppId": "amzn1.application-oa2-client.f87932cd3343470b9a35bcb103896f93"
+        }
       },
       "storage": {
         "lola": {}

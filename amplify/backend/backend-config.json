@@ -50,7 +50,12 @@
         "signupAttributes": [
           "EMAIL"
         ],
-        "socialProviders": [],
+        "socialProviders": [
+          "FACEBOOK",
+          "GOOGLE",
+          "AMAZON",
+          "APPLE"
+        ],
         "usernameAttributes": [],
         "verificationMechanisms": [
           "EMAIL"
@@ -75,6 +80,30 @@
     }
   },
   "parameters": {
+    "AMPLIFY_auth_lolab73aed38_amazonAppId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "lolab73aed38"
+        }
+      ]
+    },
+    "AMPLIFY_auth_lolab73aed38_facebookAppId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "lolab73aed38"
+        }
+      ]
+    },
+    "AMPLIFY_auth_lolab73aed38_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "lolab73aed38"
+        }
+      ]
+    },
     "AMPLIFY_function_echofunction_deploymentBucketName": {
       "usedBy": [
         {

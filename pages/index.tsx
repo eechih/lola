@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google'
 import Image from 'next/image'
 
 import Echo from '@/src/components/Echo'
+import FederatedSignIn from '@/src/components/FederatedSignIn'
 import SpeakTranslatedImage from '@/src/components/SpeakTranslatedImage'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -47,6 +48,7 @@ export default function Home() {
 
       <SpeakTranslatedImage />
       <Echo />
+      <FederatedSignIn />
 
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
         <a
