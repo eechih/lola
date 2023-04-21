@@ -21,13 +21,20 @@ export const createProduct = /* GraphQL */ `
           url
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
           productImagesId
           owner
         }
         nextToken
+        startedAt
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -51,13 +58,20 @@ export const updateProduct = /* GraphQL */ `
           url
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
           productImagesId
           owner
         }
         nextToken
+        startedAt
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -81,13 +95,20 @@ export const deleteProduct = /* GraphQL */ `
           url
           createdAt
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
           productImagesId
           owner
         }
         nextToken
+        startedAt
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -109,14 +130,21 @@ export const createImage = /* GraphQL */ `
         status
         images {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       url
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       productImagesId
       owner
     }
@@ -139,14 +167,21 @@ export const updateImage = /* GraphQL */ `
         status
         images {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       url
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       productImagesId
       owner
     }
@@ -169,14 +204,21 @@ export const deleteImage = /* GraphQL */ `
         status
         images {
           nextToken
+          startedAt
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       url
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       productImagesId
       owner
     }

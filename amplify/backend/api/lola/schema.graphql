@@ -48,5 +48,7 @@ type Image
 type Query {
   speakTranslatedImageText: String
     @predictions(actions: [identifyText, translateText, convertTextToSpeech])
-  echo(msg: String): String @function(name: "echofunction-${env}")
+  echo(msg: String): String
+    @function(name: "echofunction-${env}")
+    @auth(rules: [{ allow: public }])
 }
