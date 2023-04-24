@@ -86,21 +86,6 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    },
-    "product": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ],
-          "category": "api",
-          "resourceName": "lola"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     }
   },
   "hosting": {
@@ -148,22 +133,6 @@
         {
           "category": "function",
           "resourceName": "echofunction"
-        }
-      ]
-    },
-    "AMPLIFY_function_product_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "product"
-        }
-      ]
-    },
-    "AMPLIFY_function_product_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "product"
         }
       ]
     },
