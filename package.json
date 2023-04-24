@@ -9,8 +9,7 @@
     "lint": "next lint",
     "prettier": "prettier .",
     "format": "npm run prettier -- --write",
-    "amplify-modelgen": "amplify codegen models",
-    "amplify:product": "cd amplify/backend/function/product && tsc -p ./tsconfig.json && cd -"
+    "amplify-modelgen": "amplify codegen models"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^4.6.0",
