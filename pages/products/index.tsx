@@ -1,6 +1,7 @@
 import { GraphQLResult } from '@aws-amplify/api'
-import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
+import { ConnectionState, CONNECTION_STATE_CHANGE } from '@aws-amplify/pubsub'
 import {
+  Alert as UIAlert,
   Button,
   CheckboxField,
   Flex,
@@ -14,11 +15,9 @@ import {
   TableHead,
   TableRow,
   Text,
-  Alert as UIAlert,
-  View,
-  WithAuthenticatorProps,
   useTheme,
   withAuthenticator,
+  WithAuthenticatorProps,
 } from '@aws-amplify/ui-react'
 import { DataStore, Hub, Predicates, Storage } from 'aws-amplify'
 import { useRouter } from 'next/router'
@@ -28,6 +27,7 @@ import { BsArrowClockwise } from 'react-icons/bs'
 import { Image, Product, ProductStatus } from '../../src/models'
 import Breadcrumb from './Breadcrumb'
 import Layout from './Layout'
+import Paper from './Paper'
 
 type CreateForm = {
   name: string
@@ -204,12 +204,7 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
       <Breadcrumb
         breadcrumbs={[{ label: '首頁', href: '/' }, { label: '產品列表' }]}
       />
-      <View
-        as="div"
-        border="1px solid var(--amplify-colors-border-secondary)"
-        boxShadow="1px 1px 1px 1px var(--amplify-colors-shadow-primary)"
-        style={{ backgroundColor: tokens.colors.background.secondary.value }}
-      >
+      <Paper>
         <Flex direction="column" style={{ padding: 12 }}>
           <Flex
             direction="row"
@@ -319,7 +314,8 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
             </TableBody>
           </Table>
         </Flex>
-      </View>
+      </Paper>
+
       <Flex direction="column">
         {alerts.map(alert => (
           <UIAlert
