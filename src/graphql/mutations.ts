@@ -13,8 +13,21 @@ export const createProduct = /* GraphQL */ `
       description
       price
       cost
-      image
-      status
+      specGroups {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupsId
+          owner
+        }
+        nextToken
+        startedAt
+      }
       images {
         items {
           id
@@ -30,6 +43,9 @@ export const createProduct = /* GraphQL */ `
         nextToken
         startedAt
       }
+      provider
+      offShelfTime
+      status
       createdAt
       updatedAt
       _version
@@ -50,8 +66,21 @@ export const updateProduct = /* GraphQL */ `
       description
       price
       cost
-      image
-      status
+      specGroups {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupsId
+          owner
+        }
+        nextToken
+        startedAt
+      }
       images {
         items {
           id
@@ -67,6 +96,9 @@ export const updateProduct = /* GraphQL */ `
         nextToken
         startedAt
       }
+      provider
+      offShelfTime
+      status
       createdAt
       updatedAt
       _version
@@ -87,8 +119,21 @@ export const deleteProduct = /* GraphQL */ `
       description
       price
       cost
-      image
-      status
+      specGroups {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupsId
+          owner
+        }
+        nextToken
+        startedAt
+      }
       images {
         items {
           id
@@ -104,11 +149,338 @@ export const deleteProduct = /* GraphQL */ `
         nextToken
         startedAt
       }
+      provider
+      offShelfTime
+      status
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
+      owner
+    }
+  }
+`;
+export const createProductSpecGroup = /* GraphQL */ `
+  mutation CreateProductSpecGroup(
+    $input: CreateProductSpecGroupInput!
+    $condition: ModelProductSpecGroupConditionInput
+  ) {
+    createProductSpecGroup(input: $input, condition: $condition) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        specGroups {
+          nextToken
+          startedAt
+        }
+        images {
+          nextToken
+          startedAt
+        }
+        provider
+        offShelfTime
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      name
+      specifications {
+        items {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupSpecificationsId
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      productSpecGroupsId
+      owner
+    }
+  }
+`;
+export const updateProductSpecGroup = /* GraphQL */ `
+  mutation UpdateProductSpecGroup(
+    $input: UpdateProductSpecGroupInput!
+    $condition: ModelProductSpecGroupConditionInput
+  ) {
+    updateProductSpecGroup(input: $input, condition: $condition) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        specGroups {
+          nextToken
+          startedAt
+        }
+        images {
+          nextToken
+          startedAt
+        }
+        provider
+        offShelfTime
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      name
+      specifications {
+        items {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupSpecificationsId
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      productSpecGroupsId
+      owner
+    }
+  }
+`;
+export const deleteProductSpecGroup = /* GraphQL */ `
+  mutation DeleteProductSpecGroup(
+    $input: DeleteProductSpecGroupInput!
+    $condition: ModelProductSpecGroupConditionInput
+  ) {
+    deleteProductSpecGroup(input: $input, condition: $condition) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        specGroups {
+          nextToken
+          startedAt
+        }
+        images {
+          nextToken
+          startedAt
+        }
+        provider
+        offShelfTime
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      name
+      specifications {
+        items {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupSpecificationsId
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      productSpecGroupsId
+      owner
+    }
+  }
+`;
+export const createProductSpecification = /* GraphQL */ `
+  mutation CreateProductSpecification(
+    $input: CreateProductSpecificationInput!
+    $condition: ModelProductSpecificationConditionInput
+  ) {
+    createProductSpecification(input: $input, condition: $condition) {
+      id
+      group {
+        id
+        product {
+          id
+          name
+          description
+          price
+          cost
+          provider
+          offShelfTime
+          status
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        name
+        specifications {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        productSpecGroupsId
+        owner
+      }
+      name
+      description
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      productSpecGroupSpecificationsId
+      owner
+    }
+  }
+`;
+export const updateProductSpecification = /* GraphQL */ `
+  mutation UpdateProductSpecification(
+    $input: UpdateProductSpecificationInput!
+    $condition: ModelProductSpecificationConditionInput
+  ) {
+    updateProductSpecification(input: $input, condition: $condition) {
+      id
+      group {
+        id
+        product {
+          id
+          name
+          description
+          price
+          cost
+          provider
+          offShelfTime
+          status
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        name
+        specifications {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        productSpecGroupsId
+        owner
+      }
+      name
+      description
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      productSpecGroupSpecificationsId
+      owner
+    }
+  }
+`;
+export const deleteProductSpecification = /* GraphQL */ `
+  mutation DeleteProductSpecification(
+    $input: DeleteProductSpecificationInput!
+    $condition: ModelProductSpecificationConditionInput
+  ) {
+    deleteProductSpecification(input: $input, condition: $condition) {
+      id
+      group {
+        id
+        product {
+          id
+          name
+          description
+          price
+          cost
+          provider
+          offShelfTime
+          status
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        name
+        specifications {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        productSpecGroupsId
+        owner
+      }
+      name
+      description
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      productSpecGroupSpecificationsId
       owner
     }
   }
@@ -126,12 +498,17 @@ export const createImage = /* GraphQL */ `
         description
         price
         cost
-        image
-        status
+        specGroups {
+          nextToken
+          startedAt
+        }
         images {
           nextToken
           startedAt
         }
+        provider
+        offShelfTime
+        status
         createdAt
         updatedAt
         _version
@@ -163,12 +540,17 @@ export const updateImage = /* GraphQL */ `
         description
         price
         cost
-        image
-        status
+        specGroups {
+          nextToken
+          startedAt
+        }
         images {
           nextToken
           startedAt
         }
+        provider
+        offShelfTime
+        status
         createdAt
         updatedAt
         _version
@@ -200,12 +582,17 @@ export const deleteImage = /* GraphQL */ `
         description
         price
         cost
-        image
-        status
+        specGroups {
+          nextToken
+          startedAt
+        }
         images {
           nextToken
           startedAt
         }
+        provider
+        offShelfTime
+        status
         createdAt
         updatedAt
         _version

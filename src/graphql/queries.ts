@@ -15,8 +15,21 @@ export const getProduct = /* GraphQL */ `
       description
       price
       cost
-      image
-      status
+      specGroups {
+        items {
+          id
+          name
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupsId
+          owner
+        }
+        nextToken
+        startedAt
+      }
       images {
         items {
           id
@@ -32,6 +45,9 @@ export const getProduct = /* GraphQL */ `
         nextToken
         startedAt
       }
+      provider
+      offShelfTime
+      status
       createdAt
       updatedAt
       _version
@@ -54,12 +70,17 @@ export const listProducts = /* GraphQL */ `
         description
         price
         cost
-        image
-        status
+        specGroups {
+          nextToken
+          startedAt
+        }
         images {
           nextToken
           startedAt
         }
+        provider
+        offShelfTime
+        status
         createdAt
         updatedAt
         _version
@@ -91,12 +112,17 @@ export const syncProducts = /* GraphQL */ `
         description
         price
         cost
-        image
-        status
+        specGroups {
+          nextToken
+          startedAt
+        }
         images {
           nextToken
           startedAt
         }
+        provider
+        offShelfTime
+        status
         createdAt
         updatedAt
         _version
@@ -132,9 +158,115 @@ export const listProductsByStatus = /* GraphQL */ `
         description
         price
         cost
-        image
-        status
+        specGroups {
+          nextToken
+          startedAt
+        }
         images {
+          nextToken
+          startedAt
+        }
+        provider
+        offShelfTime
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getProductSpecGroup = /* GraphQL */ `
+  query GetProductSpecGroup($id: ID!) {
+    getProductSpecGroup(id: $id) {
+      id
+      product {
+        id
+        name
+        description
+        price
+        cost
+        specGroups {
+          nextToken
+          startedAt
+        }
+        images {
+          nextToken
+          startedAt
+        }
+        provider
+        offShelfTime
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      name
+      specifications {
+        items {
+          id
+          name
+          description
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupSpecificationsId
+          owner
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      productSpecGroupsId
+      owner
+    }
+  }
+`;
+export const listProductSpecGroups = /* GraphQL */ `
+  query ListProductSpecGroups(
+    $filter: ModelProductSpecGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProductSpecGroups(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        product {
+          id
+          name
+          description
+          price
+          cost
+          provider
+          offShelfTime
+          status
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        name
+        specifications {
           nextToken
           startedAt
         }
@@ -143,6 +275,183 @@ export const listProductsByStatus = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
+        productSpecGroupsId
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncProductSpecGroups = /* GraphQL */ `
+  query SyncProductSpecGroups(
+    $filter: ModelProductSpecGroupFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncProductSpecGroups(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        product {
+          id
+          name
+          description
+          price
+          cost
+          provider
+          offShelfTime
+          status
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        name
+        specifications {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        productSpecGroupsId
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getProductSpecification = /* GraphQL */ `
+  query GetProductSpecification($id: ID!) {
+    getProductSpecification(id: $id) {
+      id
+      group {
+        id
+        product {
+          id
+          name
+          description
+          price
+          cost
+          provider
+          offShelfTime
+          status
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          owner
+        }
+        name
+        specifications {
+          nextToken
+          startedAt
+        }
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        productSpecGroupsId
+        owner
+      }
+      name
+      description
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      productSpecGroupSpecificationsId
+      owner
+    }
+  }
+`;
+export const listProductSpecifications = /* GraphQL */ `
+  query ListProductSpecifications(
+    $filter: ModelProductSpecificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProductSpecifications(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        group {
+          id
+          name
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupsId
+          owner
+        }
+        name
+        description
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        productSpecGroupSpecificationsId
+        owner
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncProductSpecifications = /* GraphQL */ `
+  query SyncProductSpecifications(
+    $filter: ModelProductSpecificationFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncProductSpecifications(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        group {
+          id
+          name
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          productSpecGroupsId
+          owner
+        }
+        name
+        description
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        productSpecGroupSpecificationsId
         owner
       }
       nextToken
@@ -160,12 +469,17 @@ export const getImage = /* GraphQL */ `
         description
         price
         cost
-        image
-        status
+        specGroups {
+          nextToken
+          startedAt
+        }
         images {
           nextToken
           startedAt
         }
+        provider
+        offShelfTime
+        status
         createdAt
         updatedAt
         _version
@@ -199,7 +513,8 @@ export const listImages = /* GraphQL */ `
           description
           price
           cost
-          image
+          provider
+          offShelfTime
           status
           createdAt
           updatedAt
@@ -243,7 +558,8 @@ export const syncImages = /* GraphQL */ `
           description
           price
           cost
-          image
+          provider
+          offShelfTime
           status
           createdAt
           updatedAt
@@ -269,10 +585,5 @@ export const syncImages = /* GraphQL */ `
 export const echo = /* GraphQL */ `
   query Echo($msg: String) {
     echo(msg: $msg)
-  }
-`;
-export const myListProducts = /* GraphQL */ `
-  query MyListProducts {
-    myListProducts
   }
 `;

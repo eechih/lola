@@ -20,15 +20,47 @@ type Product
   description: String
   price: Int
   cost: Int
-  image: String
+  specGroups: [ProductSpecGroup] @hasMany
+  images: [Image] @hasMany
+  provider: String
+  offShelfTime: AWSDateTime
   status: ProductStatus!
     @index(
       name: "byStatus"
       queryField: "listProductsByStatus"
       sortKeyFields: ["createdAt"]
     )
-  images: [Image] @hasMany
   createdAt: AWSDateTime!
+}
+
+type ProductSpecGroup
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, operations: [read] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  product: Product @belongsTo
+  name: String!
+  specifications: [ProductSpecification] @hasMany
+}
+
+type ProductSpecification
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: private, operations: [read] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  group: ProductSpecGroup @belongsTo
+  name: String!
+  description: String
 }
 
 type Image

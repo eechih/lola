@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import { ThemeProvider } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 import { Amplify } from 'aws-amplify'
 import type { AppProps } from 'next/app'
@@ -41,5 +42,9 @@ const updatedAwsConfig = {
 Amplify.configure(updatedAwsConfig)
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <ThemeProvider>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  )
 }

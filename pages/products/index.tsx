@@ -2,25 +2,32 @@ import { GraphQLResult } from '@aws-amplify/api'
 import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
 import {
   Button,
-  Divider,
+  CheckboxField,
   Flex,
   Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  TextField,
+  Text,
   Alert as UIAlert,
-  Image as UIImage,
   View,
   WithAuthenticatorProps,
+  useTheme,
   withAuthenticator,
 } from '@aws-amplify/ui-react'
 import { DataStore, Hub, Predicates, Storage } from 'aws-amplify'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { BsArrowClockwise } from 'react-icons/bs'
 
 import { Image, Product, ProductStatus } from '../../src/models'
+import Breadcrumb from './Breadcrumb'
+import Layout from './Layout'
 
 type CreateForm = {
   name: string
@@ -49,6 +56,8 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
   const [products, setProducts] = useState<Product[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [isMutating, setMutating] = useState<boolean>(false)
+  const { tokens } = useTheme()
+  const router = useRouter()
 
   Hub.listen('api', (data: any) => {
     const { payload } = data
@@ -99,17 +108,7 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
       })
       console.log(products)
 
-      return await Promise.all(
-        products.map(async product => {
-          if (product.image) {
-            const image = await Storage.get(product.image)
-            return Product.copyOf(product, updated => {
-              updated.image = image
-            })
-          }
-          return product
-        })
-      )
+      return products
     } catch (error) {
       console.log('Error retrieving products', error)
       return []
@@ -138,7 +137,8 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
         cost: Number(cost),
         description: description,
         status: ProductStatus.ACTIVE,
-        image: filename,
+        // specGroups: undefined,
+        // images: [filename],
         createdAt: new Date().toISOString(),
       }
 
@@ -200,7 +200,126 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
   }
 
   return (
-    <View margin="1rem">
+    <Layout>
+      <Breadcrumb
+        breadcrumbs={[{ label: '首頁', href: '/' }, { label: '產品列表' }]}
+      />
+      <View
+        as="div"
+        border="1px solid var(--amplify-colors-border-secondary)"
+        boxShadow="1px 1px 1px 1px var(--amplify-colors-shadow-primary)"
+        style={{ backgroundColor: tokens.colors.background.secondary.value }}
+      >
+        <Flex direction="column" style={{ padding: 12 }}>
+          <Flex
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            style={{}}
+          >
+            <Flex direction="row">
+              <Heading>商品列表</Heading>
+            </Flex>
+
+            <Flex direction="row">
+              <Button onClick={() => router.push('/products')} size="small">
+                <BsArrowClockwise />
+              </Button>
+              <Menu trigger={<MenuButton size="small">動作</MenuButton>}>
+                <MenuItem>Download</MenuItem>
+                <MenuItem>Create a Copy</MenuItem>
+                <MenuItem>Mark as Draft</MenuItem>
+              </Menu>
+              <Button
+                isDisabled={true}
+                onClick={() => router.push('/products/create')}
+                size="small"
+              >
+                刪除
+              </Button>
+              <Button
+                isDisabled={isMutating}
+                onClick={() => router.push('/products/create')}
+                variation="primary"
+                size="small"
+              >
+                建立產品
+              </Button>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Flex
+          style={{ backgroundColor: tokens.colors.background.primary.value }}
+        >
+          <Table caption="" highlightOnHover={true}>
+            <TableHead>
+              <TableRow>
+                <TableCell as="th">
+                  <CheckboxField
+                    label="all"
+                    name=""
+                    value=""
+                    labelHidden={true}
+                  />
+                </TableCell>
+                <TableCell as="th">ID</TableCell>
+                <TableCell as="th">圖片</TableCell>
+                <TableCell as="th">名稱</TableCell>
+                <TableCell as="th">價格</TableCell>
+                <TableCell as="th">成本</TableCell>
+                <TableCell as="th">描述</TableCell>
+                <TableCell as="th">操作</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {products.map((product, index) => (
+                <TableRow key={product.id ?? index}>
+                  <TableCell>
+                    <CheckboxField
+                      label="all"
+                      name=""
+                      value=""
+                      labelHidden={true}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Text
+                      onClick={() => router.push(`/products/${product.id}`)}
+                      color={tokens.colors.font.interactive.value}
+                      style={{ cursor: 'pointer', fontWeight: 700 }}
+                    >
+                      {product.id?.substring(0, 6) ?? ''}
+                    </Text>
+                  </TableCell>
+                  <TableCell>
+                    {/* {product.images && (
+                    <UIImage
+                      height="3rem"
+                      width="3rem"
+                      src={product.images}
+                      alt={product.id}
+                    />
+                  )} */}
+                  </TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>{product.price}</TableCell>
+                  <TableCell>{product.cost}</TableCell>
+                  <TableCell>{product.description}</TableCell>
+                  <TableCell>
+                    <Button
+                      variation="link"
+                      isDisabled={isMutating}
+                      onClick={() => deleteProduct(product.id)}
+                    >
+                      刪除
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Flex>
+      </View>
       <Flex direction="column">
         {alerts.map(alert => (
           <UIAlert
@@ -213,110 +332,8 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
             {alert.body}
           </UIAlert>
         ))}
-        <Flex justifyContent="space-between" alignItems="center">
-          <Heading level={3}>產品管理</Heading>
-          <Flex alignItems="center">
-            <Heading level={6}>{user?.username}</Heading>
-            <Button variation="link" size="small" onClick={signOut}>
-              登出
-            </Button>
-          </Flex>
-        </Flex>
-
-        <Flex direction="column" maxWidth="32rem" width="100%">
-          <TextField
-            placeholder="Product name"
-            label="名稱"
-            errorMessage="There is an error"
-            onChange={event => setInput('name', event.target.value)}
-            value={formState.name}
-          />
-          <TextField
-            placeholder="不可低於成本"
-            label="價格"
-            errorMessage="There is an error"
-            onChange={event => setInput('price', event.target.value)}
-            value={formState.price}
-          />
-          <TextField
-            placeholder="不可低於0"
-            label="成本"
-            errorMessage="There is an error"
-            onChange={event => setInput('cost', event.target.value)}
-            value={formState.cost}
-          />
-          <TextField
-            placeholder="Product description"
-            label="描述"
-            errorMessage="There is an error"
-            onChange={event => setInput('description', event.target.value)}
-            value={formState.description}
-          />
-          <Flex direction="row" alignItems="center">
-            <Heading level={6}>Image</Heading>
-            <input
-              type="file"
-              accept="image/jpeg"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                console.log(event.target.files)
-                setFormState({ ...formState, file: event.target.files?.[0] })
-              }}
-            />
-          </Flex>
-          <Button
-            isDisabled={isMutating}
-            onClick={createProduct}
-            variation="primary"
-          >
-            建立產品
-          </Button>
-        </Flex>
-        <Divider orientation="horizontal" />
-        <Table caption="" highlightOnHover={true}>
-          <TableHead>
-            <TableRow>
-              <TableCell as="th">ID</TableCell>
-              <TableCell as="th">圖片</TableCell>
-              <TableCell as="th">名稱</TableCell>
-              <TableCell as="th">價格</TableCell>
-              <TableCell as="th">成本</TableCell>
-              <TableCell as="th">描述</TableCell>
-              <TableCell as="th">操作</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {products.map((product, index) => (
-              <TableRow key={product.id ?? index}>
-                <TableCell>{product.id?.substring(0, 6) ?? ''}</TableCell>
-                <TableCell>
-                  {product.image && (
-                    <UIImage
-                      height="3rem"
-                      width="3rem"
-                      src={product.image}
-                      alt={product.id}
-                    />
-                  )}
-                </TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.price}</TableCell>
-                <TableCell>{product.cost}</TableCell>
-                <TableCell>{product.description}</TableCell>
-                <TableCell>
-                  <Button
-                    variation="link"
-                    isDisabled={isMutating}
-                    onClick={() => deleteProduct(product.id)}
-                  >
-                    刪除
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
       </Flex>
-    </View>
+    </Layout>
   )
 }
 
