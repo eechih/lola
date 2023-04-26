@@ -2,19 +2,19 @@ import { GraphQLResult } from '@aws-amplify/api'
 import {
   Button,
   Flex,
-  Heading,
   TextField,
   Alert as UIAlert,
 } from '@aws-amplify/ui-react'
 import { DataStore, Storage } from 'aws-amplify'
 import { useRouter } from 'next/router'
-import { ChangeEvent, useState } from 'react'
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
 import { Image, Product, ProductStatus } from '../../src/models'
-import Breadcrumb from './Breadcrumb'
+import Breadcrumbs from './Breadcrumb'
 import Layout from './Layout'
 
-type CreateForm = {
+type ProductForm = {
   name: string
   price: string
   cost: string
@@ -22,7 +22,7 @@ type CreateForm = {
   file?: File
 }
 
-const initialState: CreateForm = {
+const initialState: ProductForm = {
   name: '',
   price: '0',
   cost: '0',
@@ -38,18 +38,23 @@ type Alert = {
 
 const Index = () => {
   const router = useRouter()
-  const [formState, setFormState] = useState<CreateForm>(initialState)
   const [products, setProducts] = useState<Product[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [isMutating, setMutating] = useState<boolean>(false)
+  const { register, handleSubmit, control } = useForm<ProductForm>({
+    defaultValues: initialState ?? {},
+  })
 
-  function setInput(key: string, value: string) {
-    setFormState({ ...formState, [key]: value })
+  async function createProduct(data: ProductForm) {}
+
+  function dismissAlert(alertId: string) {
+    setAlerts(alerts.filter(alert => alert.id !== alertId))
   }
 
-  async function createProduct() {
-    const { name, price, cost, description, file } = formState
-    if (!formState.name || !formState.description) return
+  const onSubmit = async (data: ProductForm) => {
+    console.log('onSubmit', data)
+    const { name, price, cost, description, file } = data
+    if (!name || !description) return
     setMutating(true)
     const prevProducts = products
     const filename = file?.name ?? ''
@@ -72,7 +77,6 @@ const Index = () => {
 
       console.log('product', input)
       setProducts([input as Product, ...products])
-      setFormState(initialState)
       const product = await DataStore.save(new Product(input))
       await DataStore.save(
         new Image({
@@ -99,13 +103,9 @@ const Index = () => {
     }
   }
 
-  function dismissAlert(alertId: string) {
-    setAlerts(alerts.filter(alert => alert.id !== alertId))
-  }
-
   return (
     <Layout>
-      <Breadcrumb
+      <Breadcrumbs
         breadcrumbs={[
           { label: '首頁', href: '/' },
           { label: '產品列表', href: '/products' },
@@ -125,54 +125,68 @@ const Index = () => {
           </UIAlert>
         ))}
 
-        <Flex direction="column" maxWidth="32rem" width="100%">
-          <TextField
-            placeholder="Product name"
-            label="名稱"
-            errorMessage="There is an error"
-            onChange={event => setInput('name', event.target.value)}
-            value={formState.name}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                autoFocus
+                margin="dense"
+                id={field.name}
+                label="名稱"
+                type="txt"
+                {...field}
+              />
+            )}
           />
-          <TextField
-            placeholder="不可低於成本"
-            label="價格"
-            errorMessage="There is an error"
-            onChange={event => setInput('price', event.target.value)}
-            value={formState.price}
+          <Controller
+            name="price"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                autoFocus
+                margin="dense"
+                id={field.name}
+                label="價格"
+                type="number"
+                {...field}
+              />
+            )}
           />
-          <TextField
-            placeholder="不可低於0"
-            label="成本"
-            errorMessage="There is an error"
-            onChange={event => setInput('cost', event.target.value)}
-            value={formState.cost}
+          <Controller
+            name="cost"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                autoFocus
+                margin="dense"
+                id={field.name}
+                label="成本"
+                type="number"
+                {...field}
+              />
+            )}
           />
-          <TextField
-            placeholder="Product description"
-            label="描述"
-            errorMessage="There is an error"
-            onChange={event => setInput('description', event.target.value)}
-            value={formState.description}
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                autoFocus
+                margin="dense"
+                id={field.name}
+                label="描述"
+                type="text"
+                {...field}
+              />
+            )}
           />
-          <Flex direction="row" alignItems="center">
-            <Heading level={6}>Image</Heading>
-            <input
-              type="file"
-              accept="image/jpeg"
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                console.log(event.target.files)
-                setFormState({ ...formState, file: event.target.files?.[0] })
-              }}
-            />
-          </Flex>
-          <Button
-            isDisabled={isMutating}
-            onClick={createProduct}
-            variation="primary"
-          >
+
+          <Button isDisabled={isMutating} type="submit" variation="primary">
             建立產品
           </Button>
-        </Flex>
+        </form>
       </Flex>
     </Layout>
   )

@@ -20,12 +20,12 @@ import NavHeader from './NavHeader'
 const drawerWidth = 240
 const minDrawerWidth = 56
 
-interface LayoutProps {
+interface ClippedDrawerProps {
   children: React.ReactNode
 }
 
-export default function Layout({ children }: LayoutProps) {
-  const [open, setOpen] = useState(true)
+export default function ClippedDrawer({ children }: ClippedDrawerProps) {
+  const [open, setOpen] = useState(false)
 
   return (
     <Box sx={{ display: 'flex' }}>

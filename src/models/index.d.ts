@@ -24,7 +24,7 @@ type EagerProduct = {
   readonly provider?: string | null;
   readonly offShelfTime?: string | null;
   readonly status: ProductStatus | keyof typeof ProductStatus;
-  readonly createdAt: string;
+  readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
@@ -43,7 +43,7 @@ type LazyProduct = {
   readonly provider?: string | null;
   readonly offShelfTime?: string | null;
   readonly status: ProductStatus | keyof typeof ProductStatus;
-  readonly createdAt: string;
+  readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 

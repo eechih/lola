@@ -30,7 +30,7 @@ type Product
       queryField: "listProductsByStatus"
       sortKeyFields: ["createdAt"]
     )
-  createdAt: AWSDateTime!
+  createdAt: AWSDateTime
 }
 
 type ProductSpecGroup

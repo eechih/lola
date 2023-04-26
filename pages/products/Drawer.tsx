@@ -23,10 +23,7 @@ const DrawerClosed = styled(Flex)`
 `
 export default function Drawer() {
   const router = useRouter()
-
   const pathname = router.pathname as string
-  console.log(router)
-  console.log('pathname', pathname)
   const { tokens } = useTheme()
   const [open, setOpen] = useState(true)
 
@@ -35,8 +32,9 @@ export default function Drawer() {
       <Flex
         direction="column"
         style={{
-          width: 250,
+          width: 280,
           position: 'relative',
+          borderRight: '2px solid var(--amplify-colors-border-secondary)',
         }}
         gap="0"
       >
@@ -103,7 +101,10 @@ export default function Drawer() {
       <DrawerClosed
         direction="column"
         alignItems="center"
-        style={{ width: 48 }}
+        style={{
+          width: 48,
+          borderRight: '2px solid var(--amplify-colors-border-secondary)',
+        }}
         gap="0"
         onClick={() => setOpen(true)}
       >

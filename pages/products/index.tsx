@@ -1,7 +1,6 @@
 import { GraphQLResult } from '@aws-amplify/api'
-import { ConnectionState, CONNECTION_STATE_CHANGE } from '@aws-amplify/pubsub'
+import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
 import {
-  Alert as UIAlert,
   Button,
   CheckboxField,
   Flex,
@@ -15,9 +14,10 @@ import {
   TableHead,
   TableRow,
   Text,
+  Alert as UIAlert,
+  WithAuthenticatorProps,
   useTheme,
   withAuthenticator,
-  WithAuthenticatorProps,
 } from '@aws-amplify/ui-react'
 import { DataStore, Hub, Predicates, Storage } from 'aws-amplify'
 import { useRouter } from 'next/router'
