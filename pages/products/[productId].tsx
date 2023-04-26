@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Product } from '../../src/models'
-import Breadcrumb from './Breadcrumb'
+import Breadcrumbs from './Breadcrumbs'
 import Layout from './Layout'
 import Paper from './Paper'
 
@@ -76,11 +76,11 @@ export default function Index() {
 
   return (
     <Layout>
-      <Breadcrumb
-        breadcrumbs={[
-          { label: '首頁', href: '/' },
-          { label: '產品列表', href: '/products' },
-          { label: isEdition ? '編輯產品' : '建立產品' },
+      <Breadcrumbs
+        links={[
+          { children: '首頁', href: '/' },
+          { children: '產品列表', href: '/products' },
+          { children: isEdition ? '編輯產品' : '建立產品' },
         ]}
       />
 

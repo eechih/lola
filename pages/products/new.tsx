@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Image, Product, ProductStatus } from '../../src/models'
-import Breadcrumbs from './Breadcrumb'
+import Breadcrumbs from './Breadcrumbs'
 import Layout from './Layout'
 
 type ProductForm = {

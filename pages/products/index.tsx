@@ -1,33 +1,35 @@
 import { GraphQLResult } from '@aws-amplify/api'
 import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
 import {
-  Button,
-  CheckboxField,
-  Flex,
-  Heading,
-  Menu,
-  MenuButton,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Text,
-  Alert as UIAlert,
   WithAuthenticatorProps,
-  useTheme,
   withAuthenticator,
 } from '@aws-amplify/ui-react'
+import ArchiveIcon from '@mui/icons-material/Archive'
+import EditIcon from '@mui/icons-material/Edit'
+import FileCopyIcon from '@mui/icons-material/FileCopy'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/material/styles'
 import { DataStore, Hub, Predicates, Storage } from 'aws-amplify'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { BsArrowClockwise } from 'react-icons/bs'
 
 import { Image, Product, ProductStatus } from '../../src/models'
-import Breadcrumb from './Breadcrumb'
+import Breadcrumbs from './Breadcrumbs'
 import Layout from './Layout'
-import Paper from './Paper'
 
 type CreateForm = {
   name: string
@@ -53,10 +55,11 @@ type Alert = {
 
 const Index = ({ signOut, user }: WithAuthenticatorProps) => {
   const [formState, setFormState] = useState<CreateForm>(initialState)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
   const [products, setProducts] = useState<Product[]>([])
-  const [alerts, setAlerts] = useState<Alert[]>([])
   const [isMutating, setMutating] = useState<boolean>(false)
-  const { tokens } = useTheme()
+  const theme = useTheme()
   const router = useRouter()
 
   Hub.listen('api', (data: any) => {
@@ -76,6 +79,13 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
   Hub.listen('datastore', async (data: any) => {
     console.log('datastore event', data.payload)
   })
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   useEffect(() => {
     const loadData = async () => setProducts(await listProducts())
@@ -166,7 +176,6 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
             body: error.message,
           }
         }) ?? []
-      setAlerts([...newAlerts, ...alerts])
     }
   }
 
@@ -191,144 +200,121 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
             body: error.message,
           }
         }) ?? []
-      setAlerts([...newAlerts, ...alerts])
     }
-  }
-
-  function dismissAlert(alertId: string) {
-    setAlerts(alerts.filter(alert => alert.id !== alertId))
   }
 
   return (
     <Layout>
-      <Breadcrumb
-        breadcrumbs={[{ label: '首頁', href: '/' }, { label: '產品列表' }]}
+      <Breadcrumbs
+        links={[{ children: '首頁', href: '/' }, { children: '產品列表' }]}
       />
       <Paper>
-        <Flex direction="column" style={{ padding: 12 }}>
-          <Flex
+        <Stack direction="column" padding={2}>
+          <Stack
             direction="row"
             justifyContent="space-between"
             alignItems="center"
-            style={{}}
           >
-            <Flex direction="row">
-              <Heading>商品列表</Heading>
-            </Flex>
+            <Stack direction="row">
+              <Typography variant="h6">商品列表</Typography>
+            </Stack>
 
-            <Flex direction="row">
-              <Button onClick={() => router.push('/products')} size="small">
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={() => router.push('/products')}
+                size="small"
+              >
                 <BsArrowClockwise />
               </Button>
-              <Menu trigger={<MenuButton size="small">動作</MenuButton>}>
-                <MenuItem>Download</MenuItem>
-                <MenuItem>Create a Copy</MenuItem>
-                <MenuItem>Mark as Draft</MenuItem>
-              </Menu>
               <Button
-                isDisabled={true}
+                variant="outlined"
+                color="inherit"
+                onClick={handleClick}
+                size="small"
+              >
+                動作
+              </Button>
+              <Menu
+                id="demo-customized-menu"
+                MenuListProps={{
+                  'aria-labelledby': 'demo-customized-button',
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} disableRipple>
+                  <EditIcon />
+                  Edit
+                </MenuItem>
+                <MenuItem onClick={handleClose} disableRipple>
+                  <FileCopyIcon />
+                  Duplicate
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={handleClose} disableRipple>
+                  <ArchiveIcon />
+                  Archive
+                </MenuItem>
+                <MenuItem onClick={handleClose} disableRipple>
+                  <MoreHorizIcon />
+                  More
+                </MenuItem>
+              </Menu>
+
+              <Button
+                disabled={true}
                 onClick={() => router.push('/products/create')}
                 size="small"
               >
                 刪除
               </Button>
               <Button
-                isDisabled={isMutating}
+                variant="contained"
                 onClick={() => router.push('/products/create')}
-                variation="primary"
+                disabled={isMutating}
                 size="small"
               >
                 建立產品
               </Button>
-            </Flex>
-          </Flex>
-        </Flex>
-        <Flex
-          style={{ backgroundColor: tokens.colors.background.primary.value }}
-        >
-          <Table caption="" highlightOnHover={true}>
+            </Stack>
+          </Stack>
+        </Stack>
+        <TableContainer sx={{ width: '100%', overflowX: 'auto' }}>
+          <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                <TableCell as="th">
-                  <CheckboxField
-                    label="all"
-                    name=""
-                    value=""
-                    labelHidden={true}
-                  />
-                </TableCell>
-                <TableCell as="th">ID</TableCell>
-                <TableCell as="th">圖片</TableCell>
-                <TableCell as="th">名稱</TableCell>
-                <TableCell as="th">價格</TableCell>
-                <TableCell as="th">成本</TableCell>
-                <TableCell as="th">描述</TableCell>
-                <TableCell as="th">操作</TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>名稱</TableCell>
+                <TableCell>價格</TableCell>
+                <TableCell>成本</TableCell>
+                <TableCell>描述</TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
-              {products.map((product, index) => (
-                <TableRow key={product.id ?? index}>
-                  <TableCell>
-                    <CheckboxField
-                      label="all"
-                      name=""
-                      value=""
-                      labelHidden={true}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Text
-                      onClick={() => router.push(`/products/${product.id}`)}
-                      color={tokens.colors.font.interactive.value}
-                      style={{ cursor: 'pointer', fontWeight: 700 }}
-                    >
-                      {product.id?.substring(0, 6) ?? ''}
-                    </Text>
-                  </TableCell>
-                  <TableCell>
-                    {/* {product.images && (
-                    <UIImage
-                      height="3rem"
-                      width="3rem"
-                      src={product.images}
-                      alt={product.id}
-                    />
-                  )} */}
-                  </TableCell>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.cost}</TableCell>
-                  <TableCell>{product.description}</TableCell>
-                  <TableCell>
-                    <Button
-                      variation="link"
-                      isDisabled={isMutating}
-                      onClick={() => deleteProduct(product.id)}
-                    >
-                      刪除
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {products.map(product => {
+                const { id, name, price, cost, description } = product
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={id}>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ color: '#1976d2' }}>
+                        {id.substring(0, 8)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>{name}</TableCell>
+                    <TableCell>{price}</TableCell>
+                    <TableCell>{cost}</TableCell>
+                    <TableCell>{description}</TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
-        </Flex>
+        </TableContainer>
       </Paper>
-
-      <Flex direction="column">
-        {alerts.map(alert => (
-          <UIAlert
-            key={alert.id}
-            isDismissible={true}
-            variation={alert.variation}
-            heading={alert.heading}
-            onDismiss={() => dismissAlert(alert.id)}
-          >
-            {alert.body}
-          </UIAlert>
-        ))}
-      </Flex>
     </Layout>
   )
 }
