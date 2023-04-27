@@ -27,8 +27,8 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { BsArrowClockwise } from 'react-icons/bs'
 
-import { Image, Product, ProductStatus } from '../../src/models'
-import Breadcrumbs from './Breadcrumbs'
+import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
+import { Image, Product, ProductStatus } from '@/src/models'
 import Layout from './Layout'
 
 type CreateForm = {
@@ -205,7 +205,7 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
 
   return (
     <Layout>
-      <Breadcrumbs
+      <WrappedBreadcrumbs
         links={[{ children: '首頁', href: '/' }, { children: '產品列表' }]}
       />
       <Paper>

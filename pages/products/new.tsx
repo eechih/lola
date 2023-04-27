@@ -10,8 +10,8 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { Image, Product, ProductStatus } from '../../src/models'
-import Breadcrumbs from './Breadcrumbs'
+import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
+import { Image, Product, ProductStatus } from '@/src/models'
 import Layout from './Layout'
 
 type ProductForm = {
@@ -105,11 +105,11 @@ const Index = () => {
 
   return (
     <Layout>
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: '首頁', href: '/' },
-          { label: '產品列表', href: '/products' },
-          { label: '建立產品' },
+      <WrappedBreadcrumbs
+        links={[
+          { children: '首頁', href: '/' },
+          { children: '產品列表', href: '/products' },
+          { children: '建立產品' },
         ]}
       />
       <Flex direction="column">

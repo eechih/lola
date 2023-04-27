@@ -13,8 +13,8 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import { Product } from '../../src/models'
-import Breadcrumbs from './Breadcrumbs'
+import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
+import { Product } from '@/src/models'
 import Layout from './Layout'
 import Paper from './Paper'
 
@@ -76,7 +76,7 @@ export default function Index() {
 
   return (
     <Layout>
-      <Breadcrumbs
+      <WrappedBreadcrumbs
         links={[
           { children: '首頁', href: '/' },
           { children: '產品列表', href: '/products' },
