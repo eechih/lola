@@ -85,7 +85,7 @@ export default function Index() {
     const { nextToken, limit = 10 } = props ?? {}
     try {
       const products = await DataStore.query(Product, Predicates.ALL, {
-        limit: 10,
+        limit: 30,
       })
       console.log(products)
 
@@ -191,30 +191,31 @@ export default function Index() {
                 <TableCell>ID</TableCell>
                 <TableCell>名稱</TableCell>
                 <TableCell>價格</TableCell>
+                <TableCell>供應商</TableCell>
                 <TableCell>成本</TableCell>
-                <TableCell>描述</TableCell>
+                <TableCell>下架時間</TableCell>
               </TableRow>
             </TableHead>
 
             <TableBody>
-              {products.map(product => {
-                const { id, name, price, cost, description } = product
+              {products.map((product, index) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={id}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                     <TableCell>
                       <Typography
                         component={NextLink}
-                        href={`/products/${id}`}
+                        href={`/products/${product.id}`}
                         variant="body2"
                         sx={{ color: theme.palette.info.main }}
                       >
-                        {id.substring(0, 8)}
+                        {product.id.substring(0, 8)}
                       </Typography>
                     </TableCell>
-                    <TableCell>{name}</TableCell>
-                    <TableCell>{price}</TableCell>
-                    <TableCell>{cost}</TableCell>
-                    <TableCell>{description}</TableCell>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{product.price}</TableCell>
+                    <TableCell>{product.provider}</TableCell>
+                    <TableCell>{product.cost}</TableCell>
+                    <TableCell>{product.offShelfTime}</TableCell>
                   </TableRow>
                 )
               })}
