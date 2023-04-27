@@ -1,22 +1,18 @@
-import {
-  Button,
-  FileUploader,
-  Flex,
-  Heading,
-  Text,
-  TextField,
-  ToggleButton,
-  View,
-} from '@aws-amplify/ui-react'
-import { DataStore } from 'aws-amplify'
+import { FileUploader } from '@aws-amplify/ui-react'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import { DataStore, Storage } from 'aws-amplify'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
-import { Product } from '@/src/models'
-import Layout from './Layout'
-import Paper from './Paper'
+import { Image, Product, ProductStatus } from '@/src/models'
+import Layout from '../../src/components/Layout'
 
 type ProductForm = {
   name: string
@@ -71,33 +67,61 @@ export default function Index() {
   }, [isEdition, productId, reset])
 
   const onSubmit = async (data: ProductForm) => {
-    console.log('submit', data)
+    console.log('onSubmit', data)
+    const { name, price, cost, description, file } = data
+    if (!name || !description) return
+    const filename = file?.name ?? ''
+
+    try {
+      if (file) {
+        await Storage.put(file.name, file)
+      }
+
+      const input = {
+        name: name,
+        price: Number(price),
+        cost: Number(cost),
+        description: description,
+        status: ProductStatus.ACTIVE,
+        // specGroups: undefined,
+        // images: [filename],
+        createdAt: new Date().toISOString(),
+      }
+
+      console.log('product', input)
+      const product = await DataStore.save(new Product(input))
+      await DataStore.save(
+        new Image({
+          url: filename,
+          product: product,
+        })
+      )
+      router.push('/products')
+    } catch (error) {
+      console.log('Error creating products', error)
+    }
   }
 
   return (
     <Layout>
-      <WrappedBreadcrumbs
-        links={[
-          { children: '首頁', href: '/' },
-          { children: '產品列表', href: '/products' },
-          { children: isEdition ? '編輯產品' : '建立產品' },
-        ]}
-      />
+      <Container disableGutters sx={{ marginLeft: 0 }}>
+        <WrappedBreadcrumbs
+          links={[
+            { children: '首頁', href: '/' },
+            { children: '產品列表', href: '/products' },
+            { children: isEdition ? '編輯產品' : '建立產品' },
+          ]}
+        />
 
-      <Flex direction="row" paddingBottom={16}>
-        <Heading level={3}>{isEdition ? '編輯產品' : '建立產品'}</Heading>
-      </Flex>
+        <Stack direction="row" paddingBottom={2}>
+          <Typography variant="h5">
+            {isEdition ? '編輯產品' : '建立產品'}
+          </Typography>
+        </Stack>
 
-      <View minWidth={280} maxWidth={1280}>
         <Paper>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Flex
-              direction="column"
-              paddingRight={20}
-              paddingLeft={20}
-              paddingTop={12}
-              paddingBottom={12}
-            >
+            <Stack direction="column" spacing={2} padding={2}>
               <Controller
                 name="name"
                 control={control}
@@ -105,27 +129,12 @@ export default function Index() {
                 render={({ field, fieldState }) => (
                   <TextField
                     autoFocus
-                    isRequired={true}
-                    margin="dense"
                     id={field.name}
-                    label={
-                      <Text style={{ position: 'relative' }}>
-                        名稱
-                        <Text
-                          as="span"
-                          fontSize="0.8rem"
-                          color="red"
-                          fontStyle="italic"
-                          style={{ position: 'absolute', top: -4 }}
-                        >
-                          *
-                        </Text>
-                      </Text>
-                    }
+                    label="名稱"
                     type="txt"
+                    error={fieldState.invalid}
+                    helperText={fieldState.error?.message}
                     {...field}
-                    hasError={fieldState.invalid}
-                    errorMessage={fieldState.error?.message}
                   />
                 )}
               />
@@ -138,26 +147,12 @@ export default function Index() {
                 }}
                 render={({ field, fieldState }) => (
                   <TextField
-                    margin="dense"
                     id={field.name}
-                    label={
-                      <Text style={{ position: 'relative' }}>
-                        價格
-                        <Text
-                          as="span"
-                          fontSize="0.8rem"
-                          color="red"
-                          fontStyle="italic"
-                          style={{ position: 'absolute', top: -4 }}
-                        >
-                          *
-                        </Text>
-                      </Text>
-                    }
+                    label="價格"
                     type="number"
+                    error={fieldState.invalid}
+                    helperText={fieldState.error?.message}
                     {...field}
-                    hasError={fieldState.invalid}
-                    errorMessage={fieldState.error?.message}
                   />
                 )}
               />
@@ -169,13 +164,12 @@ export default function Index() {
                 }}
                 render={({ field, fieldState }) => (
                   <TextField
-                    margin="dense"
                     id={field.name}
                     label="成本"
                     type="number"
+                    error={fieldState.invalid}
+                    helperText={fieldState.error?.message}
                     {...field}
-                    hasError={fieldState.invalid}
-                    errorMessage={fieldState.error?.message}
                   />
                 )}
               />
@@ -184,7 +178,6 @@ export default function Index() {
                 control={control}
                 render={({ field }) => (
                   <TextField
-                    margin="dense"
                     id={field.name}
                     label="描述"
                     type="text"
@@ -192,57 +185,30 @@ export default function Index() {
                   />
                 )}
               />
-              <Text>上傳圖片</Text>
+              <Typography>上傳圖片</Typography>
               <FileUploader
                 onSuccess={onSuccess}
                 variation="drop"
                 acceptedFileTypes={['image/*']}
                 accessLevel="private"
               />
-              <FileUploader
-                onSuccess={onSuccess}
-                variation="drop"
-                acceptedFileTypes={['image/*']}
-                accessLevel="private"
-              />
-              <FileUploader
-                onSuccess={onSuccess}
-                variation="drop"
-                acceptedFileTypes={['image/*']}
-                accessLevel="private"
-              />
-              <FileUploader
-                onSuccess={onSuccess}
-                variation="drop"
-                acceptedFileTypes={['image/*']}
-                accessLevel="private"
-              />
-              <FileUploader
-                onSuccess={onSuccess}
-                variation="drop"
-                acceptedFileTypes={['image/*']}
-                accessLevel="private"
-              />
-            </Flex>
+            </Stack>
           </form>
         </Paper>
-        <Flex justifyContent="end" marginTop={16}>
-          <ToggleButton
-            variation="menu"
-            onClick={() => router.push('/products')}
-          >
+        <Stack direction="row" justifyContent="end" marginTop={2}>
+          <Button color="inherit" onClick={() => router.push('/products')}>
             取消
-          </ToggleButton>
+          </Button>
           <Button
-            type="submit"
-            variation="primary"
+            variant="contained"
+            color="primary"
             onClick={handleSubmit(onSubmit)}
-            isDisabled={!formState.isDirty}
+            // disabled={!formState.isDirty || !formState.isValid}
           >
             {isEdition ? '儲存變更' : '建立產品'}
           </Button>
-        </Flex>
-      </View>
+        </Stack>
+      </Container>
     </Layout>
   )
 }

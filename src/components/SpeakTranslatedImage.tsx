@@ -6,8 +6,8 @@ import { ChangeEvent, useState } from 'react'
 import {
   SpeakTranslatedImageTextQuery,
   SpeakTranslatedImageTextQueryVariables,
-} from '../../src/API'
-import * as queries from '../../src/graphql/queries'
+} from '@/src/API'
+import * as queries from '@/src/graphql/queries'
 
 export default function SpeakTranslatedImage() {
   const [src, setSrc] = useState('')

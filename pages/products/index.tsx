@@ -1,17 +1,13 @@
-import { GraphQLResult } from '@aws-amplify/api'
 import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub'
-import {
-  WithAuthenticatorProps,
-  withAuthenticator,
-} from '@aws-amplify/ui-react'
-import ArchiveIcon from '@mui/icons-material/Archive'
-import EditIcon from '@mui/icons-material/Edit'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import RefreshIcon from '@mui/icons-material/Refresh'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
+import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import MenuList from '@mui/material/MenuList'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Table from '@mui/material/Table'
@@ -22,45 +18,20 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
-import { DataStore, Hub, Predicates, Storage } from 'aws-amplify'
-import { useRouter } from 'next/router'
+import { DataStore, Hub, Predicates } from 'aws-amplify'
+import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
-import { BsArrowClockwise } from 'react-icons/bs'
 
 import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
-import { Image, Product, ProductStatus } from '@/src/models'
-import Layout from './Layout'
+import { Product } from '@/src/models'
+import Layout from '../../src/components/Layout'
 
-type CreateForm = {
-  name: string
-  price: string
-  cost: string
-  description: string
-  file?: File
-}
-
-const initialState: CreateForm = {
-  name: '',
-  price: '0',
-  cost: '0',
-  description: '',
-}
-
-type Alert = {
-  id: string
-  variation: 'error' | 'warning'
-  heading?: string
-  body: string
-}
-
-const Index = ({ signOut, user }: WithAuthenticatorProps) => {
-  const [formState, setFormState] = useState<CreateForm>(initialState)
+export default function Index() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const [products, setProducts] = useState<Product[]>([])
   const [isMutating, setMutating] = useState<boolean>(false)
   const theme = useTheme()
-  const router = useRouter()
 
   Hub.listen('api', (data: any) => {
     const { payload } = data
@@ -125,60 +96,6 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
     }
   }
 
-  function setInput(key: string, value: string) {
-    setFormState({ ...formState, [key]: value })
-  }
-
-  async function createProduct() {
-    const { name, price, cost, description, file } = formState
-    if (!formState.name || !formState.description) return
-    setMutating(true)
-    const prevProducts = products
-    const filename = file?.name ?? ''
-
-    try {
-      if (file) {
-        await Storage.put(file.name, file)
-      }
-
-      const input = {
-        name: name,
-        price: Number(price),
-        cost: Number(cost),
-        description: description,
-        status: ProductStatus.ACTIVE,
-        // specGroups: undefined,
-        // images: [filename],
-        createdAt: new Date().toISOString(),
-      }
-
-      console.log('product', input)
-      setProducts([input as Product, ...products])
-      setFormState(initialState)
-      const product = await DataStore.save(new Product(input))
-      await DataStore.save(
-        new Image({
-          url: filename,
-          product: product,
-        })
-      )
-      setMutating(false)
-    } catch (error) {
-      console.log('Error creating products', error)
-      setProducts(prevProducts)
-      setMutating(false)
-      const res = error as GraphQLResult
-      const newAlerts: Alert[] =
-        res.errors?.map(error => {
-          return {
-            id: '' + Date.now(),
-            variation: 'error',
-            body: error.message,
-          }
-        }) ?? []
-    }
-  }
-
   async function deleteProduct(productId: string) {
     const prevProducts = products
     try {
@@ -191,15 +108,6 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
       console.log('Error deleting product', error)
       setProducts(prevProducts)
       setMutating(false)
-      const res = error as GraphQLResult
-      const newAlerts: Alert[] =
-        res.errors?.map(error => {
-          return {
-            id: '' + Date.now(),
-            variation: 'error',
-            body: error.message,
-          }
-        }) ?? []
     }
   }
 
@@ -223,16 +131,17 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
               <Button
                 variant="outlined"
                 color="inherit"
-                onClick={() => router.push('/products')}
-                size="small"
+                LinkComponent={NextLink}
+                href="/products"
               >
-                <BsArrowClockwise />
+                <RefreshIcon />
               </Button>
               <Button
+                // disabled={true}
                 variant="outlined"
                 color="inherit"
                 onClick={handleClick}
-                size="small"
+                endIcon={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
               >
                 動作
               </Button>
@@ -245,37 +154,30 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose} disableRipple>
-                  <EditIcon />
-                  Edit
-                </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                  <FileCopyIcon />
-                  Duplicate
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={handleClose} disableRipple>
-                  <ArchiveIcon />
-                  Archive
-                </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                  <MoreHorizIcon />
-                  More
-                </MenuItem>
+                <MenuList>
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <FileCopyIcon />
+                    </ListItemIcon>
+                    <Typography variant="body2">複製項目</Typography>
+                  </MenuItem>
+                </MenuList>
               </Menu>
 
               <Button
-                disabled={true}
-                onClick={() => router.push('/products/create')}
-                size="small"
+                // disabled={true}
+                variant="outlined"
+                color="inherit"
+                LinkComponent={NextLink}
+                href="/products/create"
               >
                 刪除
               </Button>
               <Button
                 variant="contained"
-                onClick={() => router.push('/products/create')}
                 disabled={isMutating}
-                size="small"
+                LinkComponent={NextLink}
+                href="/products/create"
               >
                 建立產品
               </Button>
@@ -300,7 +202,12 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={id}>
                     <TableCell>
-                      <Typography variant="body2" sx={{ color: '#1976d2' }}>
+                      <Typography
+                        component={NextLink}
+                        href={`/products/${id}`}
+                        variant="body2"
+                        sx={{ color: theme.palette.info.main }}
+                      >
                         {id.substring(0, 8)}
                       </Typography>
                     </TableCell>
@@ -318,5 +225,3 @@ const Index = ({ signOut, user }: WithAuthenticatorProps) => {
     </Layout>
   )
 }
-
-export default withAuthenticator(Index)

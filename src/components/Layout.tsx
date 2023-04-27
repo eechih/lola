@@ -1,7 +1,9 @@
 import CloseIcon from '@mui/icons-material/Close'
+import HomeIcon from '@mui/icons-material/Home'
 import MailIcon from '@mui/icons-material/Mail'
 import MenuIcon from '@mui/icons-material/Menu'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
+import TableViewIcon from '@mui/icons-material/TableView'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -13,8 +15,9 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
-
+import NextLink from 'next/link'
 import { useState } from 'react'
+
 import NavHeader from './NavHeader'
 
 const drawerWidth = 240
@@ -59,22 +62,28 @@ export default function Layout({ children }: LayoutProps) {
           </List>
           <Divider />
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
+            <ListItem key="home" disablePadding>
+              <ListItemButton LinkComponent={NextLink} href="/">
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                {open && <ListItemText primary="首頁" />}
+              </ListItemButton>
+            </ListItem>
+            <ListItem key="products" disablePadding>
+              <ListItemButton LinkComponent={NextLink} href="/products">
+                <ListItemIcon>
+                  <TableViewIcon />
+                </ListItemIcon>
+                {open && <ListItemText primary="產品列表" />}
+              </ListItemButton>
+            </ListItem>
           </List>
           <Divider />
           <List>
             {['All mail', 'Trash', 'Spam'].map((text, index) => (
               <ListItem key={text} disablePadding>
-                <ListItemButton>
+                <ListItemButton LinkComponent={NextLink} href="/products">
                   <ListItemIcon>
                     {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                   </ListItemIcon>

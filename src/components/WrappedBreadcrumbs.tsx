@@ -3,9 +3,9 @@ import Breadcrumbs, { BreadcrumbsProps } from '@mui/material/Breadcrumbs'
 import Link, { LinkProps } from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
-import { useRouter } from 'next/router'
+import NextLink from 'next/link'
 
-type WrappedBreadcrumbsProps = BreadcrumbsProps & {
+export type WrappedBreadcrumbsProps = BreadcrumbsProps & {
   // An alternative to a property called "children" to quickly and easily define the content of a Breadcrumbs.
   // Note that the "children" property will take precedence over this.
   links?: LinkProps[]
@@ -14,7 +14,6 @@ type WrappedBreadcrumbsProps = BreadcrumbsProps & {
 export default function WrappedBreadcrumbs(props: WrappedBreadcrumbsProps) {
   const { children, links = [], ...rest } = props
   const theme = useTheme()
-  const router = useRouter()
   return (
     <Breadcrumbs
       aria-label="breadcrumb"
@@ -23,22 +22,23 @@ export default function WrappedBreadcrumbs(props: WrappedBreadcrumbsProps) {
       {...rest}
     >
       {children ||
-        links.map((link, index, array) => {
-          const { children, href } = link
-          const last = index === array.length - 1
-          return last ? (
-            <Typography color="text.primary" key={index}>
-              {children}
-            </Typography>
-          ) : (
+        links.map((link, index) => {
+          const { children, href, ...rest } = link
+          return href ? (
             <Link
+              component={NextLink}
+              href={href}
               color="inherit"
-              onClick={() => router.push(href ?? '')}
-              sx={{ cursor: 'pointer' }}
               underline="hover"
+              key={index}
+              {...rest}
             >
               {children}
             </Link>
+          ) : (
+            <Typography color="text.primary" key={index} {...rest}>
+              {children}
+            </Typography>
           )
         })}
     </Breadcrumbs>

@@ -1,5 +1,3 @@
-import '@/styles/globals.css'
-import { ThemeProvider } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
@@ -9,7 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { Amplify } from 'aws-amplify'
 import type { AppProps } from 'next/app'
 
-import awsConfig from '../src/aws-exports'
+import awsConfig from '@/src/aws-exports'
 
 const isLocalhost = Boolean(
   typeof window !== 'undefined' &&
@@ -48,9 +46,8 @@ Amplify.configure(updatedAwsConfig)
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider>
-      <CssBaseline />
+    <CssBaseline>
       <Component {...pageProps} />
-    </ThemeProvider>
+    </CssBaseline>
   )
 }
