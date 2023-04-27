@@ -1,11 +1,17 @@
 import '@aws-amplify/ui-react/styles.css'
+import { CacheProvider } from '@emotion/react'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
 import { Amplify } from 'aws-amplify'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
+
+import createEmotionCache from '@/src/createEmotionCache'
+import theme from '@/src/theme'
 
 import awsConfig from '@/src/aws-exports'
 
@@ -44,10 +50,19 @@ const updatedAwsConfig = {
 
 Amplify.configure(updatedAwsConfig)
 
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache()
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <CssBaseline>
-      <Component {...pageProps} />
-    </CssBaseline>
+    <CacheProvider value={clientSideEmotionCache}>
+      <Head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </CacheProvider>
   )
 }

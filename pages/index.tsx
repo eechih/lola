@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
-import Typography from '@mui/material/Typography'
 import React from 'react'
 
 import Echo from '@/src/components/Echo'
@@ -26,11 +25,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ py: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   )
 }
@@ -49,9 +44,9 @@ export default function Home() {
         onChange={handleChange}
         aria-label="basic tabs example"
       >
-        <Tab label="Item One" />
-        <Tab label="Item Two" />
-        <Tab label="Item Three" />
+        <Tab label="SpeakTranslatedImage" />
+        <Tab label="Echo" />
+        <Tab label="FederatedSignIn" />
       </Tabs>
       <TabPanel value={value} index={0}>
         <SpeakTranslatedImage />
