@@ -275,7 +275,7 @@ export default function Index() {
               headerName: '下架時間',
               // type: 'date',
               // valueGetter: ({ value }) => value && new Date(value),
-              width: 140,
+              width: 200,
               editable: true,
             },
             {
@@ -287,7 +287,6 @@ export default function Index() {
                   label="刪除"
                   onClick={() => deleteProduct(params.id.toString())}
                   key="delet"
-                  disabled={true}
                 />,
                 <GridActionsCellItem
                   icon={<PublishIcon />}

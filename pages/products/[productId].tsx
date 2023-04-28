@@ -133,7 +133,9 @@ export default function Index() {
         description: formData.description,
         provider: formData.provider,
         status: ProductStatus.ACTIVE,
-        offShelfTime: formData.offShelfDate + 'T' + formData.offShelfTime,
+        offShelfTime: moment(
+          formData.offShelfDate + 'T' + formData.offShelfTime
+        ).toISOString(),
         createdAt: new Date().toISOString(),
       }
 
@@ -172,8 +174,9 @@ export default function Index() {
             formState.dirtyFields?.offShelfDate ||
             formState.dirtyFields?.offShelfTime
           )
-            updated.offShelfTime =
+            updated.offShelfTime = moment(
               formData.offShelfDate + 'T' + formData.offShelfTime
+            ).toISOString()
         })
       )
     }
