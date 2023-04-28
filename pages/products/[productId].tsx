@@ -197,13 +197,19 @@ export default function Index() {
 
         <Stack
           direction="row"
-          paddingBottom={2}
+          py={2}
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h5">
-            {isEdition ? '產品ID: ' + productId : '建立產品'}
-          </Typography>
+          {isEdition ? (
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Typography variant="h6">產品 ID</Typography>
+              <Typography variant="body1">{productId}</Typography>
+            </Stack>
+          ) : (
+            <Typography variant="h6">建立產品</Typography>
+          )}
+
           <Stack direction="row" spacing={2} alignItems="center">
             <Button
               variant="outlined"
@@ -228,7 +234,7 @@ export default function Index() {
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2}>
               <Grid xs={12} lg={6} marginY={2}>
-                <Paper elevation={3}>
+                <Paper variant="outlined">
                   <Grid container spacing={2} padding={2}>
                     <Grid>
                       <Typography variant="h6">基本設定</Typography>
@@ -377,7 +383,7 @@ export default function Index() {
               </Grid>
 
               <Grid xs={12} lg={6} marginY={2}>
-                <Paper elevation={3}>
+                <Paper variant="outlined">
                   <Grid container spacing={2} padding={2}>
                     <Grid>
                       <Typography variant="h6">社群貼文內容</Typography>
@@ -403,7 +409,7 @@ export default function Index() {
                 </Paper>
               </Grid>
               <Grid xs={12} marginY={2}>
-                <Paper elevation={3}>
+                <Paper variant="outlined">
                   <Grid container spacing={2} padding={2}>
                     <Grid>
                       <Typography variant="h6">產品圖片</Typography>
