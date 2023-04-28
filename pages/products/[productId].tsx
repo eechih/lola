@@ -1,4 +1,5 @@
 import { FileUploader } from '@aws-amplify/ui-react'
+import LoadingButton from '@mui/lab/LoadingButton'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
@@ -11,6 +12,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { DataStore, Storage } from 'aws-amplify'
 import moment from 'moment'
 import { useRouter } from 'next/router'
+import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -18,7 +20,7 @@ import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
 import { Image, Product, ProductStatus } from '@/src/models'
 import Layout from '../../src/components/Layout'
 
-const currencies = [
+const providers = [
   {
     value: '',
     label: '-',
@@ -64,6 +66,10 @@ const initialFormData: ProductForm = {
   description: '',
 }
 
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export default function Index() {
   const router = useRouter()
   const productId = router.query.productId as string
@@ -76,9 +82,10 @@ export default function Index() {
     setMessage(`Key: ${event.key}`)
   }
   console.log('initialFormData', initialFormData)
-  const { reset, handleSubmit, control, formState } = useForm<ProductForm>({
-    defaultValues: initialFormData,
-  })
+  const { reset, handleSubmit, control, formState, getValues } =
+    useForm<ProductForm>({
+      defaultValues: initialFormData,
+    })
 
   useEffect(() => {
     const loadData = async () => {
@@ -106,28 +113,27 @@ export default function Index() {
     if (isEdition && productId) loadData()
   }, [isEdition, productId, reset])
 
-  const onSubmit2 = async (data: ProductForm) => {
-    console.log('onSubmit', data)
-  }
-  const onSubmit = async (data: ProductForm) => {
-    console.log('onSubmit', data)
-    const { name, price, cost, description, file } = data
-    if (!name || !price) return
-    const filename = file?.name ?? ''
+  const onSubmit = async () =>
+    isEdition ? await updateProdcut() : await createProduct()
+
+  const createProduct = async () => {
+    const formData = getValues()
+    if (!formData.name || !formData.price) return
+    const filename = formData.file?.name ?? ''
 
     try {
-      if (file) {
-        await Storage.put(file.name, file)
+      if (formData.file) {
+        await Storage.put(formData.file.name, formData.file)
       }
 
       const input = {
-        name: name,
-        price: Number(price),
-        cost: Number(cost),
-        description: description,
-        provider: data.provider,
+        name: formData.name,
+        price: Number(formData.price),
+        cost: Number(formData.cost),
+        description: formData.description,
+        provider: formData.provider,
         status: ProductStatus.ACTIVE,
-        offShelfTime: data.offShelfDate + 'T' + data.offShelfTime,
+        offShelfTime: formData.offShelfDate + 'T' + formData.offShelfTime,
         createdAt: new Date().toISOString(),
       }
 
@@ -139,14 +145,47 @@ export default function Index() {
           product: product,
         })
       )
+      enqueueSnackbar('新增成功!', {
+        variant: 'success',
+        autoHideDuration: 2000,
+      })
       router.push('/products')
     } catch (error) {
       console.log('Error creating products', error)
     }
   }
+  const updateProdcut = async () => {
+    const formData = getValues()
+    const original = await DataStore.query(Product, productId)
+    if (original) {
+      await DataStore.save(
+        Product.copyOf(original, updated => {
+          if (formState.dirtyFields?.name) updated.name = formData.name
+          if (formState.dirtyFields?.price)
+            updated.price = Number(formData.price)
+          if (formState.dirtyFields?.cost) updated.cost = Number(formData.cost)
+          if (formState.dirtyFields?.description)
+            updated.description = formData.description
+          if (formState.dirtyFields?.provider)
+            updated.provider = formData.provider
+          if (
+            formState.dirtyFields?.offShelfDate ||
+            formState.dirtyFields?.offShelfTime
+          )
+            updated.offShelfTime =
+              formData.offShelfDate + 'T' + formData.offShelfTime
+        })
+      )
+    }
+    enqueueSnackbar('儲存成功!', {
+      variant: 'success',
+      autoHideDuration: 2000,
+    })
+  }
 
   return (
     <Layout>
+      <SnackbarProvider />
       <Container disableGutters sx={{ marginLeft: 0 }}>
         <WrappedBreadcrumbs
           links={[
@@ -156,10 +195,33 @@ export default function Index() {
           ]}
         />
 
-        <Stack direction="row" paddingBottom={2}>
+        <Stack
+          direction="row"
+          paddingBottom={2}
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <Typography variant="h5">
             {isEdition ? '產品ID: ' + productId : '建立產品'}
           </Typography>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={() => router.push('/products')}
+            >
+              取消
+            </Button>
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit(onSubmit)}
+              disabled={!formState.isDirty}
+              loading={formState.isSubmitting}
+            >
+              {isEdition ? '儲存變更' : '建立產品'}
+            </LoadingButton>
+          </Stack>
         </Stack>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -247,7 +309,7 @@ export default function Index() {
                             fullWidth
                             {...field}
                           >
-                            {currencies.map((option, index) => (
+                            {providers.map((option, index) => (
                               <MenuItem key={index} value={option.value}>
                                 {option.label}
                               </MenuItem>
@@ -362,18 +424,23 @@ export default function Index() {
             </Grid>
           </Box>
         </form>
-        <Stack direction="row" justifyContent="end" marginTop={2}>
-          <Button color="inherit" onClick={() => router.push('/products')}>
+        <Stack direction="row" justifyContent="end" marginTop={2} spacing={2}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={() => router.push('/products')}
+          >
             取消
           </Button>
-          <Button
+          <LoadingButton
             variant="contained"
             color="primary"
             onClick={handleSubmit(onSubmit)}
             disabled={!formState.isDirty}
+            loading={formState.isSubmitting}
           >
             {isEdition ? '儲存變更' : '建立產品'}
-          </Button>
+          </LoadingButton>
         </Stack>
       </Container>
     </Layout>
