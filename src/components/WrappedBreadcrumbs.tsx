@@ -18,7 +18,10 @@ export default function WrappedBreadcrumbs(props: WrappedBreadcrumbsProps) {
     <Breadcrumbs
       aria-label="breadcrumb"
       separator={<NavigateNextIcon fontSize="small" />}
-      sx={{ paddingY: theme.spacing(2) }}
+      sx={{
+        paddingY: theme.spacing(2),
+        [theme.breakpoints.down('md')]: { paddingY: 0 },
+      }}
       {...rest}
     >
       {children ||

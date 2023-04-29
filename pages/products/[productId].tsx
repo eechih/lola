@@ -9,6 +9,8 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { DataStore, Storage } from 'aws-amplify'
 import moment from 'moment'
 import { useRouter } from 'next/router'
@@ -16,9 +18,9 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
+import Layout from '@/src/components/Layout'
 import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
 import { Image, Product, ProductStatus } from '@/src/models'
-import Layout from '../../src/components/Layout'
 
 const providers = [
   {
@@ -74,6 +76,9 @@ export default function Index() {
   const router = useRouter()
   const productId = router.query.productId as string
   const isEdition = productId !== 'create'
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.up('md'), { noSsr: true })
+  console.log('matches', matches)
 
   const [message, setMessage] = useState('')
 
@@ -206,39 +211,25 @@ export default function Index() {
         >
           {isEdition ? (
             <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography variant="h6">產品 ID</Typography>
-              <Typography variant="body1">{productId}</Typography>
+              <Typography variant="h6">產品</Typography>
+              <Typography variant="body1">
+                {matches ? productId : productId.substring(0, 8)}
+              </Typography>
             </Stack>
           ) : (
             <Typography variant="h6">建立產品</Typography>
           )}
-
-          <Stack direction="row" spacing={2} alignItems="center">
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => router.push('/products')}
-            >
-              取消
-            </Button>
-            <LoadingButton
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit(onSubmit)}
-              disabled={!formState.isDirty}
-              loading={formState.isSubmitting}
-            >
-              {isEdition ? '儲存變更' : '建立產品'}
-            </LoadingButton>
-          </Stack>
         </Stack>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2}>
-              <Grid xs={12} lg={6} marginY={2}>
-                <Paper variant="outlined">
-                  <Grid container spacing={2} padding={2}>
+              <Grid xs={12} md={6}>
+                <Paper
+                  variant={matches ? 'outlined' : 'elevation'}
+                  elevation={0}
+                >
+                  <Grid container spacing={2} padding={matches ? 2 : 0}>
                     <Grid>
                       <Typography variant="h6">基本設定</Typography>
                     </Grid>
@@ -385,9 +376,12 @@ export default function Index() {
                 </Paper>
               </Grid>
 
-              <Grid xs={12} lg={6} marginY={2}>
-                <Paper variant="outlined">
-                  <Grid container spacing={2} padding={2}>
+              <Grid xs={12} md={6}>
+                <Paper
+                  variant={matches ? 'outlined' : 'elevation'}
+                  elevation={0}
+                >
+                  <Grid container spacing={2} padding={matches ? 2 : 0}>
                     <Grid>
                       <Typography variant="h6">社群貼文內容</Typography>
                     </Grid>
@@ -412,8 +406,11 @@ export default function Index() {
                 </Paper>
               </Grid>
               <Grid xs={12} marginY={2}>
-                <Paper variant="outlined">
-                  <Grid container spacing={2} padding={2}>
+                <Paper
+                  variant={matches ? 'outlined' : 'elevation'}
+                  elevation={0}
+                >
+                  <Grid container spacing={2} padding={matches ? 2 : 0}>
                     <Grid>
                       <Typography variant="h6">產品圖片</Typography>
                     </Grid>
@@ -433,7 +430,7 @@ export default function Index() {
             </Grid>
           </Box>
         </form>
-        <Stack direction="row" justifyContent="end" marginTop={2} spacing={2}>
+        <Stack direction="row" justifyContent="end" spacing={2}>
           <Button
             variant="outlined"
             color="inherit"
