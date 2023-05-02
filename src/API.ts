@@ -1764,6 +1764,14 @@ export type EchoQuery = {
   echo?: string | null,
 };
 
+export type PublishProductQueryVariables = {
+  productId?: string | null,
+};
+
+export type PublishProductQuery = {
+  publishProduct?: string | null,
+};
+
 export type OnCreateProductSubscriptionVariables = {
   filter?: ModelSubscriptionProductFilterInput | null,
   owner?: string | null,

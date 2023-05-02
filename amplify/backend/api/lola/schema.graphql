@@ -83,4 +83,7 @@ type Query {
   echo(msg: String): String
     @function(name: "echofunction-${env}")
     @auth(rules: [{ allow: public }])
+  publishProduct(productId: String): String
+    @function(name: "product-${env}")
+    @auth(rules: [{ allow: owner }, { allow: public }])
 }

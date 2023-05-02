@@ -59,3 +59,5 @@ amplifytools.xcconfig
 **.sample
 *.zip
 #amplify-do-not-edit-end
+
+amplify/backend/function/**/*.js

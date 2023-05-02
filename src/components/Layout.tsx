@@ -2,7 +2,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import HomeIcon from '@mui/icons-material/Home'
 import MailIcon from '@mui/icons-material/Mail'
-import MenuIcon from '@mui/icons-material/Menu'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import TableViewIcon from '@mui/icons-material/TableView'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
@@ -16,11 +15,11 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import { styled, useTheme } from '@mui/material/styles'
 import NextLink from 'next/link'
 import * as React from 'react'
+
+import NavHeader from '@/src/components/NavHeader'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -96,20 +95,7 @@ export default function Layout({ children }: LayoutProps) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Persistent drawer
-          </Typography>
-        </Toolbar>
+        <NavHeader open={open} handleDrawerOpen={handleDrawerOpen} />
       </AppBar>
       <Drawer
         sx={{

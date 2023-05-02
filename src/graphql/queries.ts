@@ -587,3 +587,8 @@ export const echo = /* GraphQL */ `
     echo(msg: $msg)
   }
 `;
+export const publishProduct = /* GraphQL */ `
+  query PublishProduct($productId: String) {
+    publishProduct(productId: $productId)
+  }
+`;

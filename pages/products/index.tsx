@@ -1,3 +1,8 @@
+import { GRAPHQL_AUTH_MODE, GraphQLQuery } from '@aws-amplify/api'
+import {
+  WithAuthenticatorProps,
+  withAuthenticator,
+} from '@aws-amplify/ui-react'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
@@ -12,22 +17,26 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { DataStore, Predicates } from 'aws-amplify'
+import { API, DataStore, Predicates } from 'aws-amplify'
 import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
 
+import { PublishProductQuery, PublishProductQueryVariables } from '@/src/API'
 import Layout from '@/src/components/Layout'
 import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
+import * as queries from '@/src/graphql/queries'
 import { Product } from '@/src/models'
 import ProductDataGrid from './ProductDataGrid'
 
-export default function Index() {
+function Index({ user }: WithAuthenticatorProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const [products, setProducts] = useState<Product[]>([])
   const [isMutating, setMutating] = useState<boolean>(false)
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('md'))
+
+  console.log('user', user)
 
   // Hub.listen('api', (data: any) => {
   //   const { payload } = data
@@ -104,6 +113,26 @@ export default function Index() {
       console.log('Error deleting product', error)
       setProducts(prevProducts)
       setMutating(false)
+    }
+  }
+
+  async function publishProduct(productId: string) {
+    console.log('publish product', productId)
+    try {
+      const variables: PublishProductQueryVariables = {
+        productId: productId,
+      }
+      const res = await API.graphql<GraphQLQuery<PublishProductQuery>>({
+        query: queries.publishProduct,
+        variables: variables,
+        authMode: GRAPHQL_AUTH_MODE.API_KEY,
+        // authMode: GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS,
+        // authToken: user?.getSignInUserSession()?.getAccessToken().getJwtToken(),
+      })
+      console.log('res', res)
+      console.log(res.data?.publishProduct)
+    } catch (error) {
+      console.log('Error publishing product', error)
     }
   }
 
@@ -187,8 +216,14 @@ export default function Index() {
         </Stack>
       </Stack>
       <Box sx={{ width: '100%' }}>
-        <ProductDataGrid products={products} onDeleteClick={deleteProduct} />
+        <ProductDataGrid
+          products={products}
+          onDeleteButtonClick={deleteProduct}
+          onPublishButtonClick={publishProduct}
+        />
       </Box>
     </Layout>
   )
 }
+
+export default withAuthenticator(Index)

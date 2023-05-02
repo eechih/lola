@@ -15,11 +15,11 @@ import { Product } from '@/src/models'
 
 type ProductDataGridProps = {
   products: Product[]
-  onDeleteClick: (productId: string) => {}
+  onDeleteButtonClick: (productId: string) => {}
+  onPublishButtonClick: (productId: string) => {}
 }
 
 export default function ProductDataGrid(props: ProductDataGridProps) {
-  const { products, onDeleteClick } = props
   const theme = useTheme()
 
   const Link = (props: { href: string; children: React.ReactNode }) => {
@@ -42,7 +42,7 @@ export default function ProductDataGrid(props: ProductDataGridProps) {
 
   return (
     <DataGrid
-      rows={products}
+      rows={props.products}
       columns={[
         {
           field: 'id',
@@ -123,13 +123,13 @@ export default function ProductDataGrid(props: ProductDataGridProps) {
             <GridActionsCellItem
               icon={<DeleteIcon />}
               label="刪除"
-              onClick={() => onDeleteClick(params.id.toString())}
+              onClick={() => props.onDeleteButtonClick(params.id.toString())}
               key="delet"
             />,
             <GridActionsCellItem
               icon={<PublishIcon />}
               label="發佈"
-              onClick={() => console.log('Publish', params.id)}
+              onClick={() => props.onPublishButtonClick(params.id.toString())}
               key="publish"
             />,
           ],

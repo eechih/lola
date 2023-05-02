@@ -3,6 +3,7 @@ import {
   withAuthenticator,
 } from '@aws-amplify/ui-react'
 import AccountCircle from '@mui/icons-material/AccountCircle'
+import MenuIcon from '@mui/icons-material/Menu'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
@@ -11,7 +12,12 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
-function NavHeader({ signOut, user }: WithAuthenticatorProps) {
+function NavHeader({
+  signOut,
+  user,
+  open,
+  handleDrawerOpen,
+}: WithAuthenticatorProps & { open: boolean; handleDrawerOpen: () => void }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -24,6 +30,15 @@ function NavHeader({ signOut, user }: WithAuthenticatorProps) {
 
   return (
     <Toolbar>
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        onClick={handleDrawerOpen}
+        edge="start"
+        sx={{ mr: 2, ...(open && { display: 'none' }) }}
+      >
+        <MenuIcon />
+      </IconButton>
       <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
         Photos
       </Typography>
