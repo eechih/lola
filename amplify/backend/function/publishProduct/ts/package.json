@@ -4,12 +4,14 @@
   "version": "0.0.0",
   "scripts": {
     "tsc": "npm run lint && tsc",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "test": "npm run tsc && amplify mock function publishProduct --event src/event.json"
   },
   "dependencies": {
     "axios": "^1.4.0"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.114"
+    "@types/aws-lambda": "^8.10.114",
+    "@types/node": "^18.16.3"
   }
 }

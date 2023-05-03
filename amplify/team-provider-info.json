@@ -34,9 +34,9 @@
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
           "s3Key": "amplify-builds/echofunction-72687a726b417a56694a-build.zip"
         },
-        "product": {
+        "publishProduct": {
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
-          "s3Key": "amplify-builds/product-66767373573243645379-build.zip"
+          "s3Key": "amplify-builds/publishProduct-6a697436757478615468-build.zip"
         }
       },
       "api": {

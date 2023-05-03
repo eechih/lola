@@ -87,7 +87,7 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "product": {
+    "publishProduct": {
       "build": true,
       "dependsOn": [
         {
@@ -152,19 +152,19 @@
         }
       ]
     },
-    "AMPLIFY_function_product_deploymentBucketName": {
+    "AMPLIFY_function_publishProduct_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "product"
+          "resourceName": "publishProduct"
         }
       ]
     },
-    "AMPLIFY_function_product_s3Key": {
+    "AMPLIFY_function_publishProduct_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "product"
+          "resourceName": "publishProduct"
         }
       ]
     },

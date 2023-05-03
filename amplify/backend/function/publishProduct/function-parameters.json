@@ -3,7 +3,8 @@
   "permissions": {
     "api": {
       "lola": [
-        "Query"
+        "Query",
+        "Mutation"
       ]
     }
   }
