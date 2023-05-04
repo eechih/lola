@@ -36,7 +36,12 @@
         },
         "publishProduct": {
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
-          "s3Key": "amplify-builds/publishProduct-6a697436757478615468-build.zip"
+          "s3Key": "amplify-builds/publishProduct-6f73527942516b586577-build.zip",
+          "secretsPathAmplifyAppId": "d12ttd7t3b3wpr"
+        },
+        "lolachromium": {
+          "deploymentBucketName": "amplify-lola-dev-170025-deployment",
+          "s3Key": "amplify-builds/lolachromium-LambdaLayerVersion9715369d-build.zip"
         }
       },
       "api": {

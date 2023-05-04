@@ -87,9 +87,21 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "lolachromium": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer"
+    },
     "publishProduct": {
       "build": true,
       "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "lolachromium"
+        },
         {
           "attributes": [
             "GraphQLAPIIdOutput",
@@ -152,6 +164,22 @@
         }
       ]
     },
+    "AMPLIFY_function_lolachromium_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "lolachromium"
+        }
+      ]
+    },
+    "AMPLIFY_function_lolachromium_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "lolachromium"
+        }
+      ]
+    },
     "AMPLIFY_function_publishProduct_deploymentBucketName": {
       "usedBy": [
         {
@@ -161,6 +189,14 @@
       ]
     },
     "AMPLIFY_function_publishProduct_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "publishProduct"
+        }
+      ]
+    },
+    "AMPLIFY_function_publishProduct_secretsPathAmplifyAppId": {
       "usedBy": [
         {
           "category": "function",

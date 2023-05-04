@@ -34,6 +34,9 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "lolachromium": {
+      "Arn": "string"
+    },
     "publishProduct": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
