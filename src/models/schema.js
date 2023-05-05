@@ -84,6 +84,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "publishTime": {
+                    "name": "publishTime",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "status": {
                     "name": "status",
                     "isArray": false,
@@ -483,5 +490,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "065160e5bea8a9795bf1d4bf97f81062"
+    "version": "0f6256ecbb9ec9328dc85cc491e41a92"
 };

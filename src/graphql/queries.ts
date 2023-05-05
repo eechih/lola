@@ -47,6 +47,7 @@ export const getProduct = /* GraphQL */ `
       }
       provider
       offShelfTime
+      publishTime
       status
       createdAt
       updatedAt
@@ -80,6 +81,7 @@ export const listProducts = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -122,6 +124,7 @@ export const syncProducts = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -168,6 +171,7 @@ export const listProductsByStatus = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -201,6 +205,7 @@ export const getProductSpecGroup = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -257,6 +262,7 @@ export const listProductSpecGroups = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -306,6 +312,7 @@ export const syncProductSpecGroups = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -346,6 +353,7 @@ export const getProductSpecification = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -479,6 +487,7 @@ export const getImage = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -515,6 +524,7 @@ export const listImages = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -560,6 +570,7 @@ export const syncImages = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt

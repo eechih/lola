@@ -45,6 +45,7 @@ export const createProduct = /* GraphQL */ `
       }
       provider
       offShelfTime
+      publishTime
       status
       createdAt
       updatedAt
@@ -98,6 +99,7 @@ export const updateProduct = /* GraphQL */ `
       }
       provider
       offShelfTime
+      publishTime
       status
       createdAt
       updatedAt
@@ -151,6 +153,7 @@ export const deleteProduct = /* GraphQL */ `
       }
       provider
       offShelfTime
+      publishTime
       status
       createdAt
       updatedAt
@@ -184,6 +187,7 @@ export const createProductSpecGroup = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -242,6 +246,7 @@ export const updateProductSpecGroup = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -300,6 +305,7 @@ export const deleteProductSpecGroup = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -352,6 +358,7 @@ export const createProductSpecification = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -402,6 +409,7 @@ export const updateProductSpecification = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -452,6 +460,7 @@ export const deleteProductSpecification = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -508,6 +517,7 @@ export const createImage = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -550,6 +560,7 @@ export const updateImage = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -592,6 +603,7 @@ export const deleteImage = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt

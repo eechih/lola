@@ -45,6 +45,7 @@ export const onCreateProduct = /* GraphQL */ `
       }
       provider
       offShelfTime
+      publishTime
       status
       createdAt
       updatedAt
@@ -98,6 +99,7 @@ export const onUpdateProduct = /* GraphQL */ `
       }
       provider
       offShelfTime
+      publishTime
       status
       createdAt
       updatedAt
@@ -151,6 +153,7 @@ export const onDeleteProduct = /* GraphQL */ `
       }
       provider
       offShelfTime
+      publishTime
       status
       createdAt
       updatedAt
@@ -184,6 +187,7 @@ export const onCreateProductSpecGroup = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -242,6 +246,7 @@ export const onUpdateProductSpecGroup = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -300,6 +305,7 @@ export const onDeleteProductSpecGroup = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -352,6 +358,7 @@ export const onCreateProductSpecification = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -402,6 +409,7 @@ export const onUpdateProductSpecification = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -452,6 +460,7 @@ export const onDeleteProductSpecification = /* GraphQL */ `
           cost
           provider
           offShelfTime
+          publishTime
           status
           createdAt
           updatedAt
@@ -508,6 +517,7 @@ export const onCreateImage = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -550,6 +560,7 @@ export const onUpdateImage = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt
@@ -592,6 +603,7 @@ export const onDeleteImage = /* GraphQL */ `
         }
         provider
         offShelfTime
+        publishTime
         status
         createdAt
         updatedAt

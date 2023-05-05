@@ -9,6 +9,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -18,15 +19,19 @@ import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { API, DataStore, Predicates } from 'aws-amplify'
+import moment from 'moment'
 import NextLink from 'next/link'
+import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 
 import { PublishProductQuery, PublishProductQueryVariables } from '@/src/API'
 import Layout from '@/src/components/Layout'
 import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
 import * as queries from '@/src/graphql/queries'
+import { useLeavePageConfirm } from '@/src/hooks/useLeave'
 import { Product } from '@/src/models'
 import ProductDataGrid from './ProductDataGrid'
+import SimpleDialog from './SimpleDialog'
 
 function Index({ user }: WithAuthenticatorProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -35,8 +40,12 @@ function Index({ user }: WithAuthenticatorProps) {
   const [isMutating, setMutating] = useState<boolean>(false)
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('md'))
+  const [publishingId, setPublishingId] = useState<string | null>(null)
 
-  console.log('user', user)
+  useLeavePageConfirm(
+    publishingId != null,
+    '目前正在執行產品發佈，離開將導致中斷，您確定要離開此頁面嗎？'
+  )
 
   // Hub.listen('api', (data: any) => {
   //   const { payload } = data
@@ -92,8 +101,6 @@ function Index({ user }: WithAuthenticatorProps) {
       const products = await DataStore.query(Product, Predicates.ALL, {
         limit: 30,
       })
-      console.log(products)
-
       return products
     } catch (error) {
       console.log('Error retrieving products', error)
@@ -118,7 +125,19 @@ function Index({ user }: WithAuthenticatorProps) {
 
   async function publishProduct(productId: string) {
     console.log('publish product', productId)
+    // try {
+    //   setPublishingId(productId)
+    //   await sleep(5000)
+    //   enqueueSnackbar('發佈成功!', {
+    //     variant: 'success',
+    //     autoHideDuration: 2000,
+    //   })
+    // } finally {
+    //   setPublishingId(null)
+    // }
+
     try {
+      setPublishingId(productId)
       const variables: PublishProductQueryVariables = {
         productId: productId,
       }
@@ -130,14 +149,32 @@ function Index({ user }: WithAuthenticatorProps) {
         // authToken: user?.getSignInUserSession()?.getAccessToken().getJwtToken(),
       })
       console.log('res', res)
-      console.log(res.data?.publishProduct)
+      const original = await DataStore.query(Product, productId)
+      if (original) {
+        await DataStore.save(
+          Product.copyOf(original, updated => {
+            updated.publishTime = moment().toISOString()
+          })
+        )
+      }
+      enqueueSnackbar('發佈成功!', {
+        variant: 'success',
+        autoHideDuration: 2000,
+      })
     } catch (error) {
       console.log('Error publishing product', error)
+      enqueueSnackbar('發佈失敗!', {
+        variant: 'error',
+        autoHideDuration: 2000,
+      })
+    } finally {
+      setPublishingId(null)
     }
   }
 
   return (
     <Layout>
+      <SnackbarProvider />
       <WrappedBreadcrumbs
         links={[{ children: '首頁', href: '/' }, { children: '產品列表' }]}
       />
@@ -222,6 +259,12 @@ function Index({ user }: WithAuthenticatorProps) {
           onPublishButtonClick={publishProduct}
         />
       </Box>
+      <SimpleDialog open={!!publishingId}>
+        <Stack alignItems="center" spacing={2}>
+          <Typography>發佈中...</Typography>
+          <CircularProgress />
+        </Stack>
+      </SimpleDialog>
     </Layout>
   )
 }

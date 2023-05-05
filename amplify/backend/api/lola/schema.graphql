@@ -24,6 +24,7 @@ type Product
   images: [Image] @hasMany
   provider: String
   offShelfTime: AWSDateTime
+  publishTime: AWSDateTime
   status: ProductStatus!
     @index(
       name: "byStatus"

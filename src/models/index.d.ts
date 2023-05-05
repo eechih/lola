@@ -23,6 +23,7 @@ type EagerProduct = {
   readonly images?: (Image | null)[] | null;
   readonly provider?: string | null;
   readonly offShelfTime?: string | null;
+  readonly publishTime?: string | null;
   readonly status: ProductStatus | keyof typeof ProductStatus;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
@@ -42,6 +43,7 @@ type LazyProduct = {
   readonly images: AsyncCollection<Image>;
   readonly provider?: string | null;
   readonly offShelfTime?: string | null;
+  readonly publishTime?: string | null;
   readonly status: ProductStatus | keyof typeof ProductStatus;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;

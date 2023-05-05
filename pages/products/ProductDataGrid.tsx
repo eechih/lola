@@ -117,6 +117,21 @@ export default function ProductDataGrid(props: ProductDataGridProps) {
           editable: true,
         },
         {
+          field: 'publishTime',
+          headerName: '已發佈',
+          type: 'boolean',
+          maxWidth: 100,
+          valueGetter: (params: GridValueGetterParams) =>
+            !!params.row.publishTime,
+          // renderCell: (params: GridRenderCellParams) => {
+          //   if (!params.row.publishTime) {
+          //     return <Typography>已發布</Typography>
+          //   } else {
+          //     return <span>--</span>
+          //   }
+          // },
+        },
+        {
           field: 'actions',
           type: 'actions',
           getActions: params => [
