@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["es2017", "DOM"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "sourceMap": false,
+    "strict": true,
+    "baseUrl": ".",
+    "outDir": "../src",
+    "typeRoots": ["node_modules/@types"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

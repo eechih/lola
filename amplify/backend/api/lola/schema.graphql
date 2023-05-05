@@ -86,4 +86,7 @@ type Query {
   publishProduct(productId: String): String
     @function(name: "publishProduct-${env}")
     @auth(rules: [{ allow: owner }, { allow: public }])
+  loginToBuyplus1: String
+    @function(name: "loginToBuyplus1-${env}")
+    @auth(rules: [{ allow: owner }, { allow: public }])
 }

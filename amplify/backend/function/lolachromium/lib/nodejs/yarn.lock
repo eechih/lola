@@ -16,10 +16,10 @@
     unbzip2-stream "1.4.3"
     yargs "17.7.1"
 
-"@sparticuz/chromium@^112.0.2":
-  version "112.0.2"
-  resolved "https://registry.yarnpkg.com/@sparticuz/chromium/-/chromium-112.0.2.tgz#86d99121abe41d29b938c50db7b734139b774ae6"
-  integrity sha512-tpoY0o4vhrFE4/mXmJF3fcPLKIeKIQxbokfLgZB62rYW7KOIljbQTqCTBARzRXGN/k2+kLvhys1LVv6PWGwWNw==
+"@sparticuz/chromium@^113.0.0":
+  version "113.0.0"
+  resolved "https://registry.yarnpkg.com/@sparticuz/chromium/-/chromium-113.0.0.tgz#6514a7869f72b6e1959c09220a3b165c083ef8da"
+  integrity sha512-Rwqf70fm2Sxm6YM/SnGX0IQG1TU96HSMwcCS5BmcNE8G6ttOEfM7bi305tJ8M4+8XERVEOX3QIB7sDTVrIUXOQ==
   dependencies:
     follow-redirects "^1.15.2"
     tar-fs "^2.1.1"
@@ -266,7 +266,7 @@ pump@^3.0.0:
     end-of-stream "^1.1.0"
     once "^1.3.1"
 
-puppeteer-core@^20.0.0:
+puppeteer-core@^20.1.0:
   version "20.1.0"
   resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-20.1.0.tgz#c74e21ad642b0adb273da83b4bf444fdecc6500f"
   integrity sha512-/xTvabzAN4mnnuYkJCuWNnnEhOb3JrBTa3sY6qVi1wybuIEk5ODRg8Z5PPiKUGiKC9iG7GWOJ5CjF3iuMuxZSA==

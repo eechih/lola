@@ -1,10 +1,10 @@
 {
   "version": "1.0.0",
-  "description": "",
+  "description": "Chromium v113",
   "main": "index.js",
   "dependencies": {
-    "@sparticuz/chromium": "^112.0.2",
-    "puppeteer-core": "^20.0.0"
+    "@sparticuz/chromium": "^113.0.0",
+    "puppeteer-core": "^20.1.0"
   },
   "devDependencies": {}
 }

@@ -10,7 +10,8 @@
     "prettier": "prettier .",
     "format": "npm run prettier -- --write",
     "amplify-modelgen": "amplify codegen models",
-    "amplify:publishProduct": "cd amplify/backend/function/publishProduct/ts && npm install && npm run build && cd -"
+    "amplify:publishProduct": "cd amplify/backend/function/publishProduct/ts && npm install && npm run build && cd -",
+    "amplify:loginToBuyplus1": "cd amplify/backend/function/loginToBuyplus1/ts && npm install && npm run build && cd -"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^4.6.0",

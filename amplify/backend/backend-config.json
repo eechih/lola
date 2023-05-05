@@ -87,6 +87,27 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "loginToBuyplus1": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "lolachromium"
+        },
+        {
+          "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
+          "resourceName": "lola"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "lolachromium": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -161,6 +182,30 @@
         {
           "category": "function",
           "resourceName": "echofunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_loginToBuyplus1_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "loginToBuyplus1"
+        }
+      ]
+    },
+    "AMPLIFY_function_loginToBuyplus1_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "loginToBuyplus1"
+        }
+      ]
+    },
+    "AMPLIFY_function_loginToBuyplus1_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "loginToBuyplus1"
         }
       ]
     },

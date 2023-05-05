@@ -592,3 +592,8 @@ export const publishProduct = /* GraphQL */ `
     publishProduct(productId: $productId)
   }
 `;
+export const loginToBuyplus1 = /* GraphQL */ `
+  query LoginToBuyplus1 {
+    loginToBuyplus1
+  }
+`;

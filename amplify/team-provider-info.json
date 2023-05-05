@@ -36,12 +36,17 @@
         },
         "publishProduct": {
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
-          "s3Key": "amplify-builds/publishProduct-6f73527942516b586577-build.zip",
+          "s3Key": "amplify-builds/publishProduct-51506868715a4e344a7a-build.zip",
           "secretsPathAmplifyAppId": "d12ttd7t3b3wpr"
         },
         "lolachromium": {
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
-          "s3Key": "amplify-builds/lolachromium-LambdaLayerVersion9715369d-build.zip"
+          "s3Key": "amplify-builds/lolachromium-LambdaLayerVersion06b5fcf8-build.zip"
+        },
+        "loginToBuyplus1": {
+          "secretsPathAmplifyAppId": "d12ttd7t3b3wpr",
+          "deploymentBucketName": "amplify-lola-dev-170025-deployment",
+          "s3Key": "amplify-builds/loginToBuyplus1-304b3973557552573574-build.zip"
         }
       },
       "api": {

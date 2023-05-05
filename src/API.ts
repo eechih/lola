@@ -1772,6 +1772,10 @@ export type PublishProductQuery = {
   publishProduct?: string | null,
 };
 
+export type LoginToBuyplus1Query = {
+  loginToBuyplus1?: string | null,
+};
+
 export type OnCreateProductSubscriptionVariables = {
   filter?: ModelSubscriptionProductFilterInput | null,
   owner?: string | null,
