@@ -121,6 +121,29 @@ const getObject = async (props: { key: string }): Promise<string> => {
   }
 }
 
+type Cookie = {
+  name: string
+  value: string
+  path?: string
+  domain?: string
+  expires?: number
+  samSite?: 'Strict' | 'Lax' | 'None'
+  secure?: boolean
+  [property: string]: any
+}
+
+const transformCookie = (cookie: Protocol.Network.Cookie): Cookie => {
+  return {
+    name: cookie.name,
+    value: cookie.value,
+    path: cookie.path,
+    domain: cookie.domain,
+    expires: cookie.expires,
+    samSite: cookie.sameSite,
+    secure: cookie.secure,
+  } as Cookie
+}
+
 export const handler = async (event: AmplifyGraphQlResolverEvent) => {
   console.log(`EVENT: ${JSON.stringify(event)}`)
 
@@ -136,7 +159,7 @@ export const handler = async (event: AmplifyGraphQlResolverEvent) => {
 
     await putObject({
       key: 'private/cookie/facebook.json',
-      body: JSON.stringify(fbCookies),
+      body: JSON.stringify(fbCookies.map(transformCookie)),
     })
 
     // Obtain BuyPlus1 cookies.
@@ -144,7 +167,7 @@ export const handler = async (event: AmplifyGraphQlResolverEvent) => {
 
     await putObject({
       key: 'private/cookie/buyplus1.json',
-      body: JSON.stringify(cookies),
+      body: JSON.stringify(cookies.map(transformCookie)),
     })
 
     // Close the browser.

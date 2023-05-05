@@ -118,18 +118,18 @@
       "dependsOn": [
         {
           "attributes": [
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "lolachromium"
-        },
-        {
-          "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput",
             "GraphQLAPIKeyOutput"
           ],
           "category": "api",
+          "resourceName": "lola"
+        },
+        {
+          "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
           "resourceName": "lola"
         }
       ],
@@ -234,14 +234,6 @@
       ]
     },
     "AMPLIFY_function_publishProduct_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "publishProduct"
-        }
-      ]
-    },
-    "AMPLIFY_function_publishProduct_secretsPathAmplifyAppId": {
       "usedBy": [
         {
           "category": "function",

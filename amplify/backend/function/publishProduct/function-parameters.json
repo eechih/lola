@@ -1,23 +1,16 @@
 {
-  "lambdaLayers": [
-    {
-      "type": "ProjectLayer",
-      "resourceName": "lolachromium",
-      "env": "dev",
-      "version": "Always choose latest version",
-      "isLatestVersionSelected": true
-    }
-  ],
   "permissions": {
     "api": {
       "lola": [
         "Query",
         "Mutation"
       ]
+    },
+    "storage": {
+      "lola": [
+        "read"
+      ]
     }
   },
-  "secretNames": [
-    "fbemail",
-    "fbpass"
-  ]
+  "secretNames": []
 }

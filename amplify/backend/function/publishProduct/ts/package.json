@@ -16,20 +16,18 @@
       "^.+\\.tsx?$": "ts-jest"
     }
   },
-  "dependencies": {
-    "axios": "^1.4.0",
-    "cheerio": "^1.0.0-rc.12",
-    "moment": "^2.29.4",
-    "uuid": "^9.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@sparticuz/chromium": "^112.0.2",
+    "@aws-sdk/client-s3": "^3.296.0",
     "@types/aws-lambda": "^8.10.114",
     "@types/jest": "^29.5.1",
     "@types/node": "^18.16.3",
     "@types/uuid": "^9.0.1",
     "aws-sdk": "^2.1371.0",
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
     "jest": "^29.5.0",
+    "moment": "^2.29.4",
     "nodemon": "^2.0.22",
     "puppeteer-core": "^20.0.0",
     "ts-jest": "^29.1.0",

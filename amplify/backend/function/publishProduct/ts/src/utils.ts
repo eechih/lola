@@ -1,50 +1,34 @@
-import chromium from '@sparticuz/chromium'
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
 import axios, { Axios } from 'axios'
-import puppeteer, { Protocol } from 'puppeteer-core'
-import { v4 as uuidv4 } from 'uuid'
-
-export const getUniqueId = () => uuidv4().replace(/-/g, '').toLowerCase()
-
-export const getUniqueName = (name: string) =>
-  `${name.toLowerCase()}-${getUniqueId}`
-
-export const inAWSCloud: boolean = __dirname === '/var/task'
-
-export const convertToAxiosCookie = (
-  cookies: Protocol.Network.Cookie[]
-): string => {
-  return cookies.map(coolie => `${coolie.name}=${coolie.value}`).join('; ')
-}
 
 const USER_AGENT =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36'
 
-type CreateAxiosProps = {
+export type Cookie = {
+  name: string
+  value: string
+  path?: string
+  domain?: string
+  expires?: number
+  samSite?: 'Strict' | 'Lax' | 'None'
+  secure?: boolean
+  [property: string]: any
+}
+
+export const convertToAxiosCookie = (cookies: Cookie[]): string => {
+  return cookies.map(coolie => `${coolie.name}=${coolie.value}`).join('; ')
+}
+
+export type CreateAxiosProps = {
   baseUrl?: string
-  cookies?: Protocol.Network.Cookie[]
+  cookies?: Cookie[]
   userAgent?: string // default
   timeout?: number // unit: milliseconds, defult: 5000
   withCredentials?: boolean // default true
-}
-
-export const createPuppeteerBrowser = async () => {
-  if (inAWSCloud) {
-    return await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      // refer to https://github.com/Sparticuz/chromium/issues/24#issuecomment-1334580490
-      executablePath: await chromium.executablePath(
-        '/opt/nodejs/node_modules/@sparticuz/chromium/bin'
-      ),
-      headless: chromium.headless,
-      ignoreHTTPSErrors: true,
-    })
-  }
-
-  return await puppeteer.launch({
-    executablePath: '/usr/bin/google-chrome-stable',
-    headless: false,
-  })
 }
 
 export const createAxios = (props: CreateAxiosProps): Axios => {
@@ -75,4 +59,39 @@ export const createAxios = (props: CreateAxiosProps): Axios => {
     )
   }
   return instance
+}
+
+export const putObject = async (
+  s3: S3Client,
+  props: { bucket: string; key: string; body: string }
+) => {
+  console.log('putObject...', props)
+  const { bucket, key, body } = props
+  try {
+    await s3.send(
+      new PutObjectCommand({ Bucket: bucket, Key: key, Body: body })
+    )
+    console.log('Successfully put object to S3.', key)
+  } catch (err) {
+    console.log('Error', err)
+    throw err
+  }
+}
+
+export const getObject = async (
+  s3: S3Client,
+  props: { bucket: string; key: string }
+): Promise<string> => {
+  console.log('getObject...', props)
+  const { bucket, key } = props
+  try {
+    const response = await s3.send(
+      new GetObjectCommand({ Bucket: bucket, Key: key })
+    )
+    const body = (await response.Body?.transformToString()) ?? ''
+    return body
+  } catch (err) {
+    console.log('Error', err)
+    throw err
+  }
 }

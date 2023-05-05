@@ -3,48 +3,15 @@ import * as cheerio from 'cheerio'
 import FormData from 'form-data'
 import { ClientRequest } from 'http'
 import moment from 'moment'
-import { Browser, Protocol } from 'puppeteer-core'
 
 import { Product } from './models'
 
-const ADMIN_PAGE_URL =
+export const ADMIN_PAGE_URL =
   'https://s18.buyplus1.com.tw/b/1301023989915468/admin/index.php'
 
-type LoginProps = {
-  email: string
-  pass: string
-}
-
-type LoginResult = {
-  cookies: Protocol.Network.Cookie[]
-}
-
-const login = async (
-  browser: Browser,
-  { email, pass }: LoginProps
-): Promise<LoginResult> => {
-  console.log('login...')
-  const page = await browser.newPage()
-  await page.goto('https://www.facebook.com/login')
-  const loginButton = await page.waitForSelector('#loginbutton')
-  await page.type('#email', email)
-  await page.type('#pass', pass)
-  await loginButton?.click()
-  await page.waitForXPath('//a[@aria-label="首頁"]')
-  const facebookCookies = await page.cookies()
-  console.log('facebookCookies', facebookCookies)
-  await page.goto(ADMIN_PAGE_URL)
-  await page.waitForXPath(
-    '//base[@href="https://s18.buyplus1.com.tw/b/1301023989915468/admin/"]'
-  )
-  const buyPlus1Cookies = await page.cookies()
-  console.log('buyPlus1Cookies', buyPlus1Cookies)
-  return {
-    cookies: [...facebookCookies, ...buyPlus1Cookies],
-  }
-}
-
-const obtainToken = async (axiosInstace: Axios): Promise<string | null> => {
+export const obtainToken = async (
+  axiosInstace: Axios
+): Promise<string | null> => {
   console.log('obtainToken...')
   const response = await axiosInstace.get('/')
   const request: ClientRequest = response.request
@@ -53,22 +20,21 @@ const obtainToken = async (axiosInstace: Axios): Promise<string | null> => {
   return token
 }
 
-const publishProduct = async (axiosInstace: Axios, product: Product) => {
+export const publishProduct = async (
+  axiosInstace: Axios,
+  token: string,
+  props: { product: Product }
+) => {
+  const { product } = props
   console.log('publishProduct...', product)
-  const token = await obtainToken(axiosInstace)
-  if (!token) throw new Error('Failed to obtain the BuyPlus1 token.')
   const { productId } = await createEmptyProduct(axiosInstace, token)
   await updateProduct(axiosInstace, token, { productId, product })
-}
-
-type CreateEmptyProductResult = {
-  productId: string
 }
 
 const createEmptyProduct = async (
   axiosInstace: Axios,
   token: string
-): Promise<CreateEmptyProductResult> => {
+): Promise<{ productId: string }> => {
   console.log('createEmptyProduct...')
   const temporaryName = moment().unix()
 
@@ -192,5 +158,3 @@ const updateProduct = async (
     throw new Error('Failed to update product.')
   }
 }
-
-export { login, publishProduct, ADMIN_PAGE_URL }

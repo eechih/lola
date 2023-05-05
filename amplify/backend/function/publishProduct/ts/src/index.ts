@@ -1,17 +1,3 @@
-/*
-Use the following code to retrieve configured secrets from SSM:
-
-const aws = require('aws-sdk');
-
-const { Parameters } = await (new aws.SSM())
-  .getParameters({
-    Names: ["facebook_credentials"].map(secretName => process.env[secretName]),
-    WithDecryption: true,
-  })
-  .promise();
-
-Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }[]
-*/
 /* Amplify Params - DO NOT EDIT
 	API_LOLA_GRAPHQLAPIENDPOINTOUTPUT
 	API_LOLA_GRAPHQLAPIIDOUTPUT
@@ -20,43 +6,53 @@ Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }
 	REGION
 Amplify Params - DO NOT EDIT */
 
+import { S3Client } from '@aws-sdk/client-s3'
 import { AmplifyGraphQlResolverEvent } from 'aws-lambda'
 
 import * as API from './API'
-import { ADMIN_PAGE_URL, login, publishProduct } from './buyplus1'
-import { getSecretValues } from './ssm'
-import { createAxios, createPuppeteerBrowser } from './utils'
+import { ADMIN_PAGE_URL, obtainToken, publishProduct } from './buyplus1'
+import { Product } from './models'
+import { Cookie, createAxios, getObject } from './utils'
+
+const region = process.env.REGION
+const bucketName = process.env.STORAGE_LOLA_BUCKETNAME ?? ''
+const s3Client = new S3Client({ region: region })
 
 export const handler = async (event: AmplifyGraphQlResolverEvent) => {
   console.log(`EVENT: ${JSON.stringify(event)}`)
 
-  let browser
-  try {
-    const { productId } = event.arguments as { productId: string }
+  const { productId } = event.arguments as { productId: string }
 
-    // Retrieve product data vis GraphQL API.
-    const product = await API.getProduct(productId)
-    console.log('product', product)
+  // Retrieve product data vis GraphQL API.
+  const product: Product = await API.getProduct(productId)
+  console.log('product', product)
 
-    // Retrieve Facebook email and password from AWS SSM.
-    const [fbemail, fbpass] = await getSecretValues(['fbemail', 'fbpass'])
+  // download cookies from S3
+  const facebookCookiePayload = await getObject(s3Client, {
+    bucket: bucketName,
+    key: 'private/cookie/facebook.json',
+  })
+  const buyplus1CookiePayload = await getObject(s3Client, {
+    bucket: bucketName,
+    key: 'private/cookie/buyplus1.json',
+  })
+  const facebookCookies = JSON.parse(facebookCookiePayload) as Cookie[]
+  const buyplus1Cookies = JSON.parse(buyplus1CookiePayload) as Cookie[]
 
-    browser = await createPuppeteerBrowser()
+  // Create an Axios instance with cookies.
+  const axiosInstace = createAxios({
+    baseUrl: ADMIN_PAGE_URL,
+    cookies: [...facebookCookies, ...buyplus1Cookies],
+  })
 
-    // Login to Facebook and retrieve BuyPlus1 cookies.
-    const { cookies } = await login(browser, { email: fbemail, pass: fbpass })
-    console.log('cookies', cookies)
+  // Obtain BuyPlus1 token.
+  const token = await obtainToken(axiosInstace)
 
-    // Create an Axios instance with BuyPlus1 cookies.
-    const axiosInstace = createAxios({ baseUrl: ADMIN_PAGE_URL, cookies })
-
+  if (token) {
+    console.log('token', token)
     // Publish products to BuyPlus1.
-    await publishProduct(axiosInstace, product)
-    return product
-  } catch (error) {
-    console.log('Error', error)
-    throw error
-  } finally {
-    if (browser) await browser.close()
-  }
+    await publishProduct(axiosInstace, token, { product })
+  } else throw new Error('Failed to get BuyPlus1 token.')
+
+  return product
 }

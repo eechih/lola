@@ -28,12 +28,13 @@
       "Type": "String",
       "Default": "apilolaGraphQLAPIKeyOutput"
     },
-    "secretsPathAmplifyAppId": {
-      "Type": "String"
-    },
     "functionlolachromiumArn": {
       "Type": "String",
       "Default": "functionlolachromiumArn"
+    },
+    "storagelolaBucketName": {
+      "Type": "String",
+      "Default": "storagelolaBucketName"
     }
   },
   "Conditions": {
@@ -98,49 +99,8 @@
             "API_LOLA_GRAPHQLAPIKEYOUTPUT": {
               "Ref": "apilolaGraphQLAPIKeyOutput"
             },
-            "fbemail": {
-              "Fn::Join": [
-                "",
-                [
-                  {
-                    "Fn::Sub": [
-                      "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
-                      {
-                        "appId": {
-                          "Ref": "secretsPathAmplifyAppId"
-                        },
-                        "env": {
-                          "Ref": "env"
-                        },
-                        "functionName": "publishProduct"
-                      }
-                    ]
-                  },
-                  "fbemail"
-                ]
-              ]
-            },
-            "fbpass": {
-              "Fn::Join": [
-                "",
-                [
-                  {
-                    "Fn::Sub": [
-                      "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
-                      {
-                        "appId": {
-                          "Ref": "secretsPathAmplifyAppId"
-                        },
-                        "env": {
-                          "Ref": "env"
-                        },
-                        "functionName": "publishProduct"
-                      }
-                    ]
-                  },
-                  "fbpass"
-                ]
-              ]
+            "STORAGE_LOLA_BUCKETNAME": {
+              "Ref": "storagelolaBucketName"
             }
           }
         },
@@ -151,13 +111,8 @@
           ]
         },
         "Runtime": "nodejs16.x",
-        "Layers": [
-          {
-            "Ref": "functionlolachromiumArn"
-          }
-        ],
-        "MemorySize": 1600,
-        "Timeout": 180
+        "Layers": [],
+        "Timeout": 25
       }
     },
     "LambdaExecutionRole": {
@@ -304,67 +259,47 @@
                   ]
                 }
               ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": "s3:ListBucket",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "storagelolaBucketName"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetObject"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "storagelolaBucketName"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }
       }
-    },
-    "AmplifyFunctionSecretsPolicy": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-function-secrets-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ssm:GetParameter",
-                "ssm:GetParameters"
-              ],
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":parameter",
-                    {
-                      "Fn::Sub": [
-                        "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
-                        {
-                          "appId": {
-                            "Ref": "secretsPathAmplifyAppId"
-                          },
-                          "env": {
-                            "Ref": "env"
-                          },
-                          "functionName": "publishProduct"
-                        }
-                      ]
-                    },
-                    "*"
-                  ]
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ]
     }
   },
   "Outputs": {

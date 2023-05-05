@@ -36,8 +36,7 @@
         },
         "publishProduct": {
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
-          "s3Key": "amplify-builds/publishProduct-51506868715a4e344a7a-build.zip",
-          "secretsPathAmplifyAppId": "d12ttd7t3b3wpr"
+          "s3Key": "amplify-builds/publishProduct-50655261576a4c765863-build.zip"
         },
         "lolachromium": {
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
@@ -46,7 +45,7 @@
         "loginToBuyplus1": {
           "secretsPathAmplifyAppId": "d12ttd7t3b3wpr",
           "deploymentBucketName": "amplify-lola-dev-170025-deployment",
-          "s3Key": "amplify-builds/loginToBuyplus1-304b3973557552573574-build.zip"
+          "s3Key": "amplify-builds/loginToBuyplus1-62483442773467565934-build.zip"
         }
       },
       "api": {
