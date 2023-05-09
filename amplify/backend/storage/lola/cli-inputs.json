@@ -2,19 +2,11 @@
   "resourceName": "lola",
   "policyUUID": "fda7fb71",
   "bucketName": "lola",
-  "storageAccess": "authAndGuest",
-  "guestAccess": [
-    "READ"
-  ],
+  "storageAccess": "auth",
+  "guestAccess": [],
   "authAccess": [
     "CREATE_AND_UPDATE",
-    "READ"
-  ],
-  "groupAccess": {
-    "Admins": [
-      "CREATE_AND_UPDATE",
-      "READ",
-      "DELETE"
-    ]
-  }
+    "READ",
+    "DELETE"
+  ]
 }

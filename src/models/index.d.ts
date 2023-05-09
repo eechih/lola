@@ -130,7 +130,7 @@ type EagerImage = {
   };
   readonly id: string;
   readonly product?: Product | null;
-  readonly url: string;
+  readonly key: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly productImagesId?: string | null;
@@ -143,7 +143,7 @@ type LazyImage = {
   };
   readonly id: string;
   readonly product: AsyncItem<Product | undefined>;
-  readonly url: string;
+  readonly key: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly productImagesId?: string | null;

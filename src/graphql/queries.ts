@@ -33,7 +33,7 @@ export const getProduct = /* GraphQL */ `
       images {
         items {
           id
-          url
+          key
           createdAt
           updatedAt
           _version
@@ -496,7 +496,7 @@ export const getImage = /* GraphQL */ `
         _lastChangedAt
         owner
       }
-      url
+      key
       createdAt
       updatedAt
       _version
@@ -533,7 +533,7 @@ export const listImages = /* GraphQL */ `
           _lastChangedAt
           owner
         }
-        url
+        key
         createdAt
         updatedAt
         _version
@@ -579,7 +579,7 @@ export const syncImages = /* GraphQL */ `
           _lastChangedAt
           owner
         }
-        url
+        key
         createdAt
         updatedAt
         _version

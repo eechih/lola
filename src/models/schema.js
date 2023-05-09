@@ -407,8 +407,8 @@ export const schema = {
                         ]
                     }
                 },
-                "url": {
-                    "name": "url",
+                "key": {
+                    "name": "key",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -490,5 +490,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.4.2",
-    "version": "0f6256ecbb9ec9328dc85cc491e41a92"
+    "version": "7f67b416bc81aad97950192aebb32ee5"
 };

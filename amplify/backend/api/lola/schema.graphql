@@ -75,7 +75,7 @@ type Image
   ) {
   id: ID!
   product: Product @belongsTo
-  url: String!
+  key: String!
 }
 
 type Query {

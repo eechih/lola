@@ -1,4 +1,3 @@
-import { FileUploader } from '@aws-amplify/ui-react'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -11,14 +10,17 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { DataStore, Storage } from 'aws-amplify'
+import { DataStore } from 'aws-amplify'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { SnackbarProvider, enqueueSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import Layout from '@/src/components/Layout'
+import StorageManager, {
+  HashHexFileNameStrategy,
+} from '@/src/components/StorageManager'
 import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
 import { Image, Product, ProductStatus } from '@/src/models'
 
@@ -54,7 +56,7 @@ type ProductForm = {
   offShelfTime: string
   description: string
   option: string
-  file?: File
+  images: Pick<Image, 'key'>[]
 }
 
 const initialFormData: ProductForm = {
@@ -66,6 +68,7 @@ const initialFormData: ProductForm = {
   offShelfTime: '20:00',
   option: '',
   description: '',
+  images: [],
 }
 
 function delay(ms: number) {
@@ -78,15 +81,9 @@ export default function Index() {
   const isEdition = productId !== 'create'
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('md'), { noSsr: true })
-  console.log('matches', matches)
 
-  const [message, setMessage] = useState('')
-
-  const onSuccess = (event: { key: string }) => {
-    console.log(event.key)
-    setMessage(`Key: ${event.key}`)
-  }
-  console.log('initialFormData', initialFormData)
+  // console.log('matches', matches)
+  // console.log('initialFormData', initialFormData)
   const { reset, handleSubmit, control, formState, getValues } =
     useForm<ProductForm>({
       defaultValues: initialFormData,
@@ -97,19 +94,23 @@ export default function Index() {
       console.log('loadData')
       try {
         const product = await DataStore.query(Product, productId)
-        console.log(product)
-        const formData: ProductForm = {
-          name: product?.name ?? '',
-          price: product?.price?.toString() ?? '',
-          cost: product?.cost?.toString() ?? '',
-          provider: product?.provider ?? '',
-          offShelfDate: moment(product?.offShelfTime).format('yyyy-MM-DD'),
-          offShelfTime: moment(product?.offShelfTime).format('HH:mm'),
-          description: product?.description ?? '',
-          option: '',
+        console.log('product', product)
+        if (product) {
+          const images = await product.images.toArray()
+          console.log('images', images)
+          reset({
+            name: product.name,
+            price: product.price?.toString(),
+            cost: product.cost?.toString(),
+            provider: product.provider ?? '',
+            offShelfDate: moment(product.offShelfTime).format('yyyy-MM-DD'),
+            offShelfTime: moment(product.offShelfTime).format('HH:mm'),
+            description: product.description ?? '',
+            option: '',
+            images: images,
+          } as ProductForm)
+          product?.images
         }
-        console.log('formData', formData)
-        reset(formData)
       } catch (err) {
         console.log(err)
       }
@@ -124,13 +125,7 @@ export default function Index() {
   const createProduct = async () => {
     const formData = getValues()
     if (!formData.name || !formData.price) return
-    const filename = formData.file?.name ?? ''
-
     try {
-      if (formData.file) {
-        await Storage.put(formData.file.name, formData.file)
-      }
-
       const input = {
         name: formData.name,
         price: Number(formData.price),
@@ -146,12 +141,17 @@ export default function Index() {
 
       console.log('product', input)
       const product = await DataStore.save(new Product(input))
-      await DataStore.save(
-        new Image({
-          url: filename,
-          product: product,
-        })
-      )
+      // await Promise.all(
+      //   Object.keys(files).map(async key => {
+      //     await DataStore.save(
+      //       new Image({
+      //         product: product,
+      //         key: key,
+      //       })
+      //     )
+      //   })
+      // )
+
       enqueueSnackbar('新增成功!', {
         variant: 'success',
         autoHideDuration: 2000,
@@ -190,6 +190,8 @@ export default function Index() {
       autoHideDuration: 2000,
     })
   }
+
+  if (!router.isReady) return <div>Loading...</div>
 
   return (
     <Layout>
@@ -415,11 +417,18 @@ export default function Index() {
                       <Typography variant="h6">產品圖片</Typography>
                     </Grid>
                     <Grid xs={12}>
-                      <FileUploader
-                        onSuccess={onSuccess}
-                        variation="drop"
+                      <StorageManager
                         acceptedFileTypes={['image/*']}
                         accessLevel="private"
+                        defaultFiles={getValues().images}
+                        processFile={HashHexFileNameStrategy}
+                        cacheExpires={15000}
+                        onUploadSuccess={({ key }) => {
+                          if (isEdition) {
+                          } else {
+                            reset({ ...getValues() })
+                          }
+                        }}
                       />
                     </Grid>
                   </Grid>

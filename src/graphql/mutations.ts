@@ -31,7 +31,7 @@ export const createProduct = /* GraphQL */ `
       images {
         items {
           id
-          url
+          key
           createdAt
           updatedAt
           _version
@@ -85,7 +85,7 @@ export const updateProduct = /* GraphQL */ `
       images {
         items {
           id
-          url
+          key
           createdAt
           updatedAt
           _version
@@ -139,7 +139,7 @@ export const deleteProduct = /* GraphQL */ `
       images {
         items {
           id
-          url
+          key
           createdAt
           updatedAt
           _version
@@ -526,7 +526,7 @@ export const createImage = /* GraphQL */ `
         _lastChangedAt
         owner
       }
-      url
+      key
       createdAt
       updatedAt
       _version
@@ -569,7 +569,7 @@ export const updateImage = /* GraphQL */ `
         _lastChangedAt
         owner
       }
-      url
+      key
       createdAt
       updatedAt
       _version
@@ -612,7 +612,7 @@ export const deleteImage = /* GraphQL */ `
         _lastChangedAt
         owner
       }
-      url
+      key
       createdAt
       updatedAt
       _version

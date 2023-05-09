@@ -170,7 +170,7 @@ export type Image = {
   __typename: "Image",
   id: string,
   product?: Product | null,
-  url: string,
+  key: string,
   createdAt: string,
   updatedAt: string,
   _version: number,
@@ -274,13 +274,13 @@ export type DeleteProductSpecificationInput = {
 
 export type CreateImageInput = {
   id?: string | null,
-  url: string,
+  key: string,
   _version?: number | null,
   productImagesId?: string | null,
 };
 
 export type ModelImageConditionInput = {
-  url?: ModelStringInput | null,
+  key?: ModelStringInput | null,
   and?: Array< ModelImageConditionInput | null > | null,
   or?: Array< ModelImageConditionInput | null > | null,
   not?: ModelImageConditionInput | null,
@@ -289,7 +289,7 @@ export type ModelImageConditionInput = {
 
 export type UpdateImageInput = {
   id: string,
-  url?: string | null,
+  key?: string | null,
   _version?: number | null,
   productImagesId?: string | null,
 };
@@ -378,7 +378,7 @@ export type ModelProductSpecificationFilterInput = {
 
 export type ModelImageFilterInput = {
   id?: ModelIDInput | null,
-  url?: ModelStringInput | null,
+  key?: ModelStringInput | null,
   and?: Array< ModelImageFilterInput | null > | null,
   or?: Array< ModelImageFilterInput | null > | null,
   not?: ModelImageFilterInput | null,
@@ -459,7 +459,7 @@ export type ModelSubscriptionProductSpecificationFilterInput = {
 
 export type ModelSubscriptionImageFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  url?: ModelSubscriptionStringInput | null,
+  key?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionImageFilterInput | null > | null,
   or?: Array< ModelSubscriptionImageFilterInput | null > | null,
 };
@@ -499,7 +499,7 @@ export type CreateProductMutation = {
       items:  Array< {
         __typename: "Image",
         id: string,
-        url: string,
+        key: string,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -559,7 +559,7 @@ export type UpdateProductMutation = {
       items:  Array< {
         __typename: "Image",
         id: string,
-        url: string,
+        key: string,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -619,7 +619,7 @@ export type DeleteProductMutation = {
       items:  Array< {
         __typename: "Image",
         id: string,
-        url: string,
+        key: string,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -1047,7 +1047,7 @@ export type CreateImageMutation = {
       _lastChangedAt: number,
       owner?: string | null,
     } | null,
-    url: string,
+    key: string,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1095,7 +1095,7 @@ export type UpdateImageMutation = {
       _lastChangedAt: number,
       owner?: string | null,
     } | null,
-    url: string,
+    key: string,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1143,7 +1143,7 @@ export type DeleteImageMutation = {
       _lastChangedAt: number,
       owner?: string | null,
     } | null,
-    url: string,
+    key: string,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1196,7 +1196,7 @@ export type GetProductQuery = {
       items:  Array< {
         __typename: "Image",
         id: string,
-        url: string,
+        key: string,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -1685,7 +1685,7 @@ export type GetImageQuery = {
       _lastChangedAt: number,
       owner?: string | null,
     } | null,
-    url: string,
+    key: string,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -1726,7 +1726,7 @@ export type ListImagesQuery = {
         _lastChangedAt: number,
         owner?: string | null,
       } | null,
-      url: string,
+      key: string,
       createdAt: string,
       updatedAt: string,
       _version: number,
@@ -1771,7 +1771,7 @@ export type SyncImagesQuery = {
         _lastChangedAt: number,
         owner?: string | null,
       } | null,
-      url: string,
+      key: string,
       createdAt: string,
       updatedAt: string,
       _version: number,
@@ -1840,7 +1840,7 @@ export type OnCreateProductSubscription = {
       items:  Array< {
         __typename: "Image",
         id: string,
-        url: string,
+        key: string,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -1900,7 +1900,7 @@ export type OnUpdateProductSubscription = {
       items:  Array< {
         __typename: "Image",
         id: string,
-        url: string,
+        key: string,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -1960,7 +1960,7 @@ export type OnDeleteProductSubscription = {
       items:  Array< {
         __typename: "Image",
         id: string,
-        url: string,
+        key: string,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -2388,7 +2388,7 @@ export type OnCreateImageSubscription = {
       _lastChangedAt: number,
       owner?: string | null,
     } | null,
-    url: string,
+    key: string,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -2436,7 +2436,7 @@ export type OnUpdateImageSubscription = {
       _lastChangedAt: number,
       owner?: string | null,
     } | null,
-    url: string,
+    key: string,
     createdAt: string,
     updatedAt: string,
     _version: number,
@@ -2484,7 +2484,7 @@ export type OnDeleteImageSubscription = {
       _lastChangedAt: number,
       owner?: string | null,
     } | null,
-    url: string,
+    key: string,
     createdAt: string,
     updatedAt: string,
     _version: number,
