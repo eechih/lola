@@ -1,11 +1,8 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
-import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useTheme } from '@mui/material/styles'
@@ -14,15 +11,28 @@ import { DataStore } from 'aws-amplify'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { SnackbarProvider, enqueueSnackbar } from 'notistack'
-import { useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import {
+  Control,
+  FormProvider,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+  useFormContext,
+} from 'react-hook-form'
 
 import Layout from '@/src/components/Layout'
 import StorageManager, {
   HashHexFileNameStrategy,
 } from '@/src/components/StorageManager'
 import WrappedBreadcrumbs from '@/src/components/WrappedBreadcrumbs'
+import { ErrorMessage, Input, Select } from '@/src/components/forms'
 import { Image, Product, ProductStatus } from '@/src/models'
+
+enum Mode {
+  CREATION = 'creation',
+  EDITION = 'edition',
+}
 
 const providers = [
   {
@@ -47,7 +57,7 @@ const providers = [
   },
 ]
 
-type ProductForm = {
+type Inputs = {
   name: string
   price: string
   cost: string
@@ -59,7 +69,7 @@ type ProductForm = {
   images: Pick<Image, 'key'>[]
 }
 
-const initialFormData: ProductForm = {
+const initialInputs: Inputs = {
   name: '',
   price: '',
   cost: '',
@@ -71,26 +81,84 @@ const initialFormData: ProductForm = {
   images: [],
 }
 
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+function ImageFieldArray(props: {
+  control: Control<Inputs>
+  mode: Mode
+  productId?: string
+}) {
+  const { control, mode, productId } = props
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'images',
+  })
+  const { resetField } = useFormContext()
+
+  return (
+    <StorageManager
+      acceptedFileTypes={['image/*']}
+      accessLevel="private"
+      defaultFiles={fields}
+      processFile={HashHexFileNameStrategy}
+      cacheExpires={15000}
+      onUploadSuccess={async ({ key }) => {
+        if (mode == Mode.EDITION && productId) {
+          const product = await DataStore.query(Product, productId)
+          if (product) {
+            DataStore.save(new Image({ product, key }))
+            resetField('images', {
+              defaultValue: [...fields, { key }],
+            })
+          }
+        } else {
+          append({ key })
+        }
+      }}
+      onFileRemove={async ({ key }) => {
+        if (mode == Mode.EDITION && productId) {
+          const product = await DataStore.query(Product, productId)
+          if (product) {
+            const images = await product.images.toArray()
+            const toImageDelete = images.find(image => image.key == key)
+            if (toImageDelete) await DataStore.delete(toImageDelete)
+          }
+          resetField('images', {
+            defaultValue: fields.filter(field => field.key != key),
+          })
+        } else {
+          const index = fields.findIndex(field => field.key == key)
+          remove(index)
+        }
+      }}
+    />
+  )
 }
+
+let renderCount = 0
 
 export default function Index() {
   const router = useRouter()
-  const productId = router.query.productId as string
-  const isEdition = productId !== 'create'
+  const [productId, setProductId] = useState<string | null>(null)
+  const [mode, setMode] = useState<Mode>(Mode.CREATION)
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('md'), { noSsr: true })
 
-  // console.log('matches', matches)
-  // console.log('initialFormData', initialFormData)
-  const { reset, handleSubmit, control, formState, getValues } =
-    useForm<ProductForm>({
-      defaultValues: initialFormData,
-    })
+  const methods = useForm<Inputs>({ defaultValues: initialInputs })
+  const { reset, handleSubmit, control, formState, setError } = methods
+  const { isDirty, isValid, dirtyFields, isSubmitting, errors } = formState
+  renderCount++
 
   useEffect(() => {
-    const loadData = async () => {
+    if (router.isReady) {
+      const productId = (router.query.productId as string) ?? null
+      const mode =
+        !productId || productId === 'create' ? Mode.CREATION : Mode.EDITION
+      setProductId(productId)
+      setMode(mode)
+    }
+  }, [router])
+
+  useEffect(() => {
+    const loadData = async (productId: string) => {
       console.log('loadData')
       try {
         const product = await DataStore.query(Product, productId)
@@ -108,7 +176,7 @@ export default function Index() {
             description: product.description ?? '',
             option: '',
             images: images,
-          } as ProductForm)
+          } as Inputs)
           product?.images
         }
       } catch (err) {
@@ -116,80 +184,79 @@ export default function Index() {
       }
     }
 
-    if (isEdition && productId) loadData()
-  }, [isEdition, productId, reset])
+    if (mode == Mode.EDITION && productId) loadData(productId)
+  }, [mode, productId, reset])
 
-  const onSubmit = async () =>
-    isEdition ? await updateProdcut() : await createProduct()
-
-  const createProduct = async () => {
-    const formData = getValues()
-    if (!formData.name || !formData.price) return
-    try {
-      const input = {
-        name: formData.name,
-        price: Number(formData.price),
-        cost: Number(formData.cost),
-        description: formData.description,
-        provider: formData.provider,
-        status: ProductStatus.ACTIVE,
-        offShelfTime: moment(
-          formData.offShelfDate + 'T' + formData.offShelfTime
-        ).toISOString(),
-        createdAt: new Date().toISOString(),
-      }
-
-      console.log('product', input)
-      const product = await DataStore.save(new Product(input))
-      // await Promise.all(
-      //   Object.keys(files).map(async key => {
-      //     await DataStore.save(
-      //       new Image({
-      //         product: product,
-      //         key: key,
-      //       })
-      //     )
-      //   })
-      // )
-
-      enqueueSnackbar('新增成功!', {
-        variant: 'success',
-        autoHideDuration: 2000,
-      })
-      router.push('/products')
-    } catch (error) {
-      console.log('Error creating products', error)
+  const createProduct = async (data: Inputs): Promise<Product> => {
+    const input = {
+      name: data.name,
+      price: Number(data.price),
+      cost: Number(data.cost),
+      description: data.description,
+      provider: data.provider,
+      status: ProductStatus.ACTIVE,
+      offShelfTime: moment(
+        data.offShelfDate + 'T' + data.offShelfTime
+      ).toISOString(),
+      createdAt: new Date().toISOString(),
     }
+    console.log('product', input)
+    const product = await DataStore.save(new Product(input))
+    await Promise.all(
+      data.images.map(image => {
+        DataStore.save(
+          new Image({
+            product: product,
+            key: image.key,
+          })
+        )
+      })
+    )
+    return product
   }
-  const updateProdcut = async () => {
-    const formData = getValues()
+  const updateProdcut = async (productId: string, data: Inputs) => {
     const original = await DataStore.query(Product, productId)
     if (original) {
       await DataStore.save(
         Product.copyOf(original, updated => {
-          if (formState.dirtyFields?.name) updated.name = formData.name
-          if (formState.dirtyFields?.price)
-            updated.price = Number(formData.price)
-          if (formState.dirtyFields?.cost) updated.cost = Number(formData.cost)
-          if (formState.dirtyFields?.description)
-            updated.description = formData.description
-          if (formState.dirtyFields?.provider)
-            updated.provider = formData.provider
-          if (
-            formState.dirtyFields?.offShelfDate ||
-            formState.dirtyFields?.offShelfTime
-          )
+          if (dirtyFields?.name) updated.name = data.name
+          if (dirtyFields?.price) updated.price = Number(data.price)
+          if (dirtyFields?.cost) updated.cost = Number(data.cost)
+          if (dirtyFields?.description) updated.description = data.description
+          if (dirtyFields?.provider) updated.provider = data.provider
+          if (dirtyFields?.offShelfDate || dirtyFields?.offShelfTime)
             updated.offShelfTime = moment(
-              formData.offShelfDate + 'T' + formData.offShelfTime
+              data.offShelfDate + 'T' + data.offShelfTime
             ).toISOString()
         })
       )
+    } else {
+      throw Error('Product not found.')
     }
-    enqueueSnackbar('儲存成功!', {
-      variant: 'success',
-      autoHideDuration: 2000,
+  }
+
+  const onSubmit: SubmitHandler<Inputs> = async data => {
+    const promise =
+      mode == Mode.EDITION && productId
+        ? updateProdcut(productId, data)
+        : createProduct(data)
+    return promise.catch(error => {
+      console.log(error)
+      const { message } = error as Error
+      setError('root.serverError', {
+        type: 'server',
+        message: message,
+      })
     })
   }
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      const message = mode == Mode.EDITION ? '儲存成功!' : '新增成功!'
+      enqueueSnackbar(message, { variant: 'success', autoHideDuration: 2000 })
+      if (mode == Mode.CREATION) router.push('/products')
+    }
+  }, [formState, mode, router])
 
   if (!router.isReady) return <div>Loading...</div>
 
@@ -201,17 +268,16 @@ export default function Index() {
           links={[
             { children: '首頁', href: '/' },
             { children: '產品列表', href: '/products' },
-            { children: isEdition ? '編輯產品' : '建立產品' },
+            { children: mode == Mode.EDITION ? '編輯產品' : '建立產品' },
           ]}
         />
-
         <Stack
           direction="row"
           py={2}
           justifyContent="space-between"
           alignItems="center"
         >
-          {isEdition ? (
+          {mode == Mode.EDITION && productId ? (
             <Stack direction="row" alignItems="center" spacing={1}>
               <Typography variant="h6">產品</Typography>
               <Typography variant="body1">
@@ -223,240 +289,158 @@ export default function Index() {
           )}
         </Stack>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2}>
-              <Grid xs={12} md={6}>
-                <Paper
-                  variant={matches ? 'outlined' : 'elevation'}
-                  elevation={0}
-                >
-                  <Grid container spacing={2} padding={matches ? 2 : 0}>
-                    <Grid>
-                      <Typography variant="h6">基本設定</Typography>
-                    </Grid>
-                    <Grid xs={12}>
-                      <Controller
-                        name="name"
-                        control={control}
-                        rules={{ required: '必須提供名稱' }}
-                        render={({ field, fieldState }) => (
-                          <TextField
-                            id={field.name}
-                            label="名稱"
-                            type="txt"
-                            error={fieldState.invalid}
-                            helperText={fieldState.error?.message}
-                            required
-                            fullWidth
-                            autoFocus={!isEdition}
-                            {...field}
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid xs={12}>
-                      <Controller
-                        name="price"
-                        control={control}
-                        rules={{
-                          required: '必須提供售價',
-                          min: { value: 0, message: '售價不可小於零' },
-                        }}
-                        render={({ field, fieldState }) => (
-                          <TextField
-                            id={field.name}
-                            label="價格"
-                            type="number"
-                            error={fieldState.invalid}
-                            helperText={fieldState.error?.message}
-                            required
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid xs={12}>
-                      <Controller
-                        name="option"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <TextField
-                            id={field.name}
-                            label="規格"
-                            type="txt"
-                            error={fieldState.invalid}
-                            helperText={
-                              fieldState.error?.message ??
-                              '範例：紅，黑，白 / XL，L，M'
-                            }
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid xs={12}>
-                      <Controller
-                        name="provider"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <TextField
-                            id={field.name}
-                            label="供應商"
-                            select
-                            error={fieldState.invalid}
-                            helperText={fieldState.error?.message}
-                            fullWidth
-                            {...field}
-                          >
-                            {providers.map((option, index) => (
-                              <MenuItem key={index} value={option.value}>
-                                {option.label}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-                        )}
-                      />
-                    </Grid>
-                    <Grid xs={12}>
-                      <Controller
-                        name="cost"
-                        control={control}
-                        rules={{
-                          min: { value: 0, message: '成本不可小於零' },
-                        }}
-                        render={({ field, fieldState }) => (
-                          <TextField
-                            id={field.name}
-                            label="成本"
-                            type="number"
-                            error={fieldState.invalid}
-                            helperText={fieldState.error?.message}
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid xs={6}>
-                      <Controller
-                        name="offShelfDate"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <TextField
-                            id={field.name}
-                            label="下架日期"
-                            type="date"
-                            error={fieldState.invalid}
-                            helperText={fieldState.error?.message}
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid xs={6}>
-                      <Controller
-                        name="offShelfTime"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <TextField
-                            id={field.name}
-                            label="下架時間"
-                            type="time"
-                            error={fieldState.invalid}
-                            helperText={fieldState.error?.message}
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                    </Grid>
+        <FormProvider {...methods}>
+          <Grid container spacing={2}>
+            <Grid xs={12} md={6}>
+              <Paper variant={matches ? 'outlined' : 'elevation'} elevation={0}>
+                <Grid container spacing={2} padding={matches ? 2 : 0}>
+                  <Grid>
+                    <Typography variant="h6">基本設定</Typography>
                   </Grid>
-                </Paper>
-              </Grid>
-
-              <Grid xs={12} md={6}>
-                <Paper
-                  variant={matches ? 'outlined' : 'elevation'}
-                  elevation={0}
-                >
-                  <Grid container spacing={2} padding={matches ? 2 : 0}>
-                    <Grid>
-                      <Typography variant="h6">社群貼文內容</Typography>
-                    </Grid>
-                    <Grid xs={12}>
-                      <Controller
-                        name="description"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            id={field.name}
-                            label="描述"
-                            type="text"
-                            minRows={15}
-                            multiline
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                    </Grid>
+                  <Grid xs={12}>
+                    <Input
+                      name="name"
+                      control={control}
+                      rules={{ required: '必須提供名稱' }}
+                      label="名稱"
+                      type="txt"
+                      required
+                      fullWidth
+                      autoFocus={mode == Mode.CREATION}
+                    />
                   </Grid>
-                </Paper>
-              </Grid>
-              <Grid xs={12} marginY={2}>
-                <Paper
-                  variant={matches ? 'outlined' : 'elevation'}
-                  elevation={0}
-                >
-                  <Grid container spacing={2} padding={matches ? 2 : 0}>
-                    <Grid>
-                      <Typography variant="h6">產品圖片</Typography>
-                    </Grid>
-                    <Grid xs={12}>
-                      <StorageManager
-                        acceptedFileTypes={['image/*']}
-                        accessLevel="private"
-                        defaultFiles={getValues().images}
-                        processFile={HashHexFileNameStrategy}
-                        cacheExpires={15000}
-                        onUploadSuccess={({ key }) => {
-                          if (isEdition) {
-                          } else {
-                            reset({ ...getValues() })
-                          }
-                        }}
-                      />
-                    </Grid>
+                  <Grid xs={12}>
+                    <Input
+                      name="price"
+                      control={control}
+                      rules={{
+                        required: '必須提供售價',
+                        min: { value: 0, message: '售價不可小於零' },
+                      }}
+                      label="價格"
+                      type="number"
+                      required
+                      fullWidth
+                    />
                   </Grid>
-                </Paper>
-              </Grid>
-
-              <Grid xs={12}></Grid>
+                  <Grid xs={12}>
+                    <Input
+                      name="option"
+                      control={control}
+                      label="規格"
+                      type="txt"
+                      fullWidth
+                      helperText="'範例：紅，黑，白 / XL，L，M'"
+                    />
+                  </Grid>
+                  <Grid xs={12}>
+                    <Select
+                      name="provider"
+                      control={control}
+                      label="供應商"
+                      options={providers}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid xs={12}>
+                    <Input
+                      name="cost"
+                      control={control}
+                      rules={{
+                        min: { value: 0, message: '成本不可小於零' },
+                      }}
+                      label="成本"
+                      type="number"
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid xs={6}>
+                    <Input
+                      name="offShelfDate"
+                      control={control}
+                      label="下架日期"
+                      type="date"
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid xs={6}>
+                    <Input
+                      name="offShelfTime"
+                      control={control}
+                      label="下架時間"
+                      type="time"
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </Paper>
             </Grid>
-          </Box>
-        </form>
-        <Stack direction="row" justifyContent="end" spacing={2}>
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={() => router.push('/products')}
-          >
-            取消
-          </Button>
-          <LoadingButton
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit(onSubmit)}
-            disabled={!formState.isDirty}
-            loading={formState.isSubmitting}
-          >
-            {isEdition ? '儲存變更' : '建立產品'}
-          </LoadingButton>
-        </Stack>
+
+            <Grid xs={12} md={6}>
+              <Paper variant={matches ? 'outlined' : 'elevation'} elevation={0}>
+                <Grid container spacing={2} padding={matches ? 2 : 0}>
+                  <Grid>
+                    <Typography variant="h6">社群貼文內容</Typography>
+                  </Grid>
+                  <Grid xs={12}>
+                    <Input
+                      name="description"
+                      type="txt"
+                      control={control}
+                      label="描述"
+                      fullWidth
+                      minRows={15}
+                      multiline
+                    />
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+            <Grid xs={12}>
+              <Paper variant={matches ? 'outlined' : 'elevation'} elevation={0}>
+                <Grid container spacing={2} padding={matches ? 2 : 0}>
+                  <Grid>
+                    <Typography variant="h6">產品圖片</Typography>
+                  </Grid>
+                  <Grid xs={12}>
+                    <ImageFieldArray
+                      control={control}
+                      mode={mode}
+                      productId={productId ?? undefined}
+                    />
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+
+            <Grid xs={12}>
+              <Stack direction="row" justifyContent="end" spacing={2}>
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  onClick={() => router.push('/products')}
+                >
+                  取消
+                </Button>
+                <LoadingButton
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit(onSubmit)}
+                  disabled={!isDirty || !isValid}
+                  loading={isSubmitting}
+                >
+                  {mode == Mode.EDITION ? '儲存變更' : '建立產品'}
+                </LoadingButton>
+              </Stack>
+            </Grid>
+            <Grid xs={12}>
+              {errors.root && <ErrorMessage error={errors.root} />}
+            </Grid>
+            <Grid xs={12}>
+              <div>Render Count: {renderCount}</div>
+            </Grid>
+          </Grid>
+        </FormProvider>
       </Container>
     </Layout>
   )
