@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
+import Paper from '@mui/material/Paper'
 import { Cache, Storage } from 'aws-amplify'
 import NextImage from 'next/image'
 import { useEffect, useState } from 'react'
@@ -222,8 +223,14 @@ export default function StorageManager(props: StorageManagerProps) {
         {files.map((file, index) => {
           const { key, src, preview } = file
           return (
-            <ImageListItem key={index}>
-              <NextImage src={src || preview || ''} alt={key} fill priority />
+            <ImageListItem key={index} component={Paper} variant="outlined">
+              <NextImage
+                src={src || preview || ''}
+                alt={key}
+                fill
+                priority
+                style={{ objectFit: 'contain' }}
+              />
               <ImageListItemBar
                 title={key}
                 position="bottom"
